@@ -13,7 +13,18 @@
         android:text="日"
         android:textSize="40sp"
         android:textStyle="bold"
+        android:fontFamily="@font/kanji_stroke_order"
         android:textColor="#1B1B1B" />
+
+    <TextView
+        android:id="@+id/tvJlpt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="JLPT N5"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="#8A5A00" />
 
     <TextView
         android:id="@+id/tvReading"

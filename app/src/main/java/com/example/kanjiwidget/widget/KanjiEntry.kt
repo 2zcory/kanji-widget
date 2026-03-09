@@ -6,4 +6,5 @@ data class KanjiEntry(
     val kunyomi: String,
     val meaningVi: String,
     val example: String,
+    val jlptLevel: String,
 )

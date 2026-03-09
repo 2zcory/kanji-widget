@@ -37,6 +37,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
 
         val views = RemoteViews(context.packageName, R.layout.widget_kanji)
         views.setTextViewText(R.id.tvKanji, item.kanji)
+        views.setTextViewText(R.id.tvJlpt, "JLPT ${item.jlptLevel}")
         views.setTextViewText(R.id.tvReading, "${item.onyomi} / ${item.kunyomi}")
         views.setTextViewText(R.id.tvMeaning, item.meaningVi)
         views.setTextViewText(R.id.tvExample, item.example)
