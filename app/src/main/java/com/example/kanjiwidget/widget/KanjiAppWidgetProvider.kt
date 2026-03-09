@@ -15,6 +15,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         appWidgetIds.forEach { id ->
             updateWidget(context, appWidgetManager, id)
+            refreshFromApiAsync(context, id)
         }
     }
 
@@ -27,13 +28,15 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             ids.forEach { id ->
                 KanjiWidgetPrefs.setIndex(context, id, Random.nextInt(KanjiRepository.n5.size))
                 updateWidget(context, manager, id)
+                refreshFromApiAsync(context, id)
             }
         }
     }
 
     private fun updateWidget(context: Context, manager: AppWidgetManager, widgetId: Int) {
         val index = KanjiWidgetPrefs.getIndex(context, widgetId).coerceIn(0, KanjiRepository.n5.lastIndex)
-        val item = KanjiRepository.n5[index]
+        val base = KanjiRepository.n5[index]
+        val item = KanjiWidgetPrefs.getRemoteEntry(context, base.kanji) ?: base
 
         val views = RemoteViews(context.packageName, R.layout.widget_kanji)
         views.setTextViewText(R.id.tvKanji, item.kanji)
@@ -54,6 +57,17 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
         views.setOnClickPendingIntent(R.id.btnNext, pi)
 
         manager.updateAppWidget(widgetId, views)
+    }
+
+    private fun refreshFromApiAsync(context: Context, widgetId: Int) {
+        Thread {
+            val manager = AppWidgetManager.getInstance(context)
+            val index = KanjiWidgetPrefs.getIndex(context, widgetId).coerceIn(0, KanjiRepository.n5.lastIndex)
+            val base = KanjiRepository.n5[index]
+            val remote = KanjiApiClient.fetchKanji(base.kanji) ?: return@Thread
+            KanjiWidgetPrefs.saveRemoteEntry(context, base.kanji, remote)
+            updateWidget(context, manager, widgetId)
+        }.start()
     }
 
     companion object {
