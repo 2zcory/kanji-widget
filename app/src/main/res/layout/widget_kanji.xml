@@ -53,6 +53,15 @@
         android:textSize="13sp"
         android:textColor="#555555" />
 
+    <TextView
+        android:id="@+id/tvMeta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Nguồn: built-in"
+        android:textSize="11sp"
+        android:textColor="#777777" />
+
     <Button
         android:id="@+id/btnNext"
         android:layout_width="wrap_content"

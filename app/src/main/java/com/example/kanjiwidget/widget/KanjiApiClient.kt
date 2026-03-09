@@ -47,7 +47,9 @@ object KanjiApiClient {
                 kunyomi = kunyomi.ifBlank { "-" },
                 meaningVi = meaning,
                 example = meta.ifBlank { "Nguồn: kanjiapi.dev" },
-                jlptLevel = jlpt
+                jlptLevel = jlpt,
+                source = "kanjiapi.dev",
+                lastUpdatedEpochMs = System.currentTimeMillis(),
             )
         } catch (_: Exception) {
             null
