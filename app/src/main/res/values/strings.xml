@@ -38,16 +38,21 @@ Chữ này: %3$s</string>
     <string name="home_widget_status_installed">Widget đang hoạt động</string>
     <string name="home_widget_status_missing">Chưa thêm widget</string>
     <string name="home_action_open_latest">Mở kanji gần nhất</string>
-    <string name="home_action_today_stats">Xem thống kê hôm nay</string>
+    <string name="home_action_today_stats">Xem thống kê</string>
     <string name="home_action_widget_help">Hướng dẫn thêm widget</string>
     <string name="home_latest_title">KANJI GẦN NHẤT</string>
     <string name="home_latest_meaning_placeholder">Đã mở gần đây nhưng chưa có dữ liệu chi tiết.</string>
     <string name="home_latest_meta_fallback">Mở lại để xem chi tiết và thứ tự nét.</string>
-    <string name="home_stats_dialog_title">Thống kê hôm nay</string>
-    <string name="home_stats_dialog_total">Tổng thời gian xem: %1$s</string>
-    <string name="home_stats_dialog_opens">Lượt mở hợp lệ: %1$d</string>
-    <string name="home_stats_dialog_latest">Kanji gần nhất: %1$s</string>
     <string name="home_widget_help_title">THÊM WIDGET</string>
     <string name="home_widget_help_body">1. Từ màn hình chính của điện thoại, nhấn giữ vào vùng trống.\n2. Mở mục Widgets và kéo Kanji Widget ra màn hình.\n3. Chạm vào thẻ widget để mở chi tiết và luyện thứ tự nét.</string>
     <string name="home_widget_help_dialog_message">1. Nhấn giữ vào vùng trống trên home screen.\n2. Chọn Widgets.\n3. Tìm Kanji Widget.\n4. Kéo widget ra màn hình chính.</string>
+    <string name="chart_title">Thống kê thời gian học</string>
+    <string name="chart_range_7">7 ngày</string>
+    <string name="chart_range_30">30 ngày</string>
+    <string name="chart_range_value">Khoảng thời gian: %1$d ngày gần nhất</string>
+    <string name="chart_total_value">Tổng thời gian: %1$s</string>
+    <string name="chart_average_value">Trung bình mỗi ngày: %1$s</string>
+    <string name="chart_best_day_value">Ngày tốt nhất: %1$s • %2$s</string>
+    <string name="chart_best_day_empty">Chưa có ngày học nào trong khoảng này.</string>
+    <string name="chart_latest_kanji_value">Kanji gần nhất: %1$s</string>
 </resources>

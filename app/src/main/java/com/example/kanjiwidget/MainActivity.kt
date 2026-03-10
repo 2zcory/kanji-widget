@@ -10,10 +10,13 @@ import android.widget.Button
 import android.widget.TextView
 import com.example.kanjiwidget.home.HomeSummary
 import com.example.kanjiwidget.home.HomeSummaryRepository
+import com.example.kanjiwidget.stats.StudyStatsBottomSheet
+import com.example.kanjiwidget.stats.StudyStatsRepository
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 
 class MainActivity : Activity() {
     private lateinit var repository: HomeSummaryRepository
+    private lateinit var studyStatsRepository: StudyStatsRepository
     private lateinit var summaryCardTitle: TextView
     private lateinit var summaryCardSubtitle: TextView
     private lateinit var summaryMeta: TextView
@@ -32,6 +35,7 @@ class MainActivity : Activity() {
         setContentView(R.layout.activity_main)
 
         repository = HomeSummaryRepository(this)
+        studyStatsRepository = StudyStatsRepository(this)
         summaryCardTitle = findViewById(R.id.tvHomeSummaryTitle)
         summaryCardSubtitle = findViewById(R.id.tvHomeSummarySubtitle)
         summaryMeta = findViewById(R.id.tvHomeSummaryMeta)
@@ -90,7 +94,7 @@ class MainActivity : Activity() {
             openLatestButton.setOnClickListener(null)
         }
 
-        statsButton.setOnClickListener { showTodayStatsDialog(summary) }
+        statsButton.setOnClickListener { showStudyStatsBottomSheet(summary) }
         widgetHelpSection.visibility = if (summary.showWidgetHelp) View.VISIBLE else View.GONE
         widgetHelpBody.text = getString(R.string.home_widget_help_body)
     }
@@ -109,20 +113,12 @@ class MainActivity : Activity() {
         }
     }
 
-    private fun showTodayStatsDialog(summary: HomeSummary) {
-        val lines = mutableListOf(
-            getString(R.string.home_stats_dialog_total, formatDuration(summary.todayStudyMs)),
-            getString(R.string.home_stats_dialog_opens, summary.todayOpenCount)
-        )
-        if (!summary.latestKanji.isNullOrBlank()) {
-            lines += getString(R.string.home_stats_dialog_latest, summary.latestKanji)
-        }
-
-        AlertDialog.Builder(this)
-            .setTitle(R.string.home_stats_dialog_title)
-            .setMessage(lines.joinToString("\n"))
-            .setPositiveButton(android.R.string.ok, null)
-            .show()
+    private fun showStudyStatsBottomSheet(summary: HomeSummary) {
+        StudyStatsBottomSheet(
+            activity = this,
+            summary = summary,
+            repository = studyStatsRepository,
+        ).show()
     }
 
     private fun showWidgetHelpDialog() {
@@ -146,7 +142,7 @@ class MainActivity : Activity() {
         return parts.joinToString(" • ").ifBlank { getString(R.string.home_latest_meta_fallback) }
     }
 
-    private fun formatDuration(durationMs: Long): String {
+    fun formatDurationForUi(durationMs: Long): String {
         val totalSeconds = durationMs / 1000L
         val minutes = totalSeconds / 60L
         val seconds = totalSeconds % 60L
@@ -156,4 +152,6 @@ class MainActivity : Activity() {
             getString(R.string.study_duration_seconds, seconds)
         }
     }
+
+    private fun formatDuration(durationMs: Long): String = formatDurationForUi(durationMs)
 }

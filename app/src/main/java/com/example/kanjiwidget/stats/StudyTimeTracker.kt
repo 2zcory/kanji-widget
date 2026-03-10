@@ -58,6 +58,10 @@ object StudyTimeTracker {
         return prefs(context).getLong(totalKey(today()), 0L)
     }
 
+    fun getTotalMs(context: Context, date: LocalDate): Long {
+        return prefs(context).getLong(totalKey(date), 0L)
+    }
+
     fun getTodayKanjiMs(context: Context, kanji: String): Long {
         val normalizedKanji = kanji.trim()
         if (normalizedKanji.isBlank()) return 0L
@@ -66,6 +70,10 @@ object StudyTimeTracker {
 
     fun getTodayOpenCount(context: Context): Int {
         return prefs(context).getInt(openCountKey(today()), 0)
+    }
+
+    fun getOpenCount(context: Context, date: LocalDate): Int {
+        return prefs(context).getInt(openCountKey(date), 0)
     }
 
     private fun persistAcrossDates(
