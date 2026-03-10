@@ -10,6 +10,7 @@ import android.webkit.WebView
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.example.kanjiwidget.history.RecentKanjiStore
 import com.example.kanjiwidget.stats.StudyTimeTracker
 import com.example.kanjiwidget.widget.KanjiStrokeOrderClient
 import kotlin.concurrent.thread
@@ -96,6 +97,7 @@ class KanjiDetailActivity : Activity() {
     override fun onStart() {
         super.onStart()
         if (currentKanji.isNotBlank()) {
+            RecentKanjiStore.recordViewedKanji(this, currentKanji)
             StudyTimeTracker.startSession(this, currentKanji)
             refreshTodayStats()
         }
