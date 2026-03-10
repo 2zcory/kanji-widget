@@ -7,6 +7,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.util.TypedValue
 import android.widget.RemoteViews
 import androidx.work.Constraints
@@ -96,9 +97,10 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             val item = currentKanji?.let { KanjiWidgetPrefs.getRemoteEntry(context, it) }
             val revealAnswer = KanjiWidgetPrefs.getRevealAnswer(context, widgetId)
             val hasLoadedEntry = item != null
+            val sizeClass = resolveSizeClass(manager, widgetId)
 
             val views = RemoteViews(context.packageName, R.layout.widget_kanji)
-            applyResponsiveTextSizes(manager, widgetId, views)
+            applyResponsiveLayout(manager, widgetId, views, sizeClass)
             views.setTextViewText(R.id.tvKanji, item?.kanji ?: currentKanji ?: "...")
             views.setTextViewText(R.id.tvJlpt, "JLPT ${item?.jlptLevel ?: "..."}")
             views.setTextViewText(
@@ -126,6 +128,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
                 }
             )
             views.setTextViewText(R.id.tvMeta, formatMeta(context, item))
+            applyContentVisibility(views, sizeClass, revealAnswer, hasLoadedEntry)
 
             val nextIntent = Intent(context, KanjiAppWidgetProvider::class.java).apply {
                 action = ACTION_NEXT_KANJI
@@ -168,25 +171,89 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             manager.updateAppWidget(widgetId, views)
         }
 
-        private fun applyResponsiveTextSizes(
+        private fun applyResponsiveLayout(
             manager: AppWidgetManager,
             widgetId: Int,
-            views: RemoteViews
+            views: RemoteViews,
+            sizeClass: WidgetSizeClass,
         ) {
             val options = manager.getAppWidgetOptions(widgetId)
             val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 220)
             val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 110)
             val widthScale = minWidth / 220f
             val heightScale = minHeight / 110f
-            val scale = minOf(widthScale, heightScale).coerceIn(0.42f, 1.35f)
+            val scale = minOf(widthScale, heightScale).coerceIn(0.42f, 1.45f)
 
-            views.setTextViewTextSize(R.id.tvKanji, TypedValue.COMPLEX_UNIT_SP, 72f * scale)
-            views.setTextViewTextSize(R.id.tvJlpt, TypedValue.COMPLEX_UNIT_SP, 18f * scale)
-            views.setTextViewTextSize(R.id.tvReading, TypedValue.COMPLEX_UNIT_SP, 18f * scale)
-            views.setTextViewTextSize(R.id.tvMeaning, TypedValue.COMPLEX_UNIT_SP, 18f * scale)
-            views.setTextViewTextSize(R.id.tvExample, TypedValue.COMPLEX_UNIT_SP, 16f * scale)
-            views.setTextViewTextSize(R.id.tvMeta, TypedValue.COMPLEX_UNIT_SP, 13f * scale)
-            views.setTextViewTextSize(R.id.btnNext, TypedValue.COMPLEX_UNIT_SP, 15f * scale)
+            val kanjiSize = when (sizeClass) {
+                WidgetSizeClass.COMPACT -> 56f * scale
+                WidgetSizeClass.MEDIUM -> 66f * scale
+                WidgetSizeClass.EXPANDED -> 72f * scale
+            }
+            val jlptSize = when (sizeClass) {
+                WidgetSizeClass.COMPACT -> 14f * scale
+                WidgetSizeClass.MEDIUM -> 16f * scale
+                WidgetSizeClass.EXPANDED -> 18f * scale
+            }
+            val bodySize = when (sizeClass) {
+                WidgetSizeClass.COMPACT -> 14f * scale
+                WidgetSizeClass.MEDIUM -> 15f * scale
+                WidgetSizeClass.EXPANDED -> 18f * scale
+            }
+            val exampleSize = when (sizeClass) {
+                WidgetSizeClass.COMPACT -> 13f * scale
+                WidgetSizeClass.MEDIUM -> 14f * scale
+                WidgetSizeClass.EXPANDED -> 16f * scale
+            }
+            val metaSize = when (sizeClass) {
+                WidgetSizeClass.COMPACT -> 11f * scale
+                WidgetSizeClass.MEDIUM -> 12f * scale
+                WidgetSizeClass.EXPANDED -> 13f * scale
+            }
+            val buttonSize = when (sizeClass) {
+                WidgetSizeClass.COMPACT -> 13f * scale
+                WidgetSizeClass.MEDIUM -> 14f * scale
+                WidgetSizeClass.EXPANDED -> 15f * scale
+            }
+
+            views.setTextViewTextSize(R.id.tvKanji, TypedValue.COMPLEX_UNIT_SP, kanjiSize)
+            views.setTextViewTextSize(R.id.tvJlpt, TypedValue.COMPLEX_UNIT_SP, jlptSize)
+            views.setTextViewTextSize(R.id.tvReading, TypedValue.COMPLEX_UNIT_SP, bodySize)
+            views.setTextViewTextSize(R.id.tvMeaning, TypedValue.COMPLEX_UNIT_SP, bodySize)
+            views.setTextViewTextSize(R.id.tvExample, TypedValue.COMPLEX_UNIT_SP, exampleSize)
+            views.setTextViewTextSize(R.id.tvMeta, TypedValue.COMPLEX_UNIT_SP, metaSize)
+            views.setTextViewTextSize(R.id.btnNext, TypedValue.COMPLEX_UNIT_SP, buttonSize)
+        }
+
+        private fun applyContentVisibility(
+            views: RemoteViews,
+            sizeClass: WidgetSizeClass,
+            revealAnswer: Boolean,
+            hasLoadedEntry: Boolean,
+        ) {
+            val showMeaning = sizeClass != WidgetSizeClass.COMPACT
+            val showReading = sizeClass == WidgetSizeClass.EXPANDED
+            val showExample = sizeClass == WidgetSizeClass.EXPANDED && revealAnswer && hasLoadedEntry
+            val showMeta = sizeClass == WidgetSizeClass.EXPANDED
+
+            views.setViewVisibility(R.id.tvReading, if (showReading) View.VISIBLE else View.GONE)
+            views.setViewVisibility(R.id.tvMeaning, if (showMeaning) View.VISIBLE else View.GONE)
+            views.setViewVisibility(R.id.tvExample, if (showExample) View.VISIBLE else View.GONE)
+            views.setViewVisibility(R.id.tvMeta, if (showMeta) View.VISIBLE else View.GONE)
+        }
+
+        private fun resolveSizeClass(
+            manager: AppWidgetManager,
+            widgetId: Int,
+        ): WidgetSizeClass {
+            val options = manager.getAppWidgetOptions(widgetId)
+            val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 220)
+            val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 110)
+
+            return when {
+                minWidth >= 250 && minHeight >= 160 -> WidgetSizeClass.EXPANDED
+                minHeight >= 130 || minWidth >= 200 -> WidgetSizeClass.MEDIUM
+                else -> WidgetSizeClass.COMPACT
+            }
         }
 
         private fun formatMeta(context: Context, item: KanjiEntry?): String {
@@ -210,6 +277,12 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
                 else -> "${ageMs / 86_400_000L} ngày trước"
             }
             return "$progress • Nguồn: $source • $freshness"
+        }
+
+        private enum class WidgetSizeClass {
+            COMPACT,
+            MEDIUM,
+            EXPANDED,
         }
     }
 }
