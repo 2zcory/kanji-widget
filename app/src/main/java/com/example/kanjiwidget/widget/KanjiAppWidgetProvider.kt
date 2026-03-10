@@ -125,7 +125,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
                     else -> "Nhấn nút để hiện đáp án"
                 }
             )
-            views.setTextViewText(R.id.tvMeta, formatMeta(context, widgetId, item))
+            views.setTextViewText(R.id.tvMeta, formatMeta(context, item))
 
             val nextIntent = Intent(context, KanjiAppWidgetProvider::class.java).apply {
                 action = ACTION_NEXT_KANJI
@@ -142,6 +142,11 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             val detailIntent = Intent(context, KanjiDetailActivity::class.java).apply {
                 putExtra(KanjiDetailActivity.EXTRA_KANJI, item?.kanji ?: currentKanji)
                 putExtra(KanjiDetailActivity.EXTRA_SOURCE, item?.source ?: "kanjiapi.dev")
+                putExtra(KanjiDetailActivity.EXTRA_JLPT, item?.jlptLevel)
+                putExtra(KanjiDetailActivity.EXTRA_ONYOMI, item?.onyomi)
+                putExtra(KanjiDetailActivity.EXTRA_KUNYOMI, item?.kunyomi)
+                putExtra(KanjiDetailActivity.EXTRA_MEANING, item?.meaningVi)
+                putExtra(KanjiDetailActivity.EXTRA_NOTE, item?.example)
             }
             val detailPi = PendingIntent.getActivity(
                 context,
@@ -184,12 +189,10 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             views.setTextViewTextSize(R.id.btnNext, TypedValue.COMPLEX_UNIT_SP, 15f * scale)
         }
 
-        private fun formatMeta(context: Context, widgetId: Int, item: KanjiEntry?): String {
+        private fun formatMeta(context: Context, item: KanjiEntry?): String {
             val total = KanjiWidgetPrefs.getKanjiCatalog(context).size
-            val deckPos = KanjiWidgetPrefs.getDeckPos(context, widgetId)
             val progress = if (total > 0) {
-                val currentPosition = if (deckPos == 0) total else deckPos
-                "Tiến độ: $currentPosition/$total"
+                "Chế độ: ngẫu nhiên • Danh sách: $total chữ"
             } else {
                 "Danh sách: đang tải"
             }

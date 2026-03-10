@@ -57,40 +57,9 @@ class KanjiRefreshWorker(
         if (catalog.size == 1) return catalog.first()
 
         val currentIndex = catalog.indexOf(currentKanji).takeIf { it >= 0 } ?: -1
-        val validIndices = catalog.indices.toSet()
-
-        var deck = KanjiWidgetPrefs.getDeck(applicationContext, widgetId).filter { it in validIndices }
-        var pos = KanjiWidgetPrefs.getDeckPos(applicationContext, widgetId)
-
-        val needsReshuffle = deck.size != catalog.size || pos !in deck.indices
-        if (needsReshuffle) {
-            deck = catalog.indices.shuffled().toMutableList().also { shuffled ->
-                if (currentIndex >= 0 && shuffled.firstOrNull() == currentIndex && shuffled.size > 1) {
-                    val tmp = shuffled[0]
-                    shuffled[0] = shuffled[1]
-                    shuffled[1] = tmp
-                }
-            }
-            pos = 0
-        }
-
-        val nextIndex = deck[pos]
-        val nextPos = if (pos + 1 >= deck.size) 0 else pos + 1
-
-        if (nextPos == 0) {
-            val reshuffled = catalog.indices.shuffled().toMutableList().also { shuffled ->
-                if (shuffled.firstOrNull() == nextIndex && shuffled.size > 1) {
-                    val tmp = shuffled[0]
-                    shuffled[0] = shuffled[1]
-                    shuffled[1] = tmp
-                }
-            }
-            KanjiWidgetPrefs.setDeck(applicationContext, widgetId, reshuffled)
-            KanjiWidgetPrefs.setDeckPos(applicationContext, widgetId, 0)
-        } else {
-            KanjiWidgetPrefs.setDeck(applicationContext, widgetId, deck)
-            KanjiWidgetPrefs.setDeckPos(applicationContext, widgetId, nextPos)
-        }
+        val nextIndex = catalog.indices
+            .filter { it != currentIndex }
+            .random()
 
         KanjiWidgetPrefs.setIndex(applicationContext, widgetId, nextIndex)
         return catalog[nextIndex]

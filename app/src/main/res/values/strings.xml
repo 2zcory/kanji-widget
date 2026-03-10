@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Kanji Widget</string>
     <string name="stroke_order_title">Thứ tự nét Kanji</string>
-    <string name="stroke_order_subtitle">Chạm phát lại để xem lại từng nét.</string>
+    <string name="stroke_order_subtitle">Study card cho một chữ kanji, gồm nét viết và phần ghi nhớ nhanh.</string>
     <string name="stroke_order_subtitle_with_source">Nguồn dữ liệu Kanji: %1$s</string>
     <string name="stroke_order_loading">Đang tải dữ liệu thứ tự nét...</string>
     <string name="stroke_order_load_error">Không tải được thứ tự nét cho chữ %1$s.</string>
@@ -10,4 +10,15 @@
     <string name="stroke_order_empty_message">Widget chưa có kanji để mở màn hình thứ tự nét.</string>
     <string name="stroke_order_replay">Phát lại</string>
     <string name="stroke_order_attribution">Stroke order dựa trên dữ liệu KanjiVG.</string>
+    <string name="stroke_order_canvas_title">Luyện thứ tự nét</string>
+    <string name="stroke_order_onyomi_label">ONYOMI</string>
+    <string name="stroke_order_kunyomi_label">KUNYOMI</string>
+    <string name="stroke_order_meaning_label">NGHĨA CHÍNH</string>
+    <string name="stroke_order_note_label">GHI CHÚ NHANH</string>
+    <string name="stroke_order_info_placeholder">Chưa có dữ liệu</string>
+    <string name="stroke_order_meaning_placeholder">Mở widget và tải đáp án để thấy nghĩa.</string>
+    <string name="stroke_order_note_placeholder">Ví dụ, số nét và metadata sẽ hiện ở đây khi widget đã tải dữ liệu.</string>
+    <string name="stroke_order_source_value">Nguồn: %1$s</string>
+    <string name="stroke_order_source_default">kanjiapi.dev</string>
+    <string name="stroke_order_badge_placeholder">JLPT ...</string>
 </resources>
