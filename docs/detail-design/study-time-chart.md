@@ -42,6 +42,11 @@ Important note:
 - current `StudyTimeTracker` implementation exposes only today-scoped read APIs
 - chart support requires a repository-level history read API for arbitrary dates
 
+V1 contract decision:
+- `StudyTimeTracker` remains the owner of study-time storage
+- it must expose explicit date-based read APIs for arbitrary `LocalDate` values
+- `StudyStatsRepository` builds chart models on top of those public APIs
+
 Chart v1 does not require:
 - per-kanji time series
 - open-count chart
@@ -139,10 +144,14 @@ This keeps the screen useful even if the chart area is small.
 ### Flow A: Open chart from main screen
 
 1. User opens the app main screen
-2. User taps `Xem thống kê hôm nay` or a future stats action
+2. User taps the main stats action
 3. User sees a stats surface
 4. User switches between `7 ngày` and `30 ngày`
 5. Chart updates to reflect the selected range
+
+Main-screen action rule for v1:
+- rename the launcher action from `Xem thống kê hôm nay` to `Xem thống kê`
+- reason: the chart surface is no longer limited to today-only data
 
 ### Flow B: No study data
 
@@ -210,8 +219,16 @@ Contract rule:
 - key naming must be treated as a shared storage contract owned by the stats layer
 
 Recommended implementation options:
-- move date-based read/write helpers into a shared stats storage component
-- or add explicit APIs in `StudyTimeTracker` for reading totals by date
+- add explicit APIs in `StudyTimeTracker` for reading totals by date
+
+Recommended API addition:
+
+```kotlin
+object StudyTimeTracker {
+    fun getTotalMs(context: Context, date: LocalDate): Long
+    fun getOpenCount(context: Context, date: LocalDate): Int
+}
+```
 
 ## API Design
 
@@ -292,7 +309,8 @@ To avoid crowding:
 For a selected range:
 - total = sum of all point values
 - average = total divided by number of days in range
-- best day = point with maximum `totalMs`, ignoring all-zero result if desired
+- best day = point with maximum `totalMs`
+- if all points are zero, `bestDay` must be `null`
 
 ## Testing Notes
 
