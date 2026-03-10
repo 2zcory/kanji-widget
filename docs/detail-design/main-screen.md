@@ -65,13 +65,14 @@ Purpose:
 Contents:
 - total study time today
 - valid detail-screen opens today
-- last kanji opened or most-viewed kanji today
+- last kanji opened today
 
 Purpose:
 - make the app launch feel meaningful even before deeper navigation exists
 
 Data source:
 - local stats from `StudyTimeTracker`
+- latest opened kanji from a dedicated local history store
 
 ### 3. Quick Actions
 
@@ -87,10 +88,14 @@ Purpose:
 
 Contents:
 - short explanation of how to add the widget
-- visual hint or short 2-step instruction
+- short 2-step text instruction
 
 Purpose:
 - support users who install the app but have not added the widget yet
+
+First version rule:
+- use text-only guidance
+- do not require image assets or illustration resources
 
 ### 5. Recent Kanji Section
 
@@ -116,12 +121,12 @@ This section can be deferred until recent-history tracking exists.
 
 1. User taps app icon
 2. Main screen shows today summary
-3. User opens the latest kanji detail screen or reviews stats
+3. User opens the latest kanji detail screen or views today-only stats
 
 ### Flow C: User without widget
 
 1. User opens app
-2. Main screen detects no meaningful usage yet
+2. Main screen detects that no widget instance is currently active
 3. Widget help is emphasized over stats
 
 ## Behavior Rules
@@ -145,11 +150,25 @@ If study data exists:
 - show today summary first
 - prioritize quick access to recent kanji detail
 
+### Widget detection rule
+
+The app should treat the widget as installed when at least one app widget instance exists for `KanjiAppWidgetProvider`.
+
+Detection method:
+- query `AppWidgetManager`
+- resolve widget ids for `KanjiAppWidgetProvider`
+- if the returned id list is not empty, widget-installed state is `true`
+- otherwise widget-installed state is `false`
+
+Behavior:
+- if no widget instance exists, emphasize widget help content
+- if at least one widget instance exists, show the normal launcher summary layout
+
 ## Navigation Design
 
 Suggested destinations from the main screen:
 - detail screen for the most recently viewed kanji
-- future statistics screen
+- a lightweight today-stats view
 - widget setup instructions
 
 Navigation style:
@@ -161,26 +180,91 @@ Navigation style:
 Required local data:
 - daily total study time
 - daily open count
-- optional latest viewed kanji
+- latest viewed kanji
 - optional recent kanji list
 
 Existing reusable source:
 - `StudyTimeTracker` for today totals
 
-Likely new storage for future extension:
+Required new storage:
 - recent kanji history store
+
+### Recent kanji history store
+
+The main screen requires a concrete recency source.
+
+Suggested local storage:
+- `SharedPreferences`
+
+Suggested responsibility:
+- persist the latest opened kanji whenever `KanjiDetailActivity` starts
+- optionally keep a short recent list for future expansion
+
+Minimum required data for v1:
+- latest viewed kanji
+- latest viewed timestamp
+
+Suggested keys:
+- `latest_kanji`
+- `latest_kanji_viewed_at`
+
+Future extension keys:
+- a bounded recent list such as the latest 10 kanji
 
 ## Technical Notes
 
 Suggested implementation path:
 - replace the current finish-only `MainActivity` with a simple layout-based activity
-- populate summary fields from local storage
+- populate summary fields through a single repository-owned summary model
 - keep business logic separate from the activity
+- do not let `MainActivity` query multiple storage sources directly
 
 Suggested future files:
 - `app/src/main/res/layout/activity_main.xml`
 - `app/src/main/java/com/example/kanjiwidget/MainActivity.kt`
-- optional `app/src/main/java/com/example/kanjiwidget/home/HomeSummaryRepository.kt`
+- `app/src/main/java/com/example/kanjiwidget/home/HomeSummaryRepository.kt`
+- optional `app/src/main/java/com/example/kanjiwidget/history/RecentKanjiStore.kt`
+
+### Data ownership
+
+`HomeSummaryRepository` should be the single owner that assembles main-screen data.
+
+Repository inputs:
+- widget-installed state from `AppWidgetManager`
+- today totals from `StudyTimeTracker`
+- latest kanji from `RecentKanjiStore`
+
+Repository output:
+- one main-screen summary model consumed by `MainActivity`
+
+Example summary fields:
+- `isWidgetInstalled`
+- `todayStudyMs`
+- `todayOpenCount`
+- `latestKanji`
+- `latestKanjiViewedAt`
+- `showWidgetHelp`
+
+### Today stats destination
+
+The quick action `Xem thống kê hôm nay` must have a concrete first-version target.
+
+For v1:
+- do not create a separate statistics screen
+- open an in-app modal dialog or bottom sheet from the main screen
+- show only today-scoped data:
+  - total study time today
+  - valid detail-screen opens today
+  - latest opened kanji
+
+Fallback rule:
+- if `latestKanji` is missing, hide that row in the modal
+- do not show an empty placeholder row for v1
+
+Reasoning:
+- this keeps the action useful
+- it stays aligned with the current scope
+- it avoids prematurely creating a full statistics screen
 
 ## Edge Cases
 
@@ -199,6 +283,13 @@ If recent-history data is unavailable:
 - hide the `Mở kanji gần nhất` action
 - keep summary and widget help visible
 
+### Widget not installed but study data exists
+
+If the user has study data but no current widget instance:
+- still show today summary
+- keep widget help visible near the bottom
+- do not force the screen into a pure empty state
+
 ## Testing Notes
 
 Manual test cases:
@@ -210,5 +301,3 @@ Manual test cases:
 ## Open Questions
 
 - Should the main screen remain very small and informational, or become a true dashboard over time?
-- Should widget setup guidance be static text, or should it include visuals?
-- Do we want a recent-kanji history feature before building the full main screen?
