@@ -11,8 +11,7 @@
     <string name="stroke_order_replay">Phát lại</string>
     <string name="stroke_order_attribution">Stroke order dựa trên dữ liệu KanjiVG.</string>
     <string name="stroke_order_canvas_title">Luyện thứ tự nét</string>
-    <string name="stroke_order_onyomi_label">ONYOMI</string>
-    <string name="stroke_order_kunyomi_label">KUNYOMI</string>
+    <string name="stroke_order_reading_label">CÁCH ĐỌC</string>
     <string name="stroke_order_meaning_label">NGHĨA CHÍNH</string>
     <string name="stroke_order_note_label">GHI CHÚ NHANH</string>
     <string name="stroke_order_info_placeholder">Chưa có dữ liệu</string>
@@ -21,4 +20,7 @@
     <string name="stroke_order_source_value">Nguồn: %1$s</string>
     <string name="stroke_order_source_default">kanjiapi.dev</string>
     <string name="stroke_order_badge_placeholder">JLPT ...</string>
+    <string name="stroke_order_reading_summary">On: %1$s
+Kun: %2$s</string>
+    <string name="stroke_order_hero_hint">Chạm Phát lại để xem từng nét theo thứ tự.</string>
 </resources>

@@ -22,8 +22,7 @@ class KanjiDetailActivity : Activity() {
     private lateinit var progressView: ProgressBar
     private lateinit var replayButton: Button
     private lateinit var webView: WebView
-    private lateinit var onyomiView: TextView
-    private lateinit var kunyomiView: TextView
+    private lateinit var readingSummaryView: TextView
     private lateinit var meaningView: TextView
     private lateinit var noteView: TextView
     private lateinit var sourceView: TextView
@@ -41,8 +40,7 @@ class KanjiDetailActivity : Activity() {
         progressView = findViewById(R.id.progressStrokeOrder)
         replayButton = findViewById(R.id.btnReplayStrokeOrder)
         webView = findViewById(R.id.webStrokeOrder)
-        onyomiView = findViewById(R.id.tvDetailOnyomi)
-        kunyomiView = findViewById(R.id.tvDetailKunyomi)
+        readingSummaryView = findViewById(R.id.tvDetailReadingSummary)
         meaningView = findViewById(R.id.tvDetailMeaning)
         noteView = findViewById(R.id.tvDetailNote)
         sourceView = findViewById(R.id.tvDetailSource)
@@ -57,7 +55,7 @@ class KanjiDetailActivity : Activity() {
 
         if (kanji.isBlank()) {
             titleView.text = getString(R.string.stroke_order_empty_title)
-            subtitleView.text = getString(R.string.stroke_order_empty_subtitle)
+            subtitleView.text = getString(R.string.stroke_order_meaning_placeholder)
             jlptBadgeView.text = getString(R.string.stroke_order_badge_placeholder)
             bindStudyInfo("", "", "", "", "")
             showError(getString(R.string.stroke_order_empty_message))
@@ -65,7 +63,7 @@ class KanjiDetailActivity : Activity() {
         }
 
         titleView.text = kanji
-        subtitleView.text = getString(R.string.stroke_order_subtitle)
+        subtitleView.text = meaning.ifBlank { getString(R.string.stroke_order_meaning_placeholder) }
         jlptBadgeView.text = if (jlpt.isNotBlank()) "JLPT $jlpt" else getString(R.string.stroke_order_badge_placeholder)
         bindStudyInfo(
             onyomi = onyomi,
@@ -172,8 +170,7 @@ class KanjiDetailActivity : Activity() {
         note: String,
         source: String,
     ) {
-        onyomiView.text = onyomi.ifBlank { getString(R.string.stroke_order_info_placeholder) }
-        kunyomiView.text = kunyomi.ifBlank { getString(R.string.stroke_order_info_placeholder) }
+        readingSummaryView.text = buildReadingSummary(onyomi, kunyomi)
         meaningView.text = meaning.ifBlank { getString(R.string.stroke_order_meaning_placeholder) }
         noteView.text = note.ifBlank { getString(R.string.stroke_order_note_placeholder) }
         sourceView.text = if (source.isNotBlank()) {
@@ -181,5 +178,11 @@ class KanjiDetailActivity : Activity() {
         } else {
             getString(R.string.stroke_order_source_value, getString(R.string.stroke_order_source_default))
         }
+    }
+
+    private fun buildReadingSummary(onyomi: String, kunyomi: String): String {
+        val on = onyomi.ifBlank { getString(R.string.stroke_order_info_placeholder) }
+        val kun = kunyomi.ifBlank { getString(R.string.stroke_order_info_placeholder) }
+        return getString(R.string.stroke_order_reading_summary, on, kun)
     }
 }

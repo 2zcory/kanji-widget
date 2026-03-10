@@ -33,10 +33,7 @@ object KanjiStrokeOrderClient {
     }
 
     fun buildAnimatedHtml(svg: String, kanji: String): String {
-        val cleanSvg = svg
-            .replace(Regex("<\\?xml[^>]*>\\s*"), "")
-            .replace(Regex("<!DOCTYPE[^>]*>(\\s*\\[[\\s\\S]*?\\])?\\s*"), "")
-            .trim()
+        val cleanSvg = sanitizeSvg(svg)
 
         val escapedKanji = escapeHtml(kanji)
 
@@ -53,45 +50,21 @@ object KanjiStrokeOrderClient {
                 html, body {
                   margin: 0;
                   padding: 0;
-                  background: #f6f1e8;
+                  background: transparent;
                   color: #1f1f1f;
                   font-family: sans-serif;
+                  overflow: hidden;
                 }
                 body {
                   display: flex;
                   justify-content: center;
                   align-items: center;
                   min-height: 100vh;
-                }
-                .frame {
-                  width: min(92vw, 520px);
-                  padding: 20px 16px 12px;
-                }
-                .header {
-                  display: flex;
-                  align-items: baseline;
-                  justify-content: space-between;
-                  gap: 12px;
-                  margin-bottom: 12px;
-                }
-                .kanji {
-                  font-size: 28px;
-                  font-weight: 700;
-                }
-                .hint {
-                  font-size: 13px;
-                  color: #6b5f4a;
-                }
-                .canvas {
-                  background: #fffdf9;
-                  border: 1px solid #d8ccbb;
-                  border-radius: 16px;
-                  box-shadow: 0 10px 24px rgba(79, 61, 34, 0.08);
-                  padding: 12px;
+                  padding: 0;
                 }
                 svg {
-                  width: 100%;
-                  height: auto;
+                  width: min(92vw, 460px);
+                  height: min(92vw, 460px);
                   display: block;
                 }
                 #stroke-root path {
@@ -107,16 +80,8 @@ object KanjiStrokeOrderClient {
               </style>
             </head>
             <body>
-              <div class="frame">
-                <div class="header">
-                  <div class="kanji">$escapedKanji</div>
-                  <div class="hint">KanjiVG stroke order</div>
-                </div>
-                <div class="canvas">
-                  <div id="stroke-root">
-                    $cleanSvg
-                  </div>
-                </div>
+              <div id="stroke-root" aria-label="Stroke order for $escapedKanji">
+                $cleanSvg
               </div>
               <script>
                 function preparePaths() {
@@ -150,6 +115,12 @@ object KanjiStrokeOrderClient {
             </body>
             </html>
         """.trimIndent()
+    }
+
+    private fun sanitizeSvg(rawSvg: String): String {
+        val svgStart = rawSvg.indexOf("<svg")
+        if (svgStart < 0) return rawSvg.trim()
+        return rawSvg.substring(svgStart).trim()
     }
 
     private fun escapeHtml(value: String): String {
