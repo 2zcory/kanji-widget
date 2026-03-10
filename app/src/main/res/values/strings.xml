@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Kanji Widget</string>
+    <string name="stroke_order_title">Thứ tự nét Kanji</string>
+    <string name="stroke_order_subtitle">Chạm phát lại để xem lại từng nét.</string>
+    <string name="stroke_order_subtitle_with_source">Nguồn dữ liệu Kanji: %1$s</string>
+    <string name="stroke_order_loading">Đang tải dữ liệu thứ tự nét...</string>
+    <string name="stroke_order_load_error">Không tải được thứ tự nét cho chữ %1$s.</string>
+    <string name="stroke_order_empty_title">Chưa có kanji</string>
+    <string name="stroke_order_empty_subtitle">Hãy tải một chữ từ widget trước.</string>
+    <string name="stroke_order_empty_message">Widget chưa có kanji để mở màn hình thứ tự nét.</string>
+    <string name="stroke_order_replay">Phát lại</string>
+    <string name="stroke_order_attribution">Stroke order dựa trên dữ liệu KanjiVG.</string>
 </resources>

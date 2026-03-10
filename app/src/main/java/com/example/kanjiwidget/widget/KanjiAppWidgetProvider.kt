@@ -15,6 +15,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.example.kanjiwidget.KanjiDetailActivity
 import com.example.kanjiwidget.R
 
 class KanjiAppWidgetProvider : AppWidgetProvider() {
@@ -137,6 +138,19 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             views.setOnClickPendingIntent(R.id.btnNext, pi)
+
+            val detailIntent = Intent(context, KanjiDetailActivity::class.java).apply {
+                putExtra(KanjiDetailActivity.EXTRA_KANJI, item?.kanji ?: currentKanji)
+                putExtra(KanjiDetailActivity.EXTRA_SOURCE, item?.source ?: "kanjiapi.dev")
+            }
+            val detailPi = PendingIntent.getActivity(
+                context,
+                widgetId + 10_000,
+                detailIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            views.setOnClickPendingIntent(R.id.widgetContent, detailPi)
+
             views.setTextViewText(
                 R.id.btnNext,
                 when {

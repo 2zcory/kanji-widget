@@ -17,6 +17,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".KanjiDetailActivity"
+            android:exported="false"
+            android:label="@string/stroke_order_title"
+            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
+
         <receiver
             android:name=".widget.KanjiAppWidgetProvider"
             android:exported="false">
