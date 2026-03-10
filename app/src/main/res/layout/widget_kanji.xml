@@ -3,71 +3,87 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="12dp"
+    android:gravity="center_vertical"
+    android:padding="8dp"
     android:background="#F7F4EE">
 
     <TextView
         android:id="@+id/tvKanji"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:maxLines="1"
         android:text="日"
-        android:textSize="40sp"
+        android:textSize="72sp"
         android:textStyle="bold"
         android:fontFamily="@font/kanji_stroke_order"
         android:textColor="#1B1B1B" />
 
     <TextView
         android:id="@+id/tvJlpt"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:maxLines="1"
         android:text="JLPT N5"
-        android:textSize="12sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="#8A5A00" />
 
     <TextView
         android:id="@+id/tvReading"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:text="ニチ / ひ"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:textColor="#333333" />
 
     <TextView
         android:id="@+id/tvMeaning"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:text="Mặt trời, ngày"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:textColor="#333333" />
 
     <TextView
         android:id="@+id/tvExample"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:text="日本（にほん）"
-        android:textSize="13sp"
+        android:textSize="16sp"
         android:textColor="#555555" />
 
     <TextView
         android:id="@+id/tvMeta"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="Nguồn: built-in"
-        android:textSize="11sp"
+        android:textSize="13sp"
         android:textColor="#777777" />
 
     <Button
         android:id="@+id/btnNext"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
+        android:maxLines="1"
         android:text="Đổi chữ"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:textSize="15sp" />
 
 </LinearLayout>

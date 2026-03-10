@@ -6,24 +6,29 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 object KanjiApiClient {
+    private const val BASE_URL = "https://kanjiapi.dev/v1"
+
     // Free API: https://kanjiapi.dev
+    fun fetchKanjiList(): List<String>? {
+        return try {
+            val body = get("/kanji/joyo") ?: return null
+            val json = JSONArray(body)
+            buildList {
+                for (i in 0 until json.length()) {
+                    val value = json.optString(i)
+                    if (!value.isNullOrBlank()) {
+                        add(value)
+                    }
+                }
+            }
+        } catch (_: Exception) {
+            null
+        }
+    }
+
     fun fetchKanji(kanji: String): KanjiEntry? {
         return try {
-            val url = URL("https://kanjiapi.dev/v1/kanji/$kanji")
-            val conn = (url.openConnection() as HttpURLConnection).apply {
-                requestMethod = "GET"
-                connectTimeout = 5000
-                readTimeout = 5000
-            }
-
-            if (conn.responseCode !in 200..299) {
-                conn.disconnect()
-                return null
-            }
-
-            val body = conn.inputStream.bufferedReader().use { it.readText() }
-            conn.disconnect()
-
+            val body = get("/kanji/$kanji") ?: return null
             val json = JSONObject(body)
             val onyomi = join(json.optJSONArray("on_readings"))
             val kunyomi = join(json.optJSONArray("kun_readings"))
@@ -53,6 +58,25 @@ object KanjiApiClient {
             )
         } catch (_: Exception) {
             null
+        }
+    }
+
+    private fun get(path: String): String? {
+        val url = URL("$BASE_URL$path")
+        val conn = (url.openConnection() as HttpURLConnection).apply {
+            requestMethod = "GET"
+            connectTimeout = 5000
+            readTimeout = 5000
+        }
+
+        return try {
+            if (conn.responseCode !in 200..299) {
+                null
+            } else {
+                conn.inputStream.bufferedReader().use { it.readText() }
+            }
+        } finally {
+            conn.disconnect()
         }
     }
 

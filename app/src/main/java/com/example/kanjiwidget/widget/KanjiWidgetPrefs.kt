@@ -7,6 +7,18 @@ object KanjiWidgetPrefs {
     private const val PREF = "kanji_widget_pref"
     private const val LEGACY_DELIMITER = "\u001F"
 
+    fun getKanjiCatalog(context: Context): List<String> {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        val raw = sp.getString("kanji_catalog", null) ?: return emptyList()
+        return raw.split(LEGACY_DELIMITER).filter { it.isNotBlank() }
+    }
+
+    fun setKanjiCatalog(context: Context, kanji: List<String>) {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        val payload = kanji.joinToString(LEGACY_DELIMITER)
+        sp.edit().putString("kanji_catalog", payload).apply()
+    }
+
     fun getDeck(context: Context, widgetId: Int): List<Int> {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
         val raw = sp.getString("deck_$widgetId", null) ?: return emptyList()
@@ -37,6 +49,16 @@ object KanjiWidgetPrefs {
     fun setIndex(context: Context, widgetId: Int, value: Int) {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
         sp.edit().putInt("idx_$widgetId", value).apply()
+    }
+
+    fun getCurrentKanji(context: Context, widgetId: Int): String? {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        return sp.getString("current_kanji_$widgetId", null)?.takeIf { it.isNotBlank() }
+    }
+
+    fun setCurrentKanji(context: Context, widgetId: Int, value: String) {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        sp.edit().putString("current_kanji_$widgetId", value).apply()
     }
 
     fun getRevealAnswer(context: Context, widgetId: Int): Boolean {
