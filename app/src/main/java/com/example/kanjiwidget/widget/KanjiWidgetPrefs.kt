@@ -7,6 +7,28 @@ object KanjiWidgetPrefs {
     private const val PREF = "kanji_widget_pref"
     private const val LEGACY_DELIMITER = "\u001F"
 
+    fun getDeck(context: Context, widgetId: Int): List<Int> {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        val raw = sp.getString("deck_$widgetId", null) ?: return emptyList()
+        return raw.split(',').mapNotNull { it.toIntOrNull() }
+    }
+
+    fun setDeck(context: Context, widgetId: Int, deck: List<Int>) {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        val payload = deck.joinToString(",")
+        sp.edit().putString("deck_$widgetId", payload).apply()
+    }
+
+    fun getDeckPos(context: Context, widgetId: Int): Int {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        return sp.getInt("deck_pos_$widgetId", 0)
+    }
+
+    fun setDeckPos(context: Context, widgetId: Int, value: Int) {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        sp.edit().putInt("deck_pos_$widgetId", value).apply()
+    }
+
     fun getIndex(context: Context, widgetId: Int): Int {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
         return sp.getInt("idx_$widgetId", 0)
@@ -15,6 +37,16 @@ object KanjiWidgetPrefs {
     fun setIndex(context: Context, widgetId: Int, value: Int) {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
         sp.edit().putInt("idx_$widgetId", value).apply()
+    }
+
+    fun getRevealAnswer(context: Context, widgetId: Int): Boolean {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        return sp.getBoolean("reveal_$widgetId", false)
+    }
+
+    fun setRevealAnswer(context: Context, widgetId: Int, value: Boolean) {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        sp.edit().putBoolean("reveal_$widgetId", value).apply()
     }
 
     fun saveRemoteEntry(context: Context, kanji: String, entry: KanjiEntry) {
