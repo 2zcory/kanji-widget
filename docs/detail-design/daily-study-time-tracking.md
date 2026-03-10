@@ -20,7 +20,7 @@ Out of scope for the first version:
 - Cloud sync
 - Cross-device aggregation
 - Background analytics upload
-- A full statistics screen
+- A dedicated full-screen statistics destination
 
 ## User Value
 
@@ -57,11 +57,11 @@ Reasoning:
 
 ### Current version
 
-No dedicated statistics screen is required for the first implementation.
+No dedicated full statistics screen is required for the first implementation.
 
-Optional lightweight UI hooks:
-- show `Hôm nay bạn đã xem X phút` near the bottom of the detail screen
-- expose the data later in a dedicated stats screen
+Current lightweight UI hooks:
+- show today study totals on the detail screen
+- expose the stored data through the launcher stats bottom sheet
 
 ### Future extension
 
@@ -93,11 +93,11 @@ Possible future views:
 Storage mechanism:
 - `SharedPreferences`
 
-Suggested preference file:
-- reuse existing widget preference file or create a dedicated file such as `kanji_study_stats`
+Current preference file:
+- `kanji_study_stats`
 
-Recommended approach:
-- use a dedicated file to separate widget state from analytics-like data
+Reason:
+- keep study tracking state separate from widget state
 
 ### Key format
 
@@ -125,9 +125,9 @@ Open count:
 
 ## Components
 
-### New component
+### Component
 
-Suggested file:
+Primary file:
 - `app/src/main/java/com/example/kanjiwidget/stats/StudyTimeTracker.kt`
 
 Responsibilities:
@@ -142,23 +142,29 @@ Responsibilities:
 Main integration target:
 - `KanjiDetailActivity`
 
-Expected usage:
+Current usage:
 - call `startSession(kanji)` in `onStart`
 - call `stopSession()` in `onStop`
 
 ## API Design
 
-Suggested API:
+Current public API:
 
 ```kotlin
 object StudyTimeTracker {
     fun startSession(context: Context, kanji: String)
     fun stopSession(context: Context)
     fun getTodayTotalMs(context: Context): Long
+    fun getTotalMs(context: Context, date: LocalDate): Long
     fun getTodayKanjiMs(context: Context, kanji: String): Long
     fun getTodayOpenCount(context: Context): Int
+    fun getOpenCount(context: Context, date: LocalDate): Int
 }
 ```
+
+Contract notes:
+- today-scoped read APIs are used directly by the detail and launcher surfaces
+- date-based read APIs support range-based summaries such as the study-time chart
 
 ## Edge Cases
 
@@ -172,8 +178,8 @@ If the activity is opened without a valid kanji:
 Activity recreation may trigger extra `onStop` and `onStart` pairs.
 
 Mitigation:
-- this is acceptable if session threshold filtering is present
-- alternatively, keep in-memory session state and only count valid elapsed windows
+- short sessions below the minimum threshold are ignored
+- the active session is also guarded through stored active-session state
 
 ### App switch / screen off
 
@@ -192,10 +198,11 @@ This is acceptable for local lightweight tracking.
 ### Day boundary crossing
 
 If a session starts before midnight and ends after midnight:
-- first version may attribute the whole session to the day when `onStop` occurs
+- split the duration across both dates
+- increment the open count once for the date where the session began
 
-Future improvement:
-- split the duration across both dates if more accuracy is required
+Reason:
+- daily total time should remain date-accurate without inflating open-count totals across multiple dates
 
 ## Privacy
 
@@ -219,8 +226,8 @@ Suggested unit tests:
 - accumulation of daily totals
 - per-kanji aggregation
 
-## Open Questions
+## Future Extensions
 
-- Should the first version show the tracked time in UI immediately, or only store it for future use?
-- Should open count increase on every valid session, or on every screen entry including sub-1-second opens?
-- Do we want a retention policy for old daily keys, or keep all local history indefinitely?
+Potential future improvements:
+- add a retention or compaction policy for very old daily keys
+- expose per-kanji history beyond today if a richer stats surface is added later

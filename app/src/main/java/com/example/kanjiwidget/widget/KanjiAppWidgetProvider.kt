@@ -67,6 +67,14 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
         renderWidget(context, appWidgetManager, appWidgetId)
     }
 
+    override fun onDeleted(context: Context, appWidgetIds: IntArray) {
+        super.onDeleted(context, appWidgetIds)
+        appWidgetIds.forEach { widgetId ->
+            KanjiWidgetPrefs.clearWidgetState(context, widgetId)
+            WorkManager.getInstance(context).cancelUniqueWork("refresh_widget_$widgetId")
+        }
+    }
+
     private fun enqueueRefresh(context: Context, widgetId: Int, advance: Boolean = false) {
         val data = Data.Builder()
             .putInt(KanjiRefreshWorker.KEY_WIDGET_ID, widgetId)

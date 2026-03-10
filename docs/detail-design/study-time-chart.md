@@ -38,13 +38,9 @@ Primary source:
 Required metric:
 - daily total study time in milliseconds
 
-Important note:
-- current `StudyTimeTracker` implementation exposes only today-scoped read APIs
-- chart support requires a repository-level history read API for arbitrary dates
-
-V1 contract decision:
+Current contract:
 - `StudyTimeTracker` remains the owner of study-time storage
-- it must expose explicit date-based read APIs for arbitrary `LocalDate` values
+- it exposes explicit date-based read APIs for arbitrary `LocalDate` values
 - `StudyStatsRepository` builds chart models on top of those public APIs
 
 Chart v1 does not require:
@@ -183,12 +179,13 @@ Responsibilities:
 
 ### Suggested model
 
-Example models:
+Current models:
 
 ```kotlin
 data class StudyChartPoint(
     val date: LocalDate,
     val totalMs: Long,
+    val openCount: Int,
 )
 
 data class StudyChartSummary(
@@ -218,10 +215,7 @@ Contract rule:
 - `StudyStatsRepository` must not depend directly on undocumented private key names from unrelated UI code
 - key naming must be treated as a shared storage contract owned by the stats layer
 
-Recommended implementation options:
-- add explicit APIs in `StudyTimeTracker` for reading totals by date
-
-Recommended API addition:
+Current read APIs:
 
 ```kotlin
 object StudyTimeTracker {
@@ -254,6 +248,9 @@ If the selected range has no study time:
 - keep range switching available
 
 The screen should not collapse into a blank area.
+
+Latest-kanji rule:
+- if launcher summary data has no latest viewed Kanji, hide that row instead of showing an empty placeholder
 
 ## Edge Cases
 
@@ -327,6 +324,7 @@ Suggested unit tests:
 - ordered output from oldest to newest
 - summary metric calculation
 
-## Open Questions
+## Future Extensions
 
-- Should open-count data be added as a second tab later, or remain time-only?
+Potential future improvements:
+- add an alternate tab or mode that visualizes open-count trends

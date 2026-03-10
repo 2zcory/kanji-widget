@@ -71,6 +71,17 @@ object KanjiWidgetPrefs {
         sp.edit().putBoolean("reveal_$widgetId", value).apply()
     }
 
+    fun clearWidgetState(context: Context, widgetId: Int) {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        sp.edit()
+            .remove("deck_$widgetId")
+            .remove("deck_pos_$widgetId")
+            .remove("idx_$widgetId")
+            .remove("current_kanji_$widgetId")
+            .remove("reveal_$widgetId")
+            .apply()
+    }
+
     fun saveRemoteEntry(context: Context, kanji: String, entry: KanjiEntry) {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
         val payload = JSONObject().apply {

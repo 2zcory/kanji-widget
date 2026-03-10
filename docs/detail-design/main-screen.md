@@ -6,21 +6,21 @@ Define the detailed design for the app main screen launched from the app icon.
 
 This document covers:
 - current behavior
-- desired future behavior if the main screen is expanded beyond a launcher stub
+- the first implemented launcher experience and its extension points
 
 ## Current State
 
 Current implementation:
-- `MainActivity` opens and immediately finishes
-- the app is currently widget-first
-- users are expected to interact mainly through the home screen widget
+- `MainActivity` renders a lightweight launcher dashboard
+- the app is still widget-first
+- users are expected to interact mainly through the home screen widget and use the launcher as a summary or fallback surface
 
 Current file:
 - `app/src/main/java/com/example/kanjiwidget/MainActivity.kt`
 
 ## Design Goal
 
-The main screen should evolve from a launcher stub into a lightweight control center for the widget-based learning flow.
+The main screen acts as a lightweight control center for the widget-based learning flow.
 
 The screen should help users:
 - understand what the app does
@@ -78,7 +78,7 @@ Data source:
 
 Suggested actions:
 - `Mở kanji gần nhất`
-- `Xem thống kê hôm nay`
+- `Xem thống kê`
 - `Hướng dẫn thêm widget`
 
 Purpose:
@@ -106,7 +106,8 @@ Contents:
 Purpose:
 - make the app usable as a lightweight review hub
 
-This section can be deferred until recent-history tracking exists.
+This section is currently implemented with the latest viewed Kanji only.
+A longer recent list remains a future extension.
 
 ## User Flow
 
@@ -121,7 +122,7 @@ This section can be deferred until recent-history tracking exists.
 
 1. User taps app icon
 2. Main screen shows today summary
-3. User opens the latest kanji detail screen or views today-only stats
+3. User opens the latest kanji detail screen or views the stats bottom sheet
 
 ### Flow C: User without widget
 
@@ -131,9 +132,9 @@ This section can be deferred until recent-history tracking exists.
 
 ## Behavior Rules
 
-### Initial version
+### Current version
 
-If implemented now, the main screen should:
+The main screen should:
 - stay lightweight
 - avoid replacing the widget as the main learning surface
 - not duplicate all detail-screen functionality
@@ -168,7 +169,7 @@ Behavior:
 
 Suggested destinations from the main screen:
 - detail screen for the most recently viewed kanji
-- a lightweight today-stats view
+- a lightweight stats bottom sheet
 - widget setup instructions
 
 Navigation style:
@@ -186,21 +187,21 @@ Required local data:
 Existing reusable source:
 - `StudyTimeTracker` for today totals
 
-Required new storage:
+Existing local storage:
 - recent kanji history store
 
 ### Recent kanji history store
 
 The main screen requires a concrete recency source.
 
-Suggested local storage:
+Current local storage:
 - `SharedPreferences`
 
-Suggested responsibility:
+Current responsibility:
 - persist the latest opened kanji whenever `KanjiDetailActivity` starts
-- optionally keep a short recent list for future expansion
+- keep enough data for the launcher to reopen the latest viewed Kanji
 
-Minimum required data for v1:
+Current v1 data:
 - latest viewed kanji
 - latest viewed timestamp
 
@@ -208,22 +209,22 @@ Suggested keys:
 - `latest_kanji`
 - `latest_kanji_viewed_at`
 
-Future extension keys:
-- a bounded recent list such as the latest 10 kanji
+Future extension:
+- add a bounded recent list such as the latest 10 kanji
 
 ## Technical Notes
 
-Suggested implementation path:
-- replace the current finish-only `MainActivity` with a simple layout-based activity
-- populate summary fields through a single repository-owned summary model
+Current implementation path:
+- `MainActivity` is a layout-based activity
+- summary fields are populated through a single repository-owned summary model
 - keep business logic separate from the activity
 - do not let `MainActivity` query multiple storage sources directly
 
-Suggested future files:
+Primary files:
 - `app/src/main/res/layout/activity_main.xml`
 - `app/src/main/java/com/example/kanjiwidget/MainActivity.kt`
 - `app/src/main/java/com/example/kanjiwidget/home/HomeSummaryRepository.kt`
-- optional `app/src/main/java/com/example/kanjiwidget/history/RecentKanjiStore.kt`
+- `app/src/main/java/com/example/kanjiwidget/history/RecentKanjiStore.kt`
 
 ### Data ownership
 
@@ -245,26 +246,25 @@ Example summary fields:
 - `latestKanjiViewedAt`
 - `showWidgetHelp`
 
-### Today stats destination
+### Study stats destination
 
-The quick action `Xem thống kê hôm nay` must have a concrete first-version target.
+The launcher stats action now has a concrete first-version target.
 
-For v1:
+Current behavior:
 - do not create a separate statistics screen
-- open an in-app modal dialog or bottom sheet from the main screen
-- show only today-scoped data:
-  - total study time today
-  - valid detail-screen opens today
-  - latest opened kanji
+- open an in-app bottom sheet from the main screen
+- support `7 ngày` and `30 ngày` ranges
+- show chart summary values for the selected range
+- show the latest opened kanji when available
 
 Fallback rule:
-- if `latestKanji` is missing, hide that row in the modal
-- do not show an empty placeholder row for v1
+- if `latestKanji` is missing, hide that row in the stats bottom sheet
+- keep chart and summary content available even when latest-history data is missing
 
 Reasoning:
 - this keeps the action useful
-- it stays aligned with the current scope
-- it avoids prematurely creating a full statistics screen
+- it stays aligned with the current lightweight scope
+- it avoids creating a full statistics screen too early
 
 ## Edge Cases
 
@@ -298,6 +298,8 @@ Manual test cases:
 - verify main-screen actions open the expected destinations
 - verify layout works on both narrow and tall devices
 
-## Open Questions
+## Future Extensions
 
-- Should the main screen remain very small and informational, or become a true dashboard over time?
+Potential future improvements:
+- expand latest-history from one item to a bounded recent list
+- promote the launcher into a richer dashboard if the app grows beyond widget-first usage
