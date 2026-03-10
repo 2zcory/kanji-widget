@@ -59,4 +59,13 @@ Chữ này: %3$s</string>
     <string name="chart_best_day_value">Ngày tốt nhất: %1$s • %2$s</string>
     <string name="chart_best_day_empty">Chưa có ngày học nào trong khoảng này.</string>
     <string name="chart_latest_kanji_value">Kanji gần nhất: %1$s</string>
+    <string name="ranking_title">Xếp hạng kanji</string>
+    <string name="ranking_scope_all">All time</string>
+    <string name="ranking_scope_30">30 ngày</string>
+    <string name="ranking_most_title">HỌC NHIỀU NHẤT</string>
+    <string name="ranking_least_title">HỌC ÍT NHẤT</string>
+    <string name="ranking_empty">Chưa có đủ dữ liệu học để tạo xếp hạng.</string>
+    <string name="ranking_secondary_with_jlpt">%1$s • JLPT %2$s</string>
+    <string name="ranking_secondary_fallback">Chưa có metadata chi tiết</string>
+    <string name="ranking_secondary_last_studied">Học gần nhất %1$s</string>
 </resources>
