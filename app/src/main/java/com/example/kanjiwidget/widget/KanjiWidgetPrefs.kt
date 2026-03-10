@@ -6,6 +6,7 @@ import org.json.JSONObject
 object KanjiWidgetPrefs {
     private const val PREF = "kanji_widget_pref"
     private const val LEGACY_DELIMITER = "\u001F"
+    private const val KEY_WIDGET_SURFACE_ALPHA = "widget_surface_alpha"
 
     fun getKanjiCatalog(context: Context): List<String> {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
@@ -80,6 +81,16 @@ object KanjiWidgetPrefs {
             .remove("current_kanji_$widgetId")
             .remove("reveal_$widgetId")
             .apply()
+    }
+
+    fun getWidgetSurfaceAlpha(context: Context): Float {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        return sp.getFloat(KEY_WIDGET_SURFACE_ALPHA, 1f).coerceIn(0.4f, 1f)
+    }
+
+    fun setWidgetSurfaceAlpha(context: Context, value: Float) {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        sp.edit().putFloat(KEY_WIDGET_SURFACE_ALPHA, value.coerceIn(0.4f, 1f)).apply()
     }
 
     fun saveRemoteEntry(context: Context, kanji: String, entry: KanjiEntry) {

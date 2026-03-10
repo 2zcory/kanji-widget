@@ -10,6 +10,7 @@ The product combines:
 - local daily study-time tracking based on detail-screen foreground time
 - a lightweight launcher screen that summarizes activity and reopens the latest studied Kanji
 - a compact study-stats surface with 7-day and 30-day charts
+- an adaptive launcher icon built around a Kanji card motif
 
 The app is widget-first.
 The launcher and detail surfaces support the widget learning flow rather than replace it.
@@ -80,6 +81,8 @@ Key behavior:
 - reveal reading and meaning on the first action tap
 - advance to another random Kanji on the next tap
 - adapt visible content based on widget size
+- adapt accent surfaces based on widget state such as loading, hidden-answer, and revealed-answer
+- support a user-controlled background opacity level
 - open the detail screen when the widget body is tapped
 
 ### Kanji detail screen
@@ -102,6 +105,7 @@ Key behavior:
 - indicate whether at least one widget instance is installed
 - reopen the most recently viewed Kanji when available
 - provide access to the stats bottom sheet
+- provide a simple global widget-opacity control
 - provide widget setup guidance when appropriate
 
 ### Study stats surface
@@ -156,6 +160,8 @@ UI direction:
 - strong separation between primary study content and metadata
 - clear empty and loading states
 - compact stats that do not compete visually with the learning flow
+- widget surfaces should feel like layered study cards rather than plain stacked text
+- the launcher icon should visually match the widget-first Kanji card identity
 
 ## Constraints
 
@@ -164,6 +170,7 @@ Technical and product constraints:
 - network access is required for first-load remote Kanji data and stroke-order fetches
 - the first version stores all study and widget data locally on device
 - the app should remain usable even when only part of the data is cached
+- widget appearance controls should prefer a few safe presets over freeform styling when `RemoteViews` host compatibility is uncertain
 
 ## Acceptance Criteria
 
@@ -173,3 +180,4 @@ The first version is successful if:
 - the detail screen records study time locally while it is visible
 - the main screen summarizes today’s activity and provides widget help when needed
 - the stats bottom sheet shows valid 7-day and 30-day local study totals
+- the user can change widget background opacity from the app and see active widgets refresh accordingly

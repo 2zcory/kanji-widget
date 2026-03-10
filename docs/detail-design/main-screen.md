@@ -27,6 +27,7 @@ The screen should help users:
 - install or use the widget
 - open the latest kanji detail screen
 - review today’s learning activity
+- adjust a small set of widget appearance preferences
 
 ## Scope
 
@@ -79,6 +80,7 @@ Data source:
 Suggested actions:
 - `Mở kanji gần nhất`
 - `Xem thống kê`
+- `Đổi độ trong suốt`
 - `Hướng dẫn thêm widget`
 
 Purpose:
@@ -97,7 +99,20 @@ First version rule:
 - use text-only guidance
 - do not require image assets or illustration resources
 
-### 5. Recent Kanji Section
+### 5. Widget Appearance Section
+
+Contents:
+- current widget background opacity value
+- one tap action to cycle through supported opacity presets
+
+Purpose:
+- let the user adapt widget readability against different wallpapers without opening a full widget-specific configuration flow
+
+Current v1 behavior:
+- opacity is global across all active widget instances
+- the action cycles through preset levels rather than exposing a slider
+
+### 6. Recent Kanji Section
 
 Contents:
 - latest viewed kanji items
@@ -117,6 +132,13 @@ A longer recent list remains a future extension.
 2. Main screen explains the widget-centric concept
 3. User sees how to add the home screen widget
 4. User returns to the launcher and adds the widget
+
+### Flow D: Adjust widget opacity
+
+1. User opens app
+2. User taps the widget opacity action
+3. App cycles to the next supported opacity preset
+4. Active widget instances rerender with the new background opacity
 
 ### Flow B: Returning user
 
@@ -151,6 +173,19 @@ If study data exists:
 - show today summary first
 - prioritize quick access to recent kanji detail
 
+### Widget opacity rule
+
+The launcher exposes a lightweight widget opacity control.
+
+Current behavior:
+- store one global opacity value for the widget background surface
+- support preset values `100%`, `85%`, `70%`, `55%`, and `40%`
+- rerender all active widget instances immediately after the value changes
+
+Reason:
+- global presets are simpler than per-widget styling for the first version
+- the approach is compatible with the current `RemoteViews` implementation
+
 ### Widget detection rule
 
 The app should treat the widget as installed when at least one app widget instance exists for `KanjiAppWidgetProvider`.
@@ -183,12 +218,14 @@ Required local data:
 - daily open count
 - latest viewed kanji
 - optional recent kanji list
+- current widget background opacity preset
 
 Existing reusable source:
 - `StudyTimeTracker` for today totals
 
 Existing local storage:
 - recent kanji history store
+- widget appearance preferences
 
 ### Recent kanji history store
 
@@ -212,13 +249,23 @@ Suggested keys:
 Future extension:
 - add a bounded recent list such as the latest 10 kanji
 
+### Widget appearance preferences
+
+Current storage:
+- `SharedPreferences` in the widget preference store
+
+Current responsibility:
+- persist one global widget background opacity value
+- expose the current value to `MainActivity`
+- let widget rendering read the same value when producing `RemoteViews`
+
 ## Technical Notes
 
 Current implementation path:
 - `MainActivity` is a layout-based activity
 - summary fields are populated through a single repository-owned summary model
 - keep business logic separate from the activity
-- do not let `MainActivity` query multiple storage sources directly
+- allow `MainActivity` to directly handle lightweight widget appearance preferences until a dedicated settings/repository layer is introduced
 
 Primary files:
 - `app/src/main/res/layout/activity_main.xml`
@@ -228,7 +275,7 @@ Primary files:
 
 ### Data ownership
 
-`HomeSummaryRepository` should be the single owner that assembles main-screen data.
+`HomeSummaryRepository` should be the single owner that assembles summary and recency data for the main screen.
 
 Repository inputs:
 - widget-installed state from `AppWidgetManager`
@@ -237,6 +284,10 @@ Repository inputs:
 
 Repository output:
 - one main-screen summary model consumed by `MainActivity`
+
+Current exception:
+- widget appearance preferences such as global opacity are still read and written directly by `MainActivity`
+- this is acceptable in v1 because the setting is small, local, and immediately followed by widget rerendering
 
 Example summary fields:
 - `isWidgetInstalled`
@@ -277,6 +328,12 @@ The app should still be usable and should explain how to add the widget.
 The screen should not feel empty.
 Use setup guidance and concise educational copy instead.
 
+### No active widget instance
+
+If the user changes opacity while no widget is active:
+- keep the selected value
+- apply it the next time a widget instance is added or refreshed
+
 ### Latest kanji missing
 
 If recent-history data is unavailable:
@@ -297,6 +354,7 @@ Manual test cases:
 - open app after using the detail screen and verify today summary is shown
 - verify main-screen actions open the expected destinations
 - verify layout works on both narrow and tall devices
+- change widget opacity and verify active widgets rerender
 
 ## Future Extensions
 

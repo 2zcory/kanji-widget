@@ -192,5 +192,50 @@
                 android:textColor="#FFF9F0" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/sectionWidgetOpacity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_detail_card"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/home_widget_opacity_title"
+                android:textColor="#A1482E"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvWidgetOpacityValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="#231D16"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/home_widget_opacity_body"
+                android:textColor="#6D6050"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/btnWidgetOpacity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_detail_button"
+                android:text="@string/home_action_widget_opacity"
+                android:textAllCaps="false"
+                android:textColor="#FFF9F0" />
+        </LinearLayout>
+
     </LinearLayout>
 </ScrollView>

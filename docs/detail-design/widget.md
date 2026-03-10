@@ -40,7 +40,9 @@ Primary files:
 - `app/src/main/java/com/example/kanjiwidget/widget/KanjiRefreshWorker.kt`
 - `app/src/main/java/com/example/kanjiwidget/widget/KanjiWidgetPrefs.kt`
 - `app/src/main/java/com/example/kanjiwidget/widget/KanjiApiClient.kt`
+- `app/src/main/res/layout/widget_kanji_compact.xml`
 - `app/src/main/res/layout/widget_kanji.xml`
+- `app/src/main/res/layout/widget_kanji_expanded.xml`
 - `app/src/main/res/xml/kanji_widget_info.xml`
 
 ## Functional Overview
@@ -61,6 +63,7 @@ Current behavior:
 Possible fields:
 - Kanji
 - JLPT level
+- state chip
 - reading
 - meaning
 - example / metadata
@@ -182,6 +185,7 @@ Stored widget-related data includes:
 - reveal state per widget
 - current selected index per widget
 - cached remote entry per Kanji
+- one global widget background opacity value
 
 ## Refresh Architecture
 
@@ -244,25 +248,29 @@ Current size classes:
 ### Compact
 
 Priority:
-- Kanji
-- JLPT
+- top chips
+- Kanji hero card
+- short recall prompt
 - action button
 
 ### Medium
 
 Adds:
 - meaning
+- compact info card presentation
 
 ### Expanded
 
 Adds:
-- reading
-- example
+- two-column composition
+- reading card
+- example card
 - meta line
 
 ### Rendering rules
 
 Adaptive behavior includes:
+- different layout files per size class
 - different font sizing per size class
 - field visibility changes via `RemoteViews`
 
@@ -270,26 +278,53 @@ Reason:
 - small widgets should remain glanceable
 - larger widgets should use extra space meaningfully
 
+### Current visual direction
+
+The current widget presentation uses:
+- a layered card surface rather than a plain stacked text list
+- chip-style badges for JLPT and state
+- a large hero panel for the Kanji itself
+- state-aware accent surfaces for loading, hidden-answer, and revealed-answer states
+
 ## Rendering Rules
 
 ### Placeholder state
 
 When no detail entry is loaded:
 - Kanji may show current cached character or `...`
+- state chip shows a loading state
+- hero and action surfaces switch to loading styling
 - reading and meaning show guidance text
 - button label becomes `Tải kanji`
 
 ### Hidden-answer state
 
 When answer is hidden:
+- state chip shows hidden-answer state
 - widget prompts the user to recall reading and meaning
 - example text is replaced with a hint to reveal
 
 ### Revealed-answer state
 
 When answer is visible:
+- state chip shows revealed-answer state
+- action surface switches to the next-state accent
 - reading and meaning are shown
 - example / note field is shown if size class allows it
+
+### Widget opacity
+
+The widget supports a user-controlled background opacity setting.
+
+Current behavior:
+- opacity is applied only to the main widget background surface
+- text and action surfaces stay fully opaque for readability
+- the value is global for all active widget instances in v1
+- supported presets are `100%`, `85%`, `70%`, `55%`, and `40%`
+
+Reason:
+- preserving opaque text and controls is more readable on busy wallpapers
+- a global preset keeps the implementation simple while still solving the primary wallpaper-contrast problem
 
 ### Footer meta line
 
@@ -328,6 +363,9 @@ Shared cached state:
 - Kanji catalog
 - remote entries by Kanji
 
+Shared appearance state:
+- global widget background opacity
+
 ## Constraints
 
 ### RemoteViews limitations
@@ -336,10 +374,12 @@ The widget uses `RemoteViews`, which limits:
 - dynamic layouts
 - custom view logic
 - rich animation
+- which view types and setter methods are safe across widget hosts
 
 Design implication:
 - keep widget interactions simple
 - reserve richer UI for the detail screen
+- prefer host-compatible primitives such as `ImageView`, `TextView`, and `Button` for dynamic styling
 
 ### Network dependence
 
@@ -394,6 +434,8 @@ Manual test cases:
 - tap widget body and verify detail screen opens
 - test offline behavior after at least one Kanji has been cached
 - place multiple widget instances and verify they behave independently
+- change widget opacity from the main screen and verify all active widgets rerender
+- verify widgets can still be added successfully after appearance customizations
 
 Suggested unit or integration tests:
 - random selection avoids immediate repeat
@@ -405,7 +447,8 @@ Suggested unit or integration tests:
 ## Future Extensions
 
 Potential future improvements:
-- widget configuration options
+- widget configuration activity exposed during widget placement
+- per-widget opacity instead of one global value
 - theme selection
 - scheduled daily rotation
 - local bundled fallback dataset

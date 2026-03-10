@@ -2,6 +2,8 @@ package com.example.kanjiwidget
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -12,9 +14,11 @@ import com.example.kanjiwidget.home.HomeSummary
 import com.example.kanjiwidget.home.HomeSummaryRepository
 import com.example.kanjiwidget.stats.StudyStatsBottomSheet
 import com.example.kanjiwidget.stats.StudyStatsRepository
+import com.example.kanjiwidget.widget.KanjiAppWidgetProvider
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 
 class MainActivity : Activity() {
+    private val widgetOpacityLevels = listOf(1.0f, 0.85f, 0.70f, 0.55f, 0.40f)
     private lateinit var repository: HomeSummaryRepository
     private lateinit var studyStatsRepository: StudyStatsRepository
     private lateinit var summaryCardTitle: TextView
@@ -29,6 +33,8 @@ class MainActivity : Activity() {
     private lateinit var statsButton: Button
     private lateinit var widgetHelpSection: View
     private lateinit var widgetHelpBody: TextView
+    private lateinit var widgetOpacityValue: TextView
+    private lateinit var widgetOpacityButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,10 +54,13 @@ class MainActivity : Activity() {
         statsButton = findViewById(R.id.btnTodayStats)
         widgetHelpSection = findViewById(R.id.sectionWidgetHelp)
         widgetHelpBody = findViewById(R.id.tvWidgetHelpBody)
+        widgetOpacityValue = findViewById(R.id.tvWidgetOpacityValue)
+        widgetOpacityButton = findViewById(R.id.btnWidgetOpacity)
 
         findViewById<Button>(R.id.btnWidgetHelp).setOnClickListener {
             showWidgetHelpDialog()
         }
+        widgetOpacityButton.setOnClickListener { cycleWidgetOpacity() }
     }
 
     override fun onResume() {
@@ -97,6 +106,10 @@ class MainActivity : Activity() {
         statsButton.setOnClickListener { showStudyStatsBottomSheet(summary) }
         widgetHelpSection.visibility = if (summary.showWidgetHelp) View.VISIBLE else View.GONE
         widgetHelpBody.text = getString(R.string.home_widget_help_body)
+        widgetOpacityValue.text = getString(
+            R.string.home_widget_opacity_value,
+            (KanjiWidgetPrefs.getWidgetSurfaceAlpha(this) * 100).toInt()
+        )
     }
 
     private fun buildLatestDetailIntent(summary: HomeSummary): Intent {
@@ -140,6 +153,16 @@ class MainActivity : Activity() {
             ).toString()
         }
         return parts.joinToString(" • ").ifBlank { getString(R.string.home_latest_meta_fallback) }
+    }
+
+    private fun cycleWidgetOpacity() {
+        val current = KanjiWidgetPrefs.getWidgetSurfaceAlpha(this)
+        val currentIndex = widgetOpacityLevels.indexOfFirst { kotlin.math.abs(it - current) < 0.01f }
+            .takeIf { it >= 0 } ?: 0
+        val next = widgetOpacityLevels[(currentIndex + 1) % widgetOpacityLevels.size]
+        KanjiWidgetPrefs.setWidgetSurfaceAlpha(this, next)
+        widgetOpacityValue.text = getString(R.string.home_widget_opacity_value, (next * 100).toInt())
+        KanjiAppWidgetProvider.refreshAllWidgets(this)
     }
 
     fun formatDurationForUi(durationMs: Long): String {

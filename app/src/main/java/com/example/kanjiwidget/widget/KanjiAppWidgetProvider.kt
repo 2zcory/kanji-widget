@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.util.TypedValue
@@ -107,32 +108,51 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             val hasLoadedEntry = item != null
             val sizeClass = resolveSizeClass(manager, widgetId)
 
-            val views = RemoteViews(context.packageName, R.layout.widget_kanji)
+            val layoutId = when (sizeClass) {
+                WidgetSizeClass.COMPACT -> R.layout.widget_kanji_compact
+                WidgetSizeClass.MEDIUM -> R.layout.widget_kanji
+                WidgetSizeClass.EXPANDED -> R.layout.widget_kanji_expanded
+            }
+            val views = RemoteViews(context.packageName, layoutId)
             applyResponsiveLayout(manager, widgetId, views, sizeClass)
+            views.setInt(
+                R.id.widgetBackground,
+                "setImageAlpha",
+                (KanjiWidgetPrefs.getWidgetSurfaceAlpha(context) * 255).toInt()
+            )
             views.setTextViewText(R.id.tvKanji, item?.kanji ?: currentKanji ?: "...")
             views.setTextViewText(R.id.tvJlpt, "JLPT ${item?.jlptLevel ?: "..."}")
+            applyStateStyling(views, revealAnswer, hasLoadedEntry)
+            views.setTextViewText(
+                R.id.tvState,
+                when {
+                    !hasLoadedEntry -> "Đang tải"
+                    revealAnswer -> "Đã mở"
+                    else -> "Ẩn đáp án"
+                }
+            )
             views.setTextViewText(
                 R.id.tvReading,
                 when {
-                    !hasLoadedEntry -> "Đang tải dữ liệu kanji từ API"
-                    revealAnswer -> "On: ${item!!.onyomi} / Kun: ${item.kunyomi}"
-                    else -> "Tự nhớ cách đọc trước khi hiện đáp án"
+                    !hasLoadedEntry -> "Đợi tải Kanji đầu tiên"
+                    revealAnswer -> "On: ${item!!.onyomi}  •  Kun: ${item.kunyomi}"
+                    else -> "Thử nhớ cách đọc trước khi mở"
                 }
             )
             views.setTextViewText(
                 R.id.tvMeaning,
                 when {
-                    !hasLoadedEntry -> "Widget sẽ hiển thị kanji sau khi lấy xong từ API."
+                    !hasLoadedEntry -> "Cần mạng cho lần đồng bộ đầu tiên."
                     revealAnswer -> item!!.meaningVi
-                    else -> "Bạn đoán nghĩa của chữ này là gì?"
+                    else -> "Đoán nghĩa của chữ này trước khi bấm mở."
                 }
             )
             views.setTextViewText(
                 R.id.tvExample,
                 when {
-                    !hasLoadedEntry -> "Cần kết nối mạng để tải từ kanjiapi.dev"
+                    !hasLoadedEntry -> "Widget sẽ sẵn sàng ngay sau khi tải xong."
                     revealAnswer -> item!!.example
-                    else -> "Nhấn nút để hiện đáp án"
+                    else -> "Chạm nút bên dưới để mở reading và nghĩa."
                 }
             )
             views.setTextViewText(R.id.tvMeta, formatMeta(context, item))
@@ -203,19 +223,24 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
                 WidgetSizeClass.EXPANDED -> 18f * scale
             }
             val bodySize = when (sizeClass) {
-                WidgetSizeClass.COMPACT -> 14f * scale
+                WidgetSizeClass.COMPACT -> 13f * scale
                 WidgetSizeClass.MEDIUM -> 15f * scale
-                WidgetSizeClass.EXPANDED -> 18f * scale
+                WidgetSizeClass.EXPANDED -> 16f * scale
             }
             val exampleSize = when (sizeClass) {
-                WidgetSizeClass.COMPACT -> 13f * scale
+                WidgetSizeClass.COMPACT -> 12f * scale
                 WidgetSizeClass.MEDIUM -> 14f * scale
-                WidgetSizeClass.EXPANDED -> 16f * scale
+                WidgetSizeClass.EXPANDED -> 13f * scale
             }
             val metaSize = when (sizeClass) {
                 WidgetSizeClass.COMPACT -> 11f * scale
                 WidgetSizeClass.MEDIUM -> 12f * scale
                 WidgetSizeClass.EXPANDED -> 13f * scale
+            }
+            val stateSize = when (sizeClass) {
+                WidgetSizeClass.COMPACT -> 11f * scale
+                WidgetSizeClass.MEDIUM -> 12f * scale
+                WidgetSizeClass.EXPANDED -> 12f * scale
             }
             val buttonSize = when (sizeClass) {
                 WidgetSizeClass.COMPACT -> 13f * scale
@@ -225,11 +250,56 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
 
             views.setTextViewTextSize(R.id.tvKanji, TypedValue.COMPLEX_UNIT_SP, kanjiSize)
             views.setTextViewTextSize(R.id.tvJlpt, TypedValue.COMPLEX_UNIT_SP, jlptSize)
+            views.setTextViewTextSize(R.id.tvState, TypedValue.COMPLEX_UNIT_SP, stateSize)
             views.setTextViewTextSize(R.id.tvReading, TypedValue.COMPLEX_UNIT_SP, bodySize)
             views.setTextViewTextSize(R.id.tvMeaning, TypedValue.COMPLEX_UNIT_SP, bodySize)
             views.setTextViewTextSize(R.id.tvExample, TypedValue.COMPLEX_UNIT_SP, exampleSize)
             views.setTextViewTextSize(R.id.tvMeta, TypedValue.COMPLEX_UNIT_SP, metaSize)
             views.setTextViewTextSize(R.id.btnNext, TypedValue.COMPLEX_UNIT_SP, buttonSize)
+        }
+
+        private fun applyStateStyling(
+            views: RemoteViews,
+            revealAnswer: Boolean,
+            hasLoadedEntry: Boolean,
+        ) {
+            val stateBackground = when {
+                !hasLoadedEntry -> R.drawable.bg_widget_pill_loading
+                revealAnswer -> R.drawable.bg_widget_pill_revealed
+                else -> R.drawable.bg_widget_pill_hidden
+            }
+            val stateTextColor = when {
+                !hasLoadedEntry -> Color.parseColor("#4D6172")
+                revealAnswer -> Color.parseColor("#376347")
+                else -> Color.parseColor("#4F5B66")
+            }
+            val heroBackground = when {
+                !hasLoadedEntry -> R.drawable.bg_widget_hero_loading
+                revealAnswer -> R.drawable.bg_widget_hero_revealed
+                else -> R.drawable.bg_widget_hero
+            }
+            val actionBackground = when {
+                !hasLoadedEntry -> R.drawable.bg_widget_action_loading
+                revealAnswer -> R.drawable.bg_widget_action_revealed
+                else -> R.drawable.bg_widget_action
+            }
+            val actionTextColor = if (revealAnswer) {
+                Color.parseColor("#F5FFF3")
+            } else {
+                Color.parseColor("#FFF8F1")
+            }
+            val exampleBackground = if (revealAnswer) {
+                R.drawable.bg_widget_info_card_revealed
+            } else {
+                R.drawable.bg_widget_info_card
+            }
+
+            views.setInt(R.id.tvState, "setBackgroundResource", stateBackground)
+            views.setTextColor(R.id.tvState, stateTextColor)
+            views.setInt(R.id.tvKanji, "setBackgroundResource", heroBackground)
+            views.setInt(R.id.btnNext, "setBackgroundResource", actionBackground)
+            views.setTextColor(R.id.btnNext, actionTextColor)
+            views.setInt(R.id.tvExample, "setBackgroundResource", exampleBackground)
         }
 
         private fun applyContentVisibility(
@@ -240,8 +310,9 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
         ) {
             val showMeaning = sizeClass != WidgetSizeClass.COMPACT
             val showReading = sizeClass == WidgetSizeClass.EXPANDED
-            val showExample = sizeClass == WidgetSizeClass.EXPANDED && revealAnswer && hasLoadedEntry
-            val showMeta = sizeClass == WidgetSizeClass.EXPANDED
+            val showExample = sizeClass == WidgetSizeClass.EXPANDED
+                || (sizeClass == WidgetSizeClass.MEDIUM && revealAnswer && hasLoadedEntry)
+            val showMeta = sizeClass != WidgetSizeClass.COMPACT
 
             views.setViewVisibility(R.id.tvReading, if (showReading) View.VISIBLE else View.GONE)
             views.setViewVisibility(R.id.tvMeaning, if (showMeaning) View.VISIBLE else View.GONE)
@@ -285,6 +356,14 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
                 else -> "${ageMs / 86_400_000L} ngày trước"
             }
             return "$progress • Nguồn: $source • $freshness"
+        }
+
+        fun refreshAllWidgets(context: Context) {
+            val manager = AppWidgetManager.getInstance(context)
+            val provider = ComponentName(context, KanjiAppWidgetProvider::class.java)
+            manager.getAppWidgetIds(provider).forEach { widgetId ->
+                renderWidget(context, manager, widgetId)
+            }
         }
 
         private enum class WidgetSizeClass {
