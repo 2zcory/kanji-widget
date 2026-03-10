@@ -10,6 +10,7 @@ import android.webkit.WebView
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.example.kanjiwidget.stats.StudyTimeTracker
 import com.example.kanjiwidget.widget.KanjiStrokeOrderClient
 import kotlin.concurrent.thread
 
@@ -26,8 +27,10 @@ class KanjiDetailActivity : Activity() {
     private lateinit var meaningView: TextView
     private lateinit var noteView: TextView
     private lateinit var sourceView: TextView
+    private lateinit var todayStatsView: TextView
 
     private var lastHtml: String? = null
+    private var currentKanji: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +47,10 @@ class KanjiDetailActivity : Activity() {
         meaningView = findViewById(R.id.tvDetailMeaning)
         noteView = findViewById(R.id.tvDetailNote)
         sourceView = findViewById(R.id.tvDetailSource)
+        todayStatsView = findViewById(R.id.tvTodayStudyStats)
 
         val kanji = intent.getStringExtra(EXTRA_KANJI)?.trim().orEmpty()
+        currentKanji = kanji
         val source = intent.getStringExtra(EXTRA_SOURCE)?.trim().orEmpty()
         val jlpt = intent.getStringExtra(EXTRA_JLPT)?.trim().orEmpty()
         val onyomi = intent.getStringExtra(EXTRA_ONYOMI)?.trim().orEmpty()
@@ -58,6 +63,7 @@ class KanjiDetailActivity : Activity() {
             subtitleView.text = getString(R.string.stroke_order_meaning_placeholder)
             jlptBadgeView.text = getString(R.string.stroke_order_badge_placeholder)
             bindStudyInfo("", "", "", "", "")
+            refreshTodayStats()
             showError(getString(R.string.stroke_order_empty_message))
             return
         }
@@ -72,6 +78,7 @@ class KanjiDetailActivity : Activity() {
             note = note,
             source = source
         )
+        refreshTodayStats()
 
         configureWebView()
 
@@ -84,6 +91,19 @@ class KanjiDetailActivity : Activity() {
         }
 
         loadStrokeOrder(kanji)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (currentKanji.isNotBlank()) {
+            StudyTimeTracker.startSession(this, currentKanji)
+            refreshTodayStats()
+        }
+    }
+
+    override fun onStop() {
+        StudyTimeTracker.stopSession(this)
+        super.onStop()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -184,5 +204,28 @@ class KanjiDetailActivity : Activity() {
         val on = onyomi.ifBlank { getString(R.string.stroke_order_info_placeholder) }
         val kun = kunyomi.ifBlank { getString(R.string.stroke_order_info_placeholder) }
         return getString(R.string.stroke_order_reading_summary, on, kun)
+    }
+
+    private fun refreshTodayStats() {
+        val totalMs = StudyTimeTracker.getTodayTotalMs(this)
+        val openCount = StudyTimeTracker.getTodayOpenCount(this)
+        val kanjiMs = StudyTimeTracker.getTodayKanjiMs(this, currentKanji)
+        todayStatsView.text = getString(
+            R.string.today_study_stats_value,
+            formatDuration(totalMs),
+            openCount,
+            formatDuration(kanjiMs)
+        )
+    }
+
+    private fun formatDuration(durationMs: Long): String {
+        val totalSeconds = durationMs / 1000L
+        val minutes = totalSeconds / 60L
+        val seconds = totalSeconds % 60L
+        return if (minutes > 0L) {
+            getString(R.string.study_duration_minutes_seconds, minutes, seconds)
+        } else {
+            getString(R.string.study_duration_seconds, seconds)
+        }
     }
 }

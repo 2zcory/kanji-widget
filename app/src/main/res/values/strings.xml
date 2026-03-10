@@ -23,4 +23,10 @@
     <string name="stroke_order_reading_summary">On: %1$s
 Kun: %2$s</string>
     <string name="stroke_order_hero_hint">Chạm Phát lại để xem từng nét theo thứ tự.</string>
+    <string name="today_study_stats_label">HÔM NAY</string>
+    <string name="today_study_stats_value">Tổng xem: %1$s
+Lượt mở hợp lệ: %2$d
+Chữ này: %3$s</string>
+    <string name="study_duration_minutes_seconds">%1$d phút %2$d giây</string>
+    <string name="study_duration_seconds">%1$d giây</string>
 </resources>
