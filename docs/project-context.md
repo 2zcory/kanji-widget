@@ -26,7 +26,7 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 - The lightweight stats-improvement slice is complete, including active-day insight, current-streak feedback, clearer range-aware summary copy, and a supportive no-data summary state in the existing stats bottom sheet
 - The Kanji Detail screen now includes a lightweight compounds section with up to five filtered examples, each showing written form, reading, meaning, and a derived usage hint backed by local cache
 - Detailed design documents now exist for the major shipped features, including the Kanji Detail screen
-- The repository has `v1.0.0` and `v1.1.0` published, and `v1.1.1` is the current patch release for the improved study stats bottom sheet
+- The repository has `v1.0.0`, `v1.1.0`, and `v1.1.1` published, and `v1.2.0` is the prepared feature release for Kanji Detail compound examples
 - GitHub Actions workflows now cover debug APK builds and signed release builds
 - The phased Kanji Detail screen update is complete, including layout, metadata, study stats, next-random navigation, and related design docs
 
