@@ -1,7 +1,7 @@
 # Checklist Template Standardization
 
 Last updated: 2026-03-12
-Status: In review
+Status: Merged
 Working branch: `chore/checklist-template`
 Base branch: `master`
 Expected merge target: `master`
@@ -47,3 +47,4 @@ The template should reduce repeated setup work and make the current branch, PR, 
 - 2026-03-12: Created the proposed checklist for standardizing a reusable complex-task checklist template in this repository.
 - 2026-03-12: Added the reusable template file, updated the checklist README, and added a short AGENTS note to point new complex tasks toward the template.
 - 2026-03-12: The user reviewed the documentation changes and confirmed they pass review on branch `chore/checklist-template`.
+- 2026-03-12: Pull Request #2 was merged into `master`, so the standardized checklist template is now part of the default repository workflow.
