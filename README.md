@@ -74,6 +74,9 @@ Required GitHub Secrets for the release workflow:
 - `RELEASE_KEY_ALIAS`
 - `RELEASE_KEY_PASSWORD`
 
+Local machine note:
+- if your environment needs a custom AAPT2 binary, keep `android.aapt2FromMavenOverride` in a local Gradle config outside Git instead of committing it to the repository
+
 ## How To Use
 
 1. Install and launch the app once

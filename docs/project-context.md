@@ -33,3 +33,4 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 - Add or update detailed design docs in `docs/detail-design/` when a feature changes materially
 - Release signing remains secret-backed and must not be committed into the repository
 - The release workflow expects `RELEASE_KEYSTORE_BASE64`, `RELEASE_STORE_PASSWORD`, `RELEASE_KEY_ALIAS`, and `RELEASE_KEY_PASSWORD` in GitHub Secrets
+- Any machine-specific `android.aapt2FromMavenOverride` configuration should stay outside the repository so CI can use the default toolchain
