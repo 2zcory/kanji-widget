@@ -95,6 +95,8 @@ Local machine note:
 
 ## Design Docs
 
+- `AGENTS.md`: repository-specific working instructions for AI coding agents
+- `docs/project-context.md`: durable project context, status, and constraints
 - [`docs/basic-design.md`](docs/basic-design.md)
 - [`docs/detail-design/daily-study-time-tracking.md`](docs/detail-design/daily-study-time-tracking.md)
 - [`docs/detail-design/kanji-study-ranking.md`](docs/detail-design/kanji-study-ranking.md)
