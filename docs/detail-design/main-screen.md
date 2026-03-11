@@ -280,13 +280,15 @@ Primary files:
 Repository inputs:
 - widget-installed state from `AppWidgetManager`
 - today totals from `StudyTimeTracker`
-- latest kanji from `RecentKanjiStore`
+- latest and recent kanji history from `RecentKanjiStore`
+- cached kanji catalog from `KanjiWidgetPrefs` for the random-open action
 
 Repository output:
 - one main-screen summary model consumed by `MainActivity`
 
 Current exception:
 - widget appearance preferences such as global opacity are still read and written directly by `MainActivity`
+- the random-kanji action currently reads the cached catalog directly from `KanjiWidgetPrefs`
 - this is acceptable in v1 because the setting is small, local, and immediately followed by widget rerendering
 
 Example summary fields:
@@ -294,7 +296,10 @@ Example summary fields:
 - `todayStudyMs`
 - `todayOpenCount`
 - `latestKanji`
-- `latestKanjiViewedAt`
+- `latestViewedAt`
+- `latestMeaning`
+- `latestJlpt`
+- `recentKanji`
 - `showWidgetHelp`
 
 ### Study stats destination

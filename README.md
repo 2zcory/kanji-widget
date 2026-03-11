@@ -94,5 +94,7 @@ Required GitHub Secrets for the release workflow:
 
 - [`docs/basic-design.md`](docs/basic-design.md)
 - [`docs/detail-design/daily-study-time-tracking.md`](docs/detail-design/daily-study-time-tracking.md)
+- [`docs/detail-design/kanji-study-ranking.md`](docs/detail-design/kanji-study-ranking.md)
 - [`docs/detail-design/main-screen.md`](docs/detail-design/main-screen.md)
 - [`docs/detail-design/study-time-chart.md`](docs/detail-design/study-time-chart.md)
+- [`docs/detail-design/widget.md`](docs/detail-design/widget.md)
