@@ -37,13 +37,17 @@ object KanjiApiClient {
             val jlptNum = if (json.isNull("jlpt")) null else json.optInt("jlpt", 0)
             val jlpt = if (jlptNum == null || jlptNum <= 0) "N/A" else "N$jlptNum"
 
-            val strokeCount = json.optInt("stroke_count", -1)
-            val unicode = json.optString("unicode", "")
-            val grade = if (json.isNull("grade")) null else json.optInt("grade", 0)
-            val meta = buildList {
-                if (strokeCount > 0) add("Nét: $strokeCount")
-                if (grade != null && grade > 0) add("Grade: $grade")
-                if (unicode.isNotBlank()) add("U+$unicode")
+            val strokeCount = json.optInt("stroke_count", -1).takeIf { it > 0 }
+            val grade = if (json.isNull("grade")) null else json.optInt("grade", 0).takeIf { it > 0 }
+            val frequency = if (json.isNull("freq_mainichi_shinbun")) {
+                null
+            } else {
+                json.optInt("freq_mainichi_shinbun", 0).takeIf { it > 0 }
+            }
+            val unicode = json.optString("unicode", "").takeIf { it.isNotBlank() }
+            val note = buildList {
+                unicode?.let { add("U+$it") }
+                if (sourceNoteNeeded(strokeCount, grade, frequency)) add("Nguồn: kanjiapi.dev")
             }.joinToString(" • ")
 
             KanjiEntry(
@@ -51,8 +55,11 @@ object KanjiApiClient {
                 onyomi = onyomi.ifBlank { "-" },
                 kunyomi = kunyomi.ifBlank { "-" },
                 meaningVi = meaning,
-                example = meta.ifBlank { "Nguồn: kanjiapi.dev" },
+                example = note,
                 jlptLevel = jlpt,
+                strokeCount = strokeCount,
+                grade = grade,
+                frequency = frequency,
                 source = "kanjiapi.dev",
                 lastUpdatedEpochMs = System.currentTimeMillis(),
             )
@@ -89,5 +96,13 @@ object KanjiApiClient {
                 if (!v.isNullOrBlank()) add(v)
             }
         }.joinToString("、")
+    }
+
+    private fun sourceNoteNeeded(
+        strokeCount: Int?,
+        grade: Int?,
+        frequency: Int?,
+    ): Boolean {
+        return strokeCount == null && grade == null && frequency == null
     }
 }

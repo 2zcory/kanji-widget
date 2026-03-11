@@ -19,6 +19,7 @@ class KanjiDetailActivity : Activity() {
 
     private lateinit var titleView: TextView
     private lateinit var subtitleView: TextView
+    private lateinit var heroMetaView: TextView
     private lateinit var jlptBadgeView: TextView
     private lateinit var statusView: TextView
     private lateinit var progressView: ProgressBar
@@ -42,6 +43,7 @@ class KanjiDetailActivity : Activity() {
 
         titleView = findViewById(R.id.tvDetailKanji)
         subtitleView = findViewById(R.id.tvDetailSubtitle)
+        heroMetaView = findViewById(R.id.tvDetailHeroMeta)
         jlptBadgeView = findViewById(R.id.tvDetailJlptBadge)
         statusView = findViewById(R.id.tvDetailStatus)
         progressView = findViewById(R.id.progressStrokeOrder)
@@ -64,10 +66,14 @@ class KanjiDetailActivity : Activity() {
         val kunyomi = intent.getStringExtra(EXTRA_KUNYOMI)?.trim().orEmpty()
         val meaning = intent.getStringExtra(EXTRA_MEANING)?.trim().orEmpty()
         val note = intent.getStringExtra(EXTRA_NOTE)?.trim().orEmpty()
+        val strokeCount = intent.getIntExtra(EXTRA_STROKE_COUNT, 0).takeIf { it > 0 }
+        val grade = intent.getIntExtra(EXTRA_GRADE, 0).takeIf { it > 0 }
+        val frequency = intent.getIntExtra(EXTRA_FREQUENCY, 0).takeIf { it > 0 }
 
         if (kanji.isBlank()) {
             titleView.text = getString(R.string.stroke_order_empty_title)
             subtitleView.text = getString(R.string.stroke_order_meaning_placeholder)
+            bindHeroMetadata(null, null, null)
             jlptBadgeView.text = getString(R.string.stroke_order_badge_placeholder)
             bindStudyInfo("", "", "", "", "")
             refreshTodayStats()
@@ -77,6 +83,7 @@ class KanjiDetailActivity : Activity() {
 
         titleView.text = kanji
         subtitleView.text = meaning.ifBlank { getString(R.string.stroke_order_meaning_placeholder) }
+        bindHeroMetadata(strokeCount, grade, frequency)
         jlptBadgeView.text = if (jlpt.isNotBlank()) "JLPT $jlpt" else getString(R.string.stroke_order_badge_placeholder)
         bindStudyInfo(
             onyomi = onyomi,
@@ -189,6 +196,28 @@ class KanjiDetailActivity : Activity() {
         const val EXTRA_KUNYOMI = "extra_kunyomi"
         const val EXTRA_MEANING = "extra_meaning"
         const val EXTRA_NOTE = "extra_note"
+        const val EXTRA_STROKE_COUNT = "extra_stroke_count"
+        const val EXTRA_GRADE = "extra_grade"
+        const val EXTRA_FREQUENCY = "extra_frequency"
+    }
+
+    private fun bindHeroMetadata(
+        strokeCount: Int?,
+        grade: Int?,
+        frequency: Int?,
+    ) {
+        val parts = buildList {
+            strokeCount?.let { add(getString(R.string.stroke_order_meta_stroke_count, it)) }
+            grade?.let { add(getString(R.string.stroke_order_meta_grade, it)) }
+            frequency?.let { add(getString(R.string.stroke_order_meta_frequency, it)) }
+        }
+        if (parts.isEmpty()) {
+            heroMetaView.visibility = View.GONE
+            heroMetaView.text = ""
+        } else {
+            heroMetaView.visibility = View.VISIBLE
+            heroMetaView.text = parts.joinToString(" • ")
+        }
     }
 
     private fun bindStudyInfo(

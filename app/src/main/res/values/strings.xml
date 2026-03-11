@@ -22,6 +22,9 @@
     <string name="stroke_order_source_value">Nguồn: %1$s</string>
     <string name="stroke_order_source_default">kanjiapi.dev</string>
     <string name="stroke_order_badge_placeholder">JLPT ...</string>
+    <string name="stroke_order_meta_stroke_count">%1$d nét</string>
+    <string name="stroke_order_meta_grade">Grade %1$d</string>
+    <string name="stroke_order_meta_frequency">#%1$d</string>
     <string name="stroke_order_hero_hint">Chạm Phát lại để xem từng nét theo thứ tự.</string>
     <string name="today_study_stats_label">HÔM NAY</string>
     <string name="today_study_total_label">Tổng xem hôm nay</string>

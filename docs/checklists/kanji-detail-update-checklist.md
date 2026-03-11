@@ -15,15 +15,15 @@ Update this checklist whenever a task is completed so the current implementation
 - [x] Update `KanjiDetailActivity` binding logic to populate separate Onyomi and Kunyomi fields
 - [x] Replace the single today-stats text block with three explicit metrics: Today total, Valid opens, and This kanji
 - [x] Update the today-stats binding logic to populate the three metric fields
-- [ ] Review the revised layout on device or emulator for spacing, hierarchy, and fallback states
+- [x] Review the revised layout on device or emulator for spacing, hierarchy, and fallback states
 
 ## Phase 2: Metadata Fields And Data Pipeline
 
-- [ ] Extend the detail-screen input contract to support stroke count, grade, and frequency
-- [ ] Update the cached kanji data model to carry the new metadata fields
-- [ ] Update API parsing and cache persistence for the new metadata fields
-- [ ] Pass the new metadata through all detail-screen entry points from widget, main screen, and stats surfaces
-- [ ] Add hero metadata rendering with conditional visibility when metadata is missing
+- [x] Extend the detail-screen input contract to support stroke count, grade, and frequency
+- [x] Update the cached kanji data model to carry the new metadata fields
+- [x] Update API parsing and cache persistence for the new metadata fields
+- [x] Pass the new metadata through all detail-screen entry points from widget, main screen, and stats surfaces
+- [x] Add hero metadata rendering with conditional visibility when metadata is missing
 
 ## Phase 3: Next Random Kanji Action
 
@@ -47,3 +47,7 @@ Update this checklist whenever a task is completed so the current implementation
 - 2026-03-11: Created the phased checklist for the Kanji Detail update work.
 - 2026-03-11: Completed the Phase 1 layout and binding refactor for separate readings and explicit today-study metrics.
 - 2026-03-11: Verified the Phase 1 changes with `./gradlew :app:compileDebugKotlin`.
+- 2026-03-11: Phase 1 manual review was confirmed by the user and the full phase is now marked complete.
+- 2026-03-11: Implemented the Phase 2 metadata model, cache, intent pipeline, and hero metadata rendering work; waiting for user verification before marking the checklist items complete.
+- 2026-03-11: Verified the current Phase 2 changes with `./gradlew :app:compileDebugKotlin`.
+- 2026-03-11: Phase 2 verification was confirmed by the user and the full phase is now marked complete.

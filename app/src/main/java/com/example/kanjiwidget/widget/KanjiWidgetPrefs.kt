@@ -102,6 +102,9 @@ object KanjiWidgetPrefs {
             put("meaningVi", entry.meaningVi)
             put("example", entry.example)
             put("jlptLevel", entry.jlptLevel)
+            put("strokeCount", entry.strokeCount)
+            put("grade", entry.grade)
+            put("frequency", entry.frequency)
             put("source", entry.source ?: "kanjiapi.dev")
             put("lastUpdatedEpochMs", entry.lastUpdatedEpochMs ?: System.currentTimeMillis())
         }.toString()
@@ -136,6 +139,9 @@ object KanjiWidgetPrefs {
                 meaningVi = meaningVi,
                 example = example,
                 jlptLevel = jlptLevel,
+                strokeCount = json.optInt("strokeCount", 0).takeIf { it > 0 },
+                grade = json.optInt("grade", 0).takeIf { it > 0 },
+                frequency = json.optInt("frequency", 0).takeIf { it > 0 },
                 source = json.optString("source").ifBlank { null },
                 lastUpdatedEpochMs = json.optLong("lastUpdatedEpochMs").takeIf { it > 0 }
             )
@@ -154,6 +160,9 @@ object KanjiWidgetPrefs {
             meaningVi = parts[3],
             example = parts[4],
             jlptLevel = parts[5],
+            strokeCount = null,
+            grade = null,
+            frequency = null,
             source = "legacy-cache",
             lastUpdatedEpochMs = null
         )

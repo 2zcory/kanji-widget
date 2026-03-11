@@ -178,6 +178,9 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
                 putExtra(KanjiDetailActivity.EXTRA_KUNYOMI, item?.kunyomi)
                 putExtra(KanjiDetailActivity.EXTRA_MEANING, item?.meaningVi)
                 putExtra(KanjiDetailActivity.EXTRA_NOTE, item?.example)
+                putExtra(KanjiDetailActivity.EXTRA_STROKE_COUNT, item?.strokeCount ?: 0)
+                putExtra(KanjiDetailActivity.EXTRA_GRADE, item?.grade ?: 0)
+                putExtra(KanjiDetailActivity.EXTRA_FREQUENCY, item?.frequency ?: 0)
             }
             val detailPi = PendingIntent.getActivity(
                 context,

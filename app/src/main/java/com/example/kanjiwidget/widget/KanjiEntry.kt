@@ -7,6 +7,9 @@ data class KanjiEntry(
     val meaningVi: String,
     val example: String,
     val jlptLevel: String,
+    val strokeCount: Int? = null,
+    val grade: Int? = null,
+    val frequency: Int? = null,
     val source: String? = null,
     val lastUpdatedEpochMs: Long? = null,
 )

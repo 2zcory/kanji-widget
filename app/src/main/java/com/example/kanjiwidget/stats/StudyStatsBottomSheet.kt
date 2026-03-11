@@ -172,6 +172,9 @@ class StudyStatsBottomSheet(
             putExtra(KanjiDetailActivity.EXTRA_KUNYOMI, entry?.kunyomi)
             putExtra(KanjiDetailActivity.EXTRA_MEANING, entry?.meaningVi ?: item.meaning)
             putExtra(KanjiDetailActivity.EXTRA_NOTE, entry?.example)
+            putExtra(KanjiDetailActivity.EXTRA_STROKE_COUNT, entry?.strokeCount ?: 0)
+            putExtra(KanjiDetailActivity.EXTRA_GRADE, entry?.grade ?: 0)
+            putExtra(KanjiDetailActivity.EXTRA_FREQUENCY, entry?.frequency ?: 0)
         }
     }
 
