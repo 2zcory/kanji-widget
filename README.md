@@ -6,7 +6,7 @@ The project currently includes:
 - a resizable home screen widget for random Kanji review
 - a detail screen with stroke-order playback from KanjiVG data
 - daily study-time tracking based on detail-screen foreground time
-- a main screen that summarizes today’s activity and reopens the latest Kanji
+- a review-hub main screen with continue-learning actions, recent Kanji history, and widget controls
 - a study-time chart surface for the last 7 or 30 days
 
 ## Main Features
@@ -25,11 +25,9 @@ The project currently includes:
 
 ### Main Screen
 - Today summary
-- Widget installation status
-- Quick access to the most recently opened Kanji
+- Continue-learning actions for the latest Kanji, a random Kanji, and study stats
 - A bounded recent Kanji list for reopening recent study cards
-- Entry point for study statistics
-- Widget setup guidance
+- Widget control and setup actions
 
 ### Study Statistics
 - Daily study-time tracking
@@ -60,6 +58,21 @@ The project currently includes:
 
 Debug APK output:
 - `app/build/outputs/apk/debug/app-debug.apk`
+
+Release APK output:
+- `app/build/outputs/apk/release/app-release.apk`
+
+## GitHub Actions
+
+The repository includes:
+- `.github/workflows/build-debug.yml` for debug APK builds on push and pull request
+- `.github/workflows/release.yml` for signed release APK builds on tags such as `v1.0.1`
+
+Required GitHub Secrets for the release workflow:
+- `RELEASE_KEYSTORE_BASE64`
+- `RELEASE_STORE_PASSWORD`
+- `RELEASE_KEY_ALIAS`
+- `RELEASE_KEY_PASSWORD`
 
 ## How To Use
 
