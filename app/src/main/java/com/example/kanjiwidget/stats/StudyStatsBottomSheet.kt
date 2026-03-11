@@ -33,6 +33,8 @@ class StudyStatsBottomSheet(
     private lateinit var rangeLabel: TextView
     private lateinit var totalView: TextView
     private lateinit var averageView: TextView
+    private lateinit var activeDaysView: TextView
+    private lateinit var currentStreakView: TextView
     private lateinit var bestDayView: TextView
     private lateinit var latestView: TextView
     private lateinit var rankingMostContainer: LinearLayout
@@ -59,6 +61,8 @@ class StudyStatsBottomSheet(
         rangeLabel = dialog.findViewById(R.id.tvChartRangeLabel)
         totalView = dialog.findViewById(R.id.tvChartTotal)
         averageView = dialog.findViewById(R.id.tvChartAverage)
+        activeDaysView = dialog.findViewById(R.id.tvChartActiveDays)
+        currentStreakView = dialog.findViewById(R.id.tvChartCurrentStreak)
         bestDayView = dialog.findViewById(R.id.tvChartBestDay)
         latestView = dialog.findViewById(R.id.tvChartLatestKanji)
         rankingMostContainer = dialog.findViewById(R.id.containerRankingMost)
@@ -84,16 +88,38 @@ class StudyStatsBottomSheet(
 
     private fun bindRange(days: Int) {
         val chartSummary = repository.getDailyChart(days)
+        val hasStudyData = chartSummary.totalMs > 0L
         chartView.points = chartSummary.points
         rangeLabel.text = activity.getString(R.string.chart_range_value, days)
-        totalView.text = activity.getString(
-            R.string.chart_total_value,
-            activity.formatDurationForUi(chartSummary.totalMs)
+        totalView.text = if (hasStudyData) {
+            activity.getString(
+                R.string.chart_total_value,
+                activity.formatDurationForUi(chartSummary.totalMs)
+            )
+        } else {
+            activity.getString(R.string.chart_total_empty_value, days)
+        }
+        averageView.text = if (hasStudyData) {
+            activity.getString(
+                R.string.chart_average_value,
+                activity.formatDurationForUi(chartSummary.averageMs)
+            )
+        } else {
+            activity.getString(R.string.chart_average_empty_value)
+        }
+        activeDaysView.text = activity.getString(
+            R.string.chart_active_days_value,
+            days,
+            chartSummary.activeDays
         )
-        averageView.text = activity.getString(
-            R.string.chart_average_value,
-            activity.formatDurationForUi(chartSummary.averageMs)
-        )
+        currentStreakView.text = if (chartSummary.currentStreakDays > 0) {
+            activity.getString(
+                R.string.chart_current_streak_value,
+                chartSummary.currentStreakDays
+            )
+        } else {
+            activity.getString(R.string.chart_current_streak_empty_value)
+        }
         bestDayView.text = chartSummary.bestDay?.let {
             activity.getString(
                 R.string.chart_best_day_value,

@@ -23,6 +23,7 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 ## Current Status
 
 - Main app, widget flow, review-hub main screen, recent Kanji history, and study statistics are implemented
+- The lightweight stats-improvement slice is complete, including active-day insight, current-streak feedback, clearer range-aware summary copy, and a supportive no-data summary state in the existing stats bottom sheet
 - Detailed design documents now exist for the major shipped features, including the Kanji Detail screen
 - The repository has `v1.0.0` published and `v1.1.0` prepared for release with the completed Kanji Detail update
 - GitHub Actions workflows now cover debug APK builds and signed release builds

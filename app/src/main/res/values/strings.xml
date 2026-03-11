@@ -69,8 +69,13 @@
     <string name="chart_range_value">Khoảng thời gian: %1$d ngày gần nhất</string>
     <string name="chart_total_value">Tổng thời gian: %1$s</string>
     <string name="chart_average_value">Trung bình mỗi ngày: %1$s</string>
+    <string name="chart_active_days_value">Ngày có học trong %1$d ngày gần nhất: %2$d</string>
+    <string name="chart_current_streak_value">Chuỗi học hiện tại tính đến hôm nay: %1$d ngày</string>
     <string name="chart_best_day_value">Ngày tốt nhất: %1$s • %2$s</string>
     <string name="chart_best_day_empty">Chưa có ngày học nào trong khoảng này.</string>
+    <string name="chart_total_empty_value">Chưa có thời gian học được ghi nhận trong %1$d ngày gần nhất.</string>
+    <string name="chart_average_empty_value">Hãy mở một kanji từ widget hoặc lịch sử gần đây để bắt đầu tạo nhịp học.</string>
+    <string name="chart_current_streak_empty_value">Chuỗi học hiện tại tính đến hôm nay: chưa bắt đầu</string>
     <string name="chart_latest_kanji_value">Kanji gần nhất: %1$s</string>
     <string name="ranking_title">Xếp hạng kanji</string>
     <string name="ranking_scope_all">All time</string>

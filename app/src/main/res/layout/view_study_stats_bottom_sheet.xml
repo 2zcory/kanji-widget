@@ -94,6 +94,22 @@
             android:textSize="15sp" />
 
         <TextView
+            android:id="@+id/tvChartActiveDays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="#3F3529"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tvChartCurrentStreak"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="#3F3529"
+            android:textSize="15sp" />
+
+        <TextView
             android:id="@+id/tvChartBestDay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

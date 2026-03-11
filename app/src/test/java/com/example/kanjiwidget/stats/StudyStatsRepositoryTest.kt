@@ -2,10 +2,28 @@ package com.example.kanjiwidget.stats
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.fail
 import org.junit.Test
 import java.time.LocalDate
 
 class StudyStatsRepositoryTest {
+    @Test
+    fun buildStudyChartSummary_throwsWhenDaysIsNotPositive() {
+        val today = LocalDate.of(2026, 3, 11)
+
+        try {
+            buildStudyChartSummary(
+                days = 0,
+                today = today,
+                totalMsForDate = { 0L },
+                openCountForDate = { 0 },
+            )
+            fail("Expected IllegalArgumentException for non-positive day range")
+        } catch (_: IllegalArgumentException) {
+            // Expected invalid-input guard.
+        }
+    }
+
     @Test
     fun buildStudyChartSummary_returnsOrderedPointsAndDerivedInsights() {
         val today = LocalDate.of(2026, 3, 11)
