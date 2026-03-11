@@ -1,7 +1,7 @@
 # Kanji Detail Update Checklist
 
 Last updated: 2026-03-11
-Status: In progress
+Status: Completed
 
 ## Purpose
 
@@ -27,20 +27,20 @@ Update this checklist whenever a task is completed so the current implementation
 
 ## Phase 3: Next Random Kanji Action
 
-- [ ] Add a secondary action row for detail-screen actions
-- [ ] Keep replay as an explicit animation action in the new action row
-- [ ] Add a Next random kanji action to the detail screen
-- [ ] Reuse the cached kanji catalog and avoid immediately repeating the current kanji when possible
-- [ ] Open the next kanji detail screen with cached detail extras when available
-- [ ] Disable the action or show a clear fallback when the catalog is unavailable
+- [x] Add a secondary action row for detail-screen actions
+- [x] Keep replay as an explicit animation action in the new action row
+- [x] Add a Next random kanji action to the detail screen
+- [x] Reuse the cached kanji catalog and avoid immediately repeating the current kanji when possible
+- [x] Open the next kanji detail screen with cached detail extras when available
+- [x] Disable the action or show a clear fallback when the catalog is unavailable
 
 ## Phase 4: Documentation Updates
 
-- [ ] Create a dedicated detail design document for the Kanji Detail screen
-- [ ] Document the revised layout structure and data contract
-- [ ] Document the fallback behavior for missing metadata and stroke-order load failures
-- [ ] Document the Next random kanji action behavior
-- [ ] Update `docs/basic-design.md` if the shipped user-facing behavior changes materially
+- [x] Create a dedicated detail design document for the Kanji Detail screen
+- [x] Document the revised layout structure and data contract
+- [x] Document the fallback behavior for missing metadata and stroke-order load failures
+- [x] Document the Next random kanji action behavior
+- [x] Update `docs/basic-design.md` if the shipped user-facing behavior changes materially
 
 ## Progress Log
 
@@ -51,3 +51,8 @@ Update this checklist whenever a task is completed so the current implementation
 - 2026-03-11: Implemented the Phase 2 metadata model, cache, intent pipeline, and hero metadata rendering work; waiting for user verification before marking the checklist items complete.
 - 2026-03-11: Verified the current Phase 2 changes with `./gradlew :app:compileDebugKotlin`.
 - 2026-03-11: Phase 2 verification was confirmed by the user and the full phase is now marked complete.
+- 2026-03-11: Implemented the Phase 3 detail action row, shared detail-intent helper, and next-random navigation behavior; waiting for user verification before marking the checklist items complete.
+- 2026-03-11: Verified the current Phase 3 changes with `./gradlew :app:compileDebugKotlin`.
+- 2026-03-11: Phase 3 verification was confirmed by the user and the full phase is now marked complete.
+- 2026-03-11: Implemented the Phase 4 documentation updates, including a dedicated Kanji Detail design document and aligned overview docs.
+- 2026-03-11: Phase 4 documentation updates are complete and the full phase is now marked complete.

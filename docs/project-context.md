@@ -23,10 +23,10 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 ## Current Status
 
 - Main app, widget flow, review-hub main screen, recent Kanji history, and study statistics are implemented
-- Detailed design documents already exist for major shipped features
+- Detailed design documents now exist for the major shipped features, including the Kanji Detail screen
 - The repository has a first public release published as `v1.0.0`
 - GitHub Actions workflows now cover debug APK builds and signed release builds
-- A phased Kanji Detail screen update is in progress and is tracked in `docs/checklists/kanji-detail-update-checklist.md`
+- The phased Kanji Detail screen update is complete, including layout, metadata, study stats, next-random navigation, and related design docs
 
 ## Working Notes
 
@@ -35,5 +35,4 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 - Release signing remains secret-backed and must not be committed into the repository
 - The release workflow expects `RELEASE_KEYSTORE_BASE64`, `RELEASE_STORE_PASSWORD`, `RELEASE_KEY_ALIAS`, and `RELEASE_KEY_PASSWORD` in GitHub Secrets
 - Any machine-specific `android.aapt2FromMavenOverride` configuration should stay outside the repository so CI can use the default toolchain
-- Current multi-session implementation focus: Kanji Detail screen improvements across layout, metadata, study stats, next-random navigation, and related design docs
-- Use `docs/checklists/kanji-detail-update-checklist.md` as the session-to-session source of truth for phased progress on the Kanji Detail work
+- The Kanji Detail checklist remains useful as the implementation record for the completed phased update

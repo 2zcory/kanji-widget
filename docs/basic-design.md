@@ -55,6 +55,7 @@ The user taps the widget card or launcher action to open the detail screen and i
 - meaning
 - note or example
 - stroke-order playback
+- a next-random continuation action
 
 ### 3. Check today’s study activity
 
@@ -94,6 +95,7 @@ Key behavior:
 - show reading, meaning, JLPT level, note, and source
 - load stroke-order playback data
 - show today-only study statistics for the current Kanji
+- let the user continue to another random kanji from the same screen
 - record foreground viewing time for study tracking
 
 ### Main screen

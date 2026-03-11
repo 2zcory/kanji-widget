@@ -17,7 +17,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.kanjiwidget.KanjiDetailActivity
+import com.example.kanjiwidget.KanjiDetailNavigator
 import com.example.kanjiwidget.R
 
 class KanjiAppWidgetProvider : AppWidgetProvider() {
@@ -170,18 +170,12 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.btnNext, pi)
 
-            val detailIntent = Intent(context, KanjiDetailActivity::class.java).apply {
-                putExtra(KanjiDetailActivity.EXTRA_KANJI, item?.kanji ?: currentKanji)
-                putExtra(KanjiDetailActivity.EXTRA_SOURCE, item?.source ?: "kanjiapi.dev")
-                putExtra(KanjiDetailActivity.EXTRA_JLPT, item?.jlptLevel)
-                putExtra(KanjiDetailActivity.EXTRA_ONYOMI, item?.onyomi)
-                putExtra(KanjiDetailActivity.EXTRA_KUNYOMI, item?.kunyomi)
-                putExtra(KanjiDetailActivity.EXTRA_MEANING, item?.meaningVi)
-                putExtra(KanjiDetailActivity.EXTRA_NOTE, item?.example)
-                putExtra(KanjiDetailActivity.EXTRA_STROKE_COUNT, item?.strokeCount ?: 0)
-                putExtra(KanjiDetailActivity.EXTRA_GRADE, item?.grade ?: 0)
-                putExtra(KanjiDetailActivity.EXTRA_FREQUENCY, item?.frequency ?: 0)
-            }
+            val detailIntent = KanjiDetailNavigator.buildDetailIntent(
+                context = context,
+                kanji = item?.kanji ?: currentKanji.orEmpty(),
+                meaningFallback = item?.meaningVi,
+                jlptFallback = item?.jlptLevel,
+            )
             val detailPi = PendingIntent.getActivity(
                 context,
                 widgetId + 10_000,

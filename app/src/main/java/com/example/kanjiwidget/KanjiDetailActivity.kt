@@ -24,6 +24,7 @@ class KanjiDetailActivity : Activity() {
     private lateinit var statusView: TextView
     private lateinit var progressView: ProgressBar
     private lateinit var replayButton: Button
+    private lateinit var nextRandomButton: Button
     private lateinit var webView: WebView
     private lateinit var onyomiView: TextView
     private lateinit var kunyomiView: TextView
@@ -48,6 +49,7 @@ class KanjiDetailActivity : Activity() {
         statusView = findViewById(R.id.tvDetailStatus)
         progressView = findViewById(R.id.progressStrokeOrder)
         replayButton = findViewById(R.id.btnReplayStrokeOrder)
+        nextRandomButton = findViewById(R.id.btnNextRandomKanji)
         webView = findViewById(R.id.webStrokeOrder)
         onyomiView = findViewById(R.id.tvDetailOnyomi)
         kunyomiView = findViewById(R.id.tvDetailKunyomi)
@@ -103,6 +105,7 @@ class KanjiDetailActivity : Activity() {
                 loadStrokeOrder(kanji)
             }
         }
+        bindNextRandomAction()
 
         loadStrokeOrder(kanji)
     }
@@ -186,6 +189,28 @@ class KanjiDetailActivity : Activity() {
         progressView.visibility = View.GONE
         replayButton.isEnabled = true
         webView.visibility = View.INVISIBLE
+    }
+
+    private fun bindNextRandomAction() {
+        val catalog = com.example.kanjiwidget.widget.KanjiWidgetPrefs.getKanjiCatalog(this)
+        val isAvailable = catalog.isNotEmpty()
+        nextRandomButton.isEnabled = isAvailable
+        nextRandomButton.alpha = if (isAvailable) 1f else 0.5f
+        nextRandomButton.setOnClickListener(
+            if (!isAvailable) {
+                null
+            } else {
+                View.OnClickListener {
+                    val nextIntent = KanjiDetailNavigator.buildRandomDetailIntent(
+                        context = this,
+                        catalog = catalog,
+                        currentKanji = currentKanji,
+                    ) ?: return@OnClickListener
+                    startActivity(nextIntent)
+                    finish()
+                }
+            }
+        )
     }
 
     companion object {

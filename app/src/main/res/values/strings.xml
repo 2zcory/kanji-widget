@@ -9,6 +9,7 @@
     <string name="stroke_order_empty_subtitle">Hãy tải một chữ từ widget trước.</string>
     <string name="stroke_order_empty_message">Widget chưa có kanji để mở màn hình thứ tự nét.</string>
     <string name="stroke_order_replay">Phát lại</string>
+    <string name="stroke_order_next_random">Kanji khác</string>
     <string name="stroke_order_attribution">Stroke order dựa trên dữ liệu KanjiVG.</string>
     <string name="stroke_order_canvas_title">Luyện thứ tự nét</string>
     <string name="stroke_order_reading_label">CÁCH ĐỌC</string>

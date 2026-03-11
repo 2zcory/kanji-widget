@@ -13,10 +13,10 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.kanjiwidget.KanjiDetailActivity
+import com.example.kanjiwidget.KanjiDetailNavigator
 import com.example.kanjiwidget.MainActivity
 import com.example.kanjiwidget.R
 import com.example.kanjiwidget.home.HomeSummary
-import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 import java.time.format.DateTimeFormatter
 
 class StudyStatsBottomSheet(
@@ -163,19 +163,12 @@ class StudyStatsBottomSheet(
     }
 
     private fun buildDetailIntent(item: KanjiStudyRankItem): Intent {
-        val entry = KanjiWidgetPrefs.getRemoteEntry(activity, item.kanji)
-        return Intent(activity, KanjiDetailActivity::class.java).apply {
-            putExtra(KanjiDetailActivity.EXTRA_KANJI, item.kanji)
-            putExtra(KanjiDetailActivity.EXTRA_SOURCE, entry?.source ?: activity.getString(R.string.stroke_order_source_default))
-            putExtra(KanjiDetailActivity.EXTRA_JLPT, entry?.jlptLevel ?: item.jlptLevel)
-            putExtra(KanjiDetailActivity.EXTRA_ONYOMI, entry?.onyomi)
-            putExtra(KanjiDetailActivity.EXTRA_KUNYOMI, entry?.kunyomi)
-            putExtra(KanjiDetailActivity.EXTRA_MEANING, entry?.meaningVi ?: item.meaning)
-            putExtra(KanjiDetailActivity.EXTRA_NOTE, entry?.example)
-            putExtra(KanjiDetailActivity.EXTRA_STROKE_COUNT, entry?.strokeCount ?: 0)
-            putExtra(KanjiDetailActivity.EXTRA_GRADE, entry?.grade ?: 0)
-            putExtra(KanjiDetailActivity.EXTRA_FREQUENCY, entry?.frequency ?: 0)
-        }
+        return KanjiDetailNavigator.buildDetailIntent(
+            context = activity,
+            kanji = item.kanji,
+            meaningFallback = item.meaning,
+            jlptFallback = item.jlptLevel,
+        )
     }
 
     private fun updateRangeButtons(days: Int) {

@@ -137,16 +137,36 @@
                 </LinearLayout>
             </FrameLayout>
 
-            <Button
-                android:id="@+id/btnReplayStrokeOrder"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:background="@drawable/bg_detail_button"
-                android:text="@string/stroke_order_replay"
-                android:textAllCaps="false"
-                android:textColor="#FFF9F0"
-                android:textSize="15sp" />
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnReplayStrokeOrder"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_detail_button"
+                    android:text="@string/stroke_order_replay"
+                    android:textAllCaps="false"
+                    android:textColor="#FFF9F0"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/btnNextRandomKanji"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_detail_button"
+                    android:text="@string/stroke_order_next_random"
+                    android:textAllCaps="false"
+                    android:textColor="#FFF9F0"
+                    android:textSize="15sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

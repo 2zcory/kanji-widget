@@ -116,19 +116,12 @@ class MainActivity : Activity() {
 
     private fun buildLatestDetailIntent(summary: HomeSummary): Intent {
         val kanji = summary.latestKanji.orEmpty()
-        val entry = KanjiWidgetPrefs.getRemoteEntry(this, kanji)
-        return Intent(this, KanjiDetailActivity::class.java).apply {
-            putExtra(KanjiDetailActivity.EXTRA_KANJI, kanji)
-            putExtra(KanjiDetailActivity.EXTRA_SOURCE, entry?.source ?: getString(R.string.stroke_order_source_default))
-            putExtra(KanjiDetailActivity.EXTRA_JLPT, entry?.jlptLevel)
-            putExtra(KanjiDetailActivity.EXTRA_ONYOMI, entry?.onyomi)
-            putExtra(KanjiDetailActivity.EXTRA_KUNYOMI, entry?.kunyomi)
-            putExtra(KanjiDetailActivity.EXTRA_MEANING, entry?.meaningVi ?: summary.latestMeaning)
-            putExtra(KanjiDetailActivity.EXTRA_NOTE, entry?.example)
-            putExtra(KanjiDetailActivity.EXTRA_STROKE_COUNT, entry?.strokeCount ?: 0)
-            putExtra(KanjiDetailActivity.EXTRA_GRADE, entry?.grade ?: 0)
-            putExtra(KanjiDetailActivity.EXTRA_FREQUENCY, entry?.frequency ?: 0)
-        }
+        return KanjiDetailNavigator.buildDetailIntent(
+            context = this,
+            kanji = kanji,
+            meaningFallback = summary.latestMeaning,
+            jlptFallback = summary.latestJlpt,
+        )
     }
 
     private fun showStudyStatsBottomSheet(summary: HomeSummary) {
@@ -208,38 +201,23 @@ class MainActivity : Activity() {
     }
 
     private fun buildRandomDetailIntent(catalog: List<String>, latestKanji: String?): Intent {
-        val selectedKanji = when {
-            catalog.isEmpty() -> latestKanji.orEmpty()
-            catalog.size == 1 -> catalog.first()
-            else -> catalog
-                .filterNot { it == latestKanji }
-                .ifEmpty { catalog }
-                .random()
-        }
-        return buildDetailIntent(
-            RecentKanjiSummaryItem(
-                kanji = selectedKanji,
-                viewedAt = System.currentTimeMillis(),
-                meaning = null,
-                jlpt = null,
-            )
+        return KanjiDetailNavigator.buildRandomDetailIntent(
+            context = this,
+            catalog = catalog,
+            currentKanji = latestKanji,
+        ) ?: KanjiDetailNavigator.buildDetailIntent(
+            context = this,
+            kanji = latestKanji.orEmpty(),
         )
     }
 
     private fun buildDetailIntent(item: RecentKanjiSummaryItem): Intent {
-        val entry = KanjiWidgetPrefs.getRemoteEntry(this, item.kanji)
-        return Intent(this, KanjiDetailActivity::class.java).apply {
-            putExtra(KanjiDetailActivity.EXTRA_KANJI, item.kanji)
-            putExtra(KanjiDetailActivity.EXTRA_SOURCE, entry?.source ?: getString(R.string.stroke_order_source_default))
-            putExtra(KanjiDetailActivity.EXTRA_JLPT, entry?.jlptLevel ?: item.jlpt)
-            putExtra(KanjiDetailActivity.EXTRA_ONYOMI, entry?.onyomi)
-            putExtra(KanjiDetailActivity.EXTRA_KUNYOMI, entry?.kunyomi)
-            putExtra(KanjiDetailActivity.EXTRA_MEANING, entry?.meaningVi ?: item.meaning)
-            putExtra(KanjiDetailActivity.EXTRA_NOTE, entry?.example)
-            putExtra(KanjiDetailActivity.EXTRA_STROKE_COUNT, entry?.strokeCount ?: 0)
-            putExtra(KanjiDetailActivity.EXTRA_GRADE, entry?.grade ?: 0)
-            putExtra(KanjiDetailActivity.EXTRA_FREQUENCY, entry?.frequency ?: 0)
-        }
+        return KanjiDetailNavigator.buildDetailIntent(
+            context = this,
+            kanji = item.kanji,
+            meaningFallback = item.meaning,
+            jlptFallback = item.jlpt,
+        )
     }
 
     private fun buildRecentMeta(item: RecentKanjiSummaryItem): String {

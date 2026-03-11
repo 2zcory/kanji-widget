@@ -22,6 +22,7 @@ The project currently includes:
 - Onyomi / Kunyomi / meaning / notes
 - Stroke-order playback using KanjiVG SVG data
 - Today-only study statistics for the current Kanji
+- Next-random continuation action from the detail screen
 
 ### Main Screen
 - Today summary
