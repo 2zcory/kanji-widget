@@ -37,5 +37,6 @@ This file defines how an AI coding agent should operate in this repository.
 - If the current task changes scope, constraints, or status in a lasting way, update `docs/project-context.md`.
 - If the current task changes a shipped feature materially, update the corresponding detail design document under `docs/detail-design/`.
 - Use `docs/checklists/` for temporary multi-session work tracking.
+- For a new complex task, start from `docs/checklists/TEMPLATE-complex-task-checklist.md` unless a more specific checklist already exists.
 - Keep active checklists in `docs/checklists/` and move completed ones into `docs/checklists/archieved/`.
 - Update the relevant checklist whenever a tracked task is completed so progress is recoverable in later sessions.
