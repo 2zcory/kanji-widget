@@ -39,7 +39,7 @@ In scope:
 Out of scope for the first version:
 - user accounts
 - remote sync
-- advanced charts
+- advanced charts beyond the current lightweight bottom-sheet experience
 - heavy onboarding flow
 
 ## Screen Role
@@ -265,7 +265,7 @@ Current implementation path:
 - `MainActivity` is a layout-based activity
 - summary fields are populated through a single repository-owned summary model
 - keep business logic separate from the activity
-- allow `MainActivity` to directly handle lightweight widget appearance preferences until a dedicated settings/repository layer is introduced
+- allow `MainActivity` to directly handle lightweight widget appearance preferences until a dedicated settings or repository layer is introduced
 
 Primary files:
 - `app/src/main/res/layout/activity_main.xml`
@@ -309,18 +309,22 @@ The launcher stats action now has a concrete first-version target.
 Current behavior:
 - do not create a separate statistics screen
 - open an in-app bottom sheet from the main screen
-- support `7 ngày` and `30 ngày` ranges
+- support `7 ngày` and `30 ngày` chart ranges
 - show chart summary values for the selected range
+- show lightweight range insights including active study days and the current streak ending today
 - show the latest opened kanji when available
+- keep ranking inside the same bottom sheet
 
 Fallback rule:
 - if `latestKanji` is missing, hide that row in the stats bottom sheet
 - keep chart and summary content available even when latest-history data is missing
+- if the selected chart range has no study data, keep the sheet informative with empty-state summary copy instead of collapsing the content
 
 Reasoning:
 - this keeps the action useful
 - it stays aligned with the current lightweight scope
 - it avoids creating a full statistics screen too early
+- it adds motivation-oriented feedback without turning the surface into a full analytics dashboard
 
 ## Edge Cases
 
@@ -358,6 +362,8 @@ Manual test cases:
 - open app on a fresh install and verify the empty state
 - open app after using the detail screen and verify today summary is shown
 - verify main-screen actions open the expected destinations
+- verify the stats bottom sheet updates when the chart range changes
+- verify the stats bottom sheet remains useful when there is no study data
 - verify layout works on both narrow and tall devices
 - change widget opacity and verify active widgets rerender
 
