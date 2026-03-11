@@ -84,36 +84,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnOpenLatestKanji"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="7dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_detail_button"
-                android:text="@string/home_action_open_latest"
-                android:textAllCaps="false"
-                android:textColor="#FFF9F0" />
-
-            <Button
-                android:id="@+id/btnTodayStats"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="7dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_detail_button"
-                android:text="@string/home_action_today_stats"
-                android:textAllCaps="false"
-                android:textColor="#FFF9F0" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/cardLatestKanji"
+            android:id="@+id/sectionContinueLearning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -124,36 +95,57 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/home_latest_title"
+                android:text="@string/home_continue_title"
                 android:textColor="#A1482E"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvLatestKanji"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvContinueLearningBody"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="#231D16"
-                android:textSize="38sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvLatestMeaning"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
                 android:textColor="#3F3529"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/tvLatestMeta"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:textColor="#6D6050"
-                android:textSize="13sp" />
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnOpenLatestKanji"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="7dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_detail_button"
+                    android:text="@string/home_action_open_latest"
+                    android:textAllCaps="false"
+                    android:textColor="#FFF9F0" />
+
+                <Button
+                    android:id="@+id/btnOpenRandomKanji"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="7dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_detail_button"
+                    android:text="@string/home_action_open_random"
+                    android:textAllCaps="false"
+                    android:textColor="#FFF9F0" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnTodayStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_detail_button"
+                android:text="@string/home_action_today_stats"
+                android:textAllCaps="false"
+                android:textColor="#FFF9F0" />
         </LinearLayout>
 
         <LinearLayout
@@ -191,7 +183,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/sectionWidgetHelp"
+            android:id="@+id/sectionWidgetControls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -202,52 +194,24 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/home_widget_help_title"
+                android:text="@string/home_widget_controls_title"
                 android:textColor="#A1482E"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvWidgetHelpBody"
+                android:id="@+id/tvWidgetControlsBody"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textColor="#3F3529"
                 android:textSize="16sp" />
 
-            <Button
-                android:id="@+id/btnWidgetHelp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_detail_button"
-                android:text="@string/home_action_widget_help"
-                android:textAllCaps="false"
-                android:textColor="#FFF9F0" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/sectionWidgetOpacity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/bg_detail_card"
-            android:orientation="vertical"
-            android:padding="14dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/home_widget_opacity_title"
-                android:textColor="#A1482E"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
             <TextView
                 android:id="@+id/tvWidgetOpacityValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:textColor="#231D16"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -267,6 +231,16 @@
                 android:layout_marginTop="12dp"
                 android:background="@drawable/bg_detail_button"
                 android:text="@string/home_action_widget_opacity"
+                android:textAllCaps="false"
+                android:textColor="#FFF9F0" />
+
+            <Button
+                android:id="@+id/btnWidgetHelp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_detail_button"
+                android:text="@string/home_action_widget_help"
                 android:textAllCaps="false"
                 android:textColor="#FFF9F0" />
         </LinearLayout>

@@ -26,16 +26,13 @@ class MainActivity : Activity() {
     private lateinit var summaryCardSubtitle: TextView
     private lateinit var summaryMeta: TextView
     private lateinit var widgetStatus: TextView
-    private lateinit var latestCard: View
-    private lateinit var latestKanji: TextView
-    private lateinit var latestMeaning: TextView
-    private lateinit var latestMeta: TextView
+    private lateinit var continueLearningBody: TextView
     private lateinit var openLatestButton: Button
+    private lateinit var openRandomButton: Button
     private lateinit var statsButton: Button
     private lateinit var recentKanjiSection: View
     private lateinit var recentKanjiContainer: LinearLayout
-    private lateinit var widgetHelpSection: View
-    private lateinit var widgetHelpBody: TextView
+    private lateinit var widgetControlsBody: TextView
     private lateinit var widgetOpacityValue: TextView
     private lateinit var widgetOpacityButton: Button
 
@@ -49,16 +46,13 @@ class MainActivity : Activity() {
         summaryCardSubtitle = findViewById(R.id.tvHomeSummarySubtitle)
         summaryMeta = findViewById(R.id.tvHomeSummaryMeta)
         widgetStatus = findViewById(R.id.tvWidgetStatus)
-        latestCard = findViewById(R.id.cardLatestKanji)
-        latestKanji = findViewById(R.id.tvLatestKanji)
-        latestMeaning = findViewById(R.id.tvLatestMeaning)
-        latestMeta = findViewById(R.id.tvLatestMeta)
+        continueLearningBody = findViewById(R.id.tvContinueLearningBody)
         openLatestButton = findViewById(R.id.btnOpenLatestKanji)
+        openRandomButton = findViewById(R.id.btnOpenRandomKanji)
         statsButton = findViewById(R.id.btnTodayStats)
         recentKanjiSection = findViewById(R.id.sectionRecentKanji)
         recentKanjiContainer = findViewById(R.id.containerRecentKanji)
-        widgetHelpSection = findViewById(R.id.sectionWidgetHelp)
-        widgetHelpBody = findViewById(R.id.tvWidgetHelpBody)
+        widgetControlsBody = findViewById(R.id.tvWidgetControlsBody)
         widgetOpacityValue = findViewById(R.id.tvWidgetOpacityValue)
         widgetOpacityButton = findViewById(R.id.btnWidgetOpacity)
 
@@ -92,26 +86,28 @@ class MainActivity : Activity() {
         }
 
         val hasLatest = !summary.latestKanji.isNullOrBlank()
-        latestCard.visibility = if (hasLatest) View.VISIBLE else View.GONE
-        openLatestButton.visibility = if (hasLatest) View.VISIBLE else View.GONE
-
+        continueLearningBody.text = if (hasLatest) {
+            getString(R.string.home_continue_body_with_latest)
+        } else {
+            getString(R.string.home_continue_body_empty)
+        }
+        openLatestButton.isEnabled = hasLatest
+        openLatestButton.alpha = if (hasLatest) 1f else 0.5f
         if (hasLatest) {
-            latestKanji.text = summary.latestKanji
-            latestMeaning.text = summary.latestMeaning ?: getString(R.string.home_latest_meaning_placeholder)
-            latestMeta.text = buildLatestMeta(summary)
-
             val latestIntent = buildLatestDetailIntent(summary)
-            latestCard.setOnClickListener { startActivity(latestIntent) }
             openLatestButton.setOnClickListener { startActivity(latestIntent) }
         } else {
-            latestCard.setOnClickListener(null)
             openLatestButton.setOnClickListener(null)
         }
 
-        bindRecentKanji(summary.recentKanji.drop(1))
+        bindRandomAction(summary)
+        bindRecentKanji(summary.recentKanji)
         statsButton.setOnClickListener { showStudyStatsBottomSheet(summary) }
-        widgetHelpSection.visibility = if (summary.showWidgetHelp) View.VISIBLE else View.GONE
-        widgetHelpBody.text = getString(R.string.home_widget_help_body)
+        widgetControlsBody.text = if (summary.isWidgetInstalled) {
+            getString(R.string.home_widget_controls_body_installed)
+        } else {
+            getString(R.string.home_widget_controls_body_missing)
+        }
         widgetOpacityValue.text = getString(
             R.string.home_widget_opacity_value,
             (KanjiWidgetPrefs.getWidgetSurfaceAlpha(this) * 100).toInt()
@@ -148,19 +144,6 @@ class MainActivity : Activity() {
             .show()
     }
 
-    private fun buildLatestMeta(summary: HomeSummary): String {
-        val parts = mutableListOf<String>()
-        summary.latestJlpt?.takeIf { it.isNotBlank() }?.let { parts += "JLPT $it" }
-        summary.latestViewedAt?.let {
-            parts += DateUtils.getRelativeTimeSpanString(
-                it,
-                System.currentTimeMillis(),
-                DateUtils.MINUTE_IN_MILLIS
-            ).toString()
-        }
-        return parts.joinToString(" • ").ifBlank { getString(R.string.home_latest_meta_fallback) }
-    }
-
     private fun cycleWidgetOpacity() {
         val current = KanjiWidgetPrefs.getWidgetSurfaceAlpha(this)
         val currentIndex = widgetOpacityLevels.indexOfFirst { kotlin.math.abs(it - current) < 0.01f }
@@ -184,6 +167,26 @@ class MainActivity : Activity() {
 
     private fun formatDuration(durationMs: Long): String = formatDurationForUi(durationMs)
 
+    private fun bindRandomAction(summary: HomeSummary) {
+        val catalog = KanjiWidgetPrefs.getKanjiCatalog(this)
+        openRandomButton.isEnabled = catalog.isNotEmpty()
+        openRandomButton.alpha = if (catalog.isNotEmpty()) 1f else 0.5f
+        openRandomButton.text = if (catalog.isNotEmpty()) {
+            getString(R.string.home_action_open_random)
+        } else {
+            getString(R.string.home_action_open_random_disabled)
+        }
+        openRandomButton.setOnClickListener(
+            if (catalog.isEmpty()) {
+                null
+            } else {
+                View.OnClickListener {
+                    startActivity(buildRandomDetailIntent(catalog, summary.latestKanji))
+                }
+            }
+        )
+    }
+
     private fun bindRecentKanji(items: List<RecentKanjiSummaryItem>) {
         recentKanjiContainer.removeAllViews()
         recentKanjiSection.visibility = if (items.isEmpty()) View.GONE else View.VISIBLE
@@ -199,6 +202,25 @@ class MainActivity : Activity() {
             row.setOnClickListener { startActivity(buildDetailIntent(item)) }
             recentKanjiContainer.addView(row)
         }
+    }
+
+    private fun buildRandomDetailIntent(catalog: List<String>, latestKanji: String?): Intent {
+        val selectedKanji = when {
+            catalog.isEmpty() -> latestKanji.orEmpty()
+            catalog.size == 1 -> catalog.first()
+            else -> catalog
+                .filterNot { it == latestKanji }
+                .ifEmpty { catalog }
+                .random()
+        }
+        return buildDetailIntent(
+            RecentKanjiSummaryItem(
+                kanji = selectedKanji,
+                viewedAt = System.currentTimeMillis(),
+                meaning = null,
+                jlpt = null,
+            )
+        )
     }
 
     private fun buildDetailIntent(item: RecentKanjiSummaryItem): Intent {

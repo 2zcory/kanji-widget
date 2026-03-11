@@ -25,7 +25,7 @@ The main screen acts as a lightweight control center for the widget-based learni
 The screen should help users:
 - understand what the app does
 - install or use the widget
-- open the latest kanji detail screen
+- continue learning from the latest kanji or a random kanji
 - review today’s learning activity
 - adjust a small set of widget appearance preferences
 
@@ -75,44 +75,23 @@ Data source:
 - local stats from `StudyTimeTracker`
 - latest opened kanji from a dedicated local history store
 
-### 3. Quick Actions
+### 3. Continue Learning Section
 
-Suggested actions:
-- `Mở kanji gần nhất`
+Contents:
+- short body text that suggests the next step
+- `Tiếp tục chữ gần nhất`
+- `Mở kanji ngẫu nhiên`
 - `Xem thống kê`
-- `Đổi độ trong suốt`
-- `Hướng dẫn thêm widget`
 
 Purpose:
-- give the launcher screen immediate utility
+- make the launcher feel like an active review hub
+- keep primary study actions above settings content
 
-### 4. Widget Help Section
+Behavior:
+- latest-kanji action is enabled only when recent history exists
+- random-kanji action uses the cached catalog and avoids the latest kanji when possible
 
-Contents:
-- short explanation of how to add the widget
-- short 2-step text instruction
-
-Purpose:
-- support users who install the app but have not added the widget yet
-
-First version rule:
-- use text-only guidance
-- do not require image assets or illustration resources
-
-### 5. Widget Appearance Section
-
-Contents:
-- current widget background opacity value
-- one tap action to cycle through supported opacity presets
-
-Purpose:
-- let the user adapt widget readability against different wallpapers without opening a full widget-specific configuration flow
-
-Current v1 behavior:
-- opacity is global across all active widget instances
-- the action cycles through preset levels rather than exposing a slider
-
-### 6. Recent Kanji Section
+### 4. Recent Kanji Section
 
 Contents:
 - latest viewed kanji items
@@ -121,8 +100,25 @@ Contents:
 Purpose:
 - make the app usable as a lightweight review hub
 
-This section is currently implemented with the latest viewed Kanji only.
-A longer recent list remains a future extension.
+Current behavior:
+- this section now shows the bounded recent list directly
+- the first recent item is no longer duplicated as a separate latest card
+
+### 5. Widget Controls Section
+
+Contents:
+- widget state summary text
+- current widget background opacity value
+- one tap action to cycle through supported opacity presets
+- action to open widget setup instructions
+
+Purpose:
+- keep widget controls near the learning hub without turning the main screen into a full settings page
+- support both installed-widget and missing-widget states in one place
+
+Current v1 behavior:
+- opacity is global across all active widget instances
+- the action cycles through preset levels rather than exposing a slider
 
 ## User Flow
 
@@ -144,7 +140,7 @@ A longer recent list remains a future extension.
 
 1. User taps app icon
 2. Main screen shows today summary
-3. User opens the latest kanji detail screen or views the stats bottom sheet
+3. User continues the latest kanji, opens a random kanji, or views the stats bottom sheet
 
 ### Flow C: User without widget
 
@@ -171,7 +167,7 @@ If there is no recorded study data:
 
 If study data exists:
 - show today summary first
-- prioritize quick access to recent kanji detail
+- prioritize quick access to recent kanji detail and one-tap continuation
 
 ### Widget opacity rule
 
