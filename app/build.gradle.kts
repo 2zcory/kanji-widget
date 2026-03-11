@@ -3,6 +3,15 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+import java.util.Properties
+
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { load(it) }
+    }
+}
+
 android {
     namespace = "com.example.kanjiwidget"
     compileSdk = 34
@@ -12,13 +21,34 @@ android {
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
+    }
+
+    signingConfigs {
+        create("release") {
+            val storeFilePath = localProperties.getProperty("release.storeFile")?.trim()
+            val storePasswordValue = localProperties.getProperty("release.storePassword")?.trim()
+            val keyAliasValue = localProperties.getProperty("release.keyAlias")?.trim()
+            val keyPasswordValue = localProperties.getProperty("release.keyPassword")?.trim()
+
+            if (!storeFilePath.isNullOrEmpty()
+                && !storePasswordValue.isNullOrEmpty()
+                && !keyAliasValue.isNullOrEmpty()
+                && !keyPasswordValue.isNullOrEmpty()
+            ) {
+                storeFile = file(storeFilePath)
+                storePassword = storePasswordValue
+                keyAlias = keyAliasValue
+                keyPassword = keyPasswordValue
+            }
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
