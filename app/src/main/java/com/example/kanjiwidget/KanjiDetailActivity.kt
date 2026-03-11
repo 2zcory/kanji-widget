@@ -9,11 +9,13 @@ import android.view.LayoutInflater
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.example.kanjiwidget.detail.KanjiCompoundEntry
 import com.example.kanjiwidget.detail.KanjiCompoundRepository
+import com.example.kanjiwidget.detail.KanjiSpeechController
 import com.example.kanjiwidget.history.RecentKanjiStore
 import com.example.kanjiwidget.stats.StudyTimeTracker
 import com.example.kanjiwidget.widget.KanjiStrokeOrderClient
@@ -32,6 +34,7 @@ class KanjiDetailActivity : Activity() {
     private lateinit var webView: WebView
     private lateinit var onyomiView: TextView
     private lateinit var kunyomiView: TextView
+    private lateinit var playMainReadingButton: ImageButton
     private lateinit var meaningView: TextView
     private lateinit var noteView: TextView
     private lateinit var sourceView: TextView
@@ -44,12 +47,22 @@ class KanjiDetailActivity : Activity() {
     private var lastHtml: String? = null
     private var currentKanji: String = ""
     private lateinit var compoundRepository: KanjiCompoundRepository
+    private lateinit var speechController: KanjiSpeechController
+    private var mainReadingToSpeak: String? = null
+    private var renderedCompounds: List<KanjiCompoundEntry> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kanji_detail)
 
         compoundRepository = KanjiCompoundRepository(this)
+        speechController = KanjiSpeechController(this) {
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                bindMainReadingAudio(mainReadingToSpeak)
+                renderCompounds(renderedCompounds)
+            }
+        }
         titleView = findViewById(R.id.tvDetailKanji)
         subtitleView = findViewById(R.id.tvDetailSubtitle)
         heroMetaView = findViewById(R.id.tvDetailHeroMeta)
@@ -61,6 +74,7 @@ class KanjiDetailActivity : Activity() {
         webView = findViewById(R.id.webStrokeOrder)
         onyomiView = findViewById(R.id.tvDetailOnyomi)
         kunyomiView = findViewById(R.id.tvDetailKunyomi)
+        playMainReadingButton = findViewById(R.id.btnPlayMainReading)
         meaningView = findViewById(R.id.tvDetailMeaning)
         noteView = findViewById(R.id.tvDetailNote)
         sourceView = findViewById(R.id.tvDetailSource)
@@ -88,6 +102,7 @@ class KanjiDetailActivity : Activity() {
             bindHeroMetadata(null, null, null)
             jlptBadgeView.text = getString(R.string.stroke_order_badge_placeholder)
             bindStudyInfo("", "", "", "", "")
+            bindMainReadingAudio(null)
             renderCompounds(emptyList())
             refreshTodayStats()
             showError(getString(R.string.stroke_order_empty_message))
@@ -105,6 +120,7 @@ class KanjiDetailActivity : Activity() {
             note = note,
             source = source
         )
+        bindMainReadingAudio(selectMainReading(onyomi, kunyomi))
         bindCompounds(kanji)
         refreshTodayStats()
 
@@ -132,8 +148,14 @@ class KanjiDetailActivity : Activity() {
     }
 
     override fun onStop() {
+        speechController.stop()
         StudyTimeTracker.stopSession(this)
         super.onStop()
+    }
+
+    override fun onDestroy() {
+        speechController.release()
+        super.onDestroy()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -275,6 +297,25 @@ class KanjiDetailActivity : Activity() {
         }
     }
 
+    private fun bindMainReadingAudio(reading: String?) {
+        mainReadingToSpeak = reading?.takeIf { it.isNotBlank() }
+        val isEnabled = !mainReadingToSpeak.isNullOrBlank()
+        playMainReadingButton.visibility = if (isEnabled) View.VISIBLE else View.GONE
+        playMainReadingButton.isEnabled = isEnabled
+        playMainReadingButton.alpha = if (isEnabled && speechController.isReady()) 1f else 0.5f
+        playMainReadingButton.setOnClickListener(
+            if (!isEnabled) {
+                null
+            } else {
+                View.OnClickListener {
+                    if (speechController.isReady()) {
+                        speechController.speak(mainReadingToSpeak.orEmpty())
+                    }
+                }
+            }
+        )
+    }
+
     private fun bindCompounds(kanji: String) {
         val cachedEntries = compoundRepository.getCachedCompounds(kanji)
         renderCompounds(cachedEntries)
@@ -291,6 +332,7 @@ class KanjiDetailActivity : Activity() {
     }
 
     private fun renderCompounds(entries: List<KanjiCompoundEntry>) {
+        renderedCompounds = entries
         compoundsContainer.removeAllViews()
         if (entries.isEmpty()) {
             compoundsSection.visibility = View.GONE
@@ -305,9 +347,37 @@ class KanjiDetailActivity : Activity() {
             row.findViewById<TextView>(R.id.tvCompoundMeaning).text = entry.meaning
             row.findViewById<TextView>(R.id.tvCompoundUsage).text =
                 getString(R.string.detail_compound_usage_value, entry.usageHint)
+            val playButton = row.findViewById<ImageButton>(R.id.btnPlayCompoundReading)
+            val canPlay = entry.reading.isNotBlank()
+            playButton.visibility = if (canPlay) View.VISIBLE else View.GONE
+            playButton.isEnabled = canPlay
+            playButton.alpha = if (canPlay && speechController.isReady()) 1f else 0.5f
+            playButton.setOnClickListener(
+                if (!canPlay) {
+                    null
+                } else {
+                    View.OnClickListener {
+                        if (speechController.isReady()) {
+                            speechController.speak(entry.reading)
+                        }
+                    }
+                }
+            )
             compoundsContainer.addView(row)
         }
         compoundsSection.visibility = View.VISIBLE
+    }
+
+    private fun selectMainReading(
+        onyomi: String,
+        kunyomi: String,
+    ): String? {
+        return onyomi.takeIf { isPlayableReading(it) }
+            ?: kunyomi.takeIf { isPlayableReading(it) }
+    }
+
+    private fun isPlayableReading(value: String?): Boolean {
+        return !value.isNullOrBlank() && value != getString(R.string.stroke_order_info_placeholder)
     }
 
     private fun refreshTodayStats() {

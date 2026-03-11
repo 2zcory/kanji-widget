@@ -11,6 +11,7 @@ This document covers:
 - today-only study metrics
 - the Next random kanji action
 - the first compound-examples slice for practical vocabulary context
+- the first pronunciation-audio slice using Android `TextToSpeech`
 
 ## Scope
 
@@ -21,6 +22,7 @@ In scope:
 - stroke-order loading and replay behavior
 - next-random navigation from the detail screen
 - a lightweight compounds section for the current kanji using one remote source and local cache support
+- pronunciation playback for the main reading target and eligible compound rows using on-device `TextToSpeech`
 
 Out of scope for the current version:
 - editing or favoriting kanji
@@ -28,6 +30,7 @@ Out of scope for the current version:
 - spaced-repetition scheduling
 - prefetching the next random kanji in the background
 - full dictionary browsing or long-form example sentences from a second provider
+- remote audio hosting or downloadable voice assets
 
 ## Current Components
 
@@ -51,6 +54,7 @@ It should let the user:
 - replay stroke order on demand
 - review readings, meaning, note, source, and available metadata
 - review a few practical compound examples for the current kanji
+- hear pronunciation playback for the main reading and supported compound readings
 - see today-only study totals for the current kanji context
 - continue to another random kanji without returning to the launcher
 
@@ -96,9 +100,13 @@ Behavior:
 Current contents:
 - Onyomi label and value
 - Kunyomi label and value
+- one main pronunciation playback control
 
 Behavior:
 - use a shared placeholder when a reading field is unavailable
+- for v1, the main playback target prefers `onyomi` and falls back to `kunyomi`
+- hide or disable the playback control when neither reading is usable
+- if a new playback starts, stop the previous playback first
 
 ### Compound examples section
 
@@ -110,6 +118,7 @@ Each visible compound row should include:
 - reading
 - short meaning
 - short usage hint
+- a small pronunciation playback control when the row has a usable reading
 
 Current behavior target:
 - prefer compounds that appear common or readable based on source priority metadata
@@ -120,6 +129,11 @@ Usage hint rule for v1:
 - the usage field is a short label derived from source priority markers and meaning shape
 - it is not a generated full sentence example
 - example labels may include `Common word`, `News-heavy`, `Formal term`, or `Study word`
+
+Compound audio rule for v1:
+- compound-row playback uses the row reading returned from the compounds source
+- hide or disable the row playback control when the row reading is blank
+- starting compound playback should stop any current main-reading or compound playback first
 
 ### Today section
 
@@ -198,6 +212,15 @@ Current behavior:
 - on `onStop`, the screen stops the current study session
 - today metrics are refreshed from local study totals
 
+### Audio playback
+
+Current v1 behavior:
+1. `KanjiDetailActivity` initializes an on-device `TextToSpeech` helper
+2. The helper attempts to use Japanese voice data when available
+3. If initialization or language setup fails, audio controls stay unavailable without blocking the rest of the screen
+4. A new play action stops any current playback before speaking the new target
+5. Activity teardown stops playback and releases `TextToSpeech`
+
 ## Random Navigation Behavior
 
 The detail screen supports one-tap continuation to another random kanji.
@@ -232,6 +255,7 @@ Current local dependencies:
 - recent-view history from `RecentKanjiStore`
 - local study stats from `StudyTimeTracker`
 - cached per-kanji compound entries from local preferences if the first compounds fetch has already completed
+- Android `TextToSpeech` state owned by the current detail activity
 
 Current remote dependency:
 - KanjiVG-derived stroke-order SVG loading through `KanjiStrokeOrderClient`
@@ -264,6 +288,12 @@ Behavior:
 - render placeholders for readings, meaning, and note
 - render the default source label
 
+### Unavailable text-to-speech support
+
+Behavior:
+- if Japanese `TextToSpeech` support is unavailable or initialization fails, keep the rest of the detail screen fully usable
+- hide or disable audio controls in a stable way rather than leaving them tappable and failing silently
+
 ### Missing or weak compounds data
 
 Behavior:
@@ -294,6 +324,9 @@ Recommended checks:
 - verify compounds appear for a kanji with strong source matches
 - verify the compounds section hides when no suitable rows remain after filtering
 - verify cached compounds are reused on reopen inside the approved freshness window
+- verify the main reading audio prefers `onyomi` and falls back to `kunyomi`
+- verify compound row audio plays the row reading when supported
+- verify unavailable TTS support leaves the rest of the screen usable
 - verify stroke-order loading, replay, and retry-after-failure behavior
 - verify `Next random` avoids the current kanji when the catalog has multiple entries
 - verify `Next random` is disabled when the catalog is unavailable
