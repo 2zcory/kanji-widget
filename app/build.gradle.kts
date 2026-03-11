@@ -22,6 +22,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0.0"
+        manifestPlaceholders["appLabel"] = "Kanji Widget"
     }
 
     signingConfigs {
@@ -45,6 +46,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            manifestPlaceholders["appLabel"] = "Kanji Widget Debug"
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")

@@ -24,11 +24,14 @@ class KanjiDetailActivity : Activity() {
     private lateinit var progressView: ProgressBar
     private lateinit var replayButton: Button
     private lateinit var webView: WebView
-    private lateinit var readingSummaryView: TextView
+    private lateinit var onyomiView: TextView
+    private lateinit var kunyomiView: TextView
     private lateinit var meaningView: TextView
     private lateinit var noteView: TextView
     private lateinit var sourceView: TextView
-    private lateinit var todayStatsView: TextView
+    private lateinit var todayTotalView: TextView
+    private lateinit var todayOpenCountView: TextView
+    private lateinit var todayKanjiView: TextView
 
     private var lastHtml: String? = null
     private var currentKanji: String = ""
@@ -44,11 +47,14 @@ class KanjiDetailActivity : Activity() {
         progressView = findViewById(R.id.progressStrokeOrder)
         replayButton = findViewById(R.id.btnReplayStrokeOrder)
         webView = findViewById(R.id.webStrokeOrder)
-        readingSummaryView = findViewById(R.id.tvDetailReadingSummary)
+        onyomiView = findViewById(R.id.tvDetailOnyomi)
+        kunyomiView = findViewById(R.id.tvDetailKunyomi)
         meaningView = findViewById(R.id.tvDetailMeaning)
         noteView = findViewById(R.id.tvDetailNote)
         sourceView = findViewById(R.id.tvDetailSource)
-        todayStatsView = findViewById(R.id.tvTodayStudyStats)
+        todayTotalView = findViewById(R.id.tvTodayStudyTotal)
+        todayOpenCountView = findViewById(R.id.tvTodayStudyOpenCount)
+        todayKanjiView = findViewById(R.id.tvTodayStudyKanji)
 
         val kanji = intent.getStringExtra(EXTRA_KANJI)?.trim().orEmpty()
         currentKanji = kanji
@@ -192,7 +198,8 @@ class KanjiDetailActivity : Activity() {
         note: String,
         source: String,
     ) {
-        readingSummaryView.text = buildReadingSummary(onyomi, kunyomi)
+        onyomiView.text = onyomi.ifBlank { getString(R.string.stroke_order_info_placeholder) }
+        kunyomiView.text = kunyomi.ifBlank { getString(R.string.stroke_order_info_placeholder) }
         meaningView.text = meaning.ifBlank { getString(R.string.stroke_order_meaning_placeholder) }
         noteView.text = note.ifBlank { getString(R.string.stroke_order_note_placeholder) }
         sourceView.text = if (source.isNotBlank()) {
@@ -202,22 +209,13 @@ class KanjiDetailActivity : Activity() {
         }
     }
 
-    private fun buildReadingSummary(onyomi: String, kunyomi: String): String {
-        val on = onyomi.ifBlank { getString(R.string.stroke_order_info_placeholder) }
-        val kun = kunyomi.ifBlank { getString(R.string.stroke_order_info_placeholder) }
-        return getString(R.string.stroke_order_reading_summary, on, kun)
-    }
-
     private fun refreshTodayStats() {
         val totalMs = StudyTimeTracker.getTodayTotalMs(this)
         val openCount = StudyTimeTracker.getTodayOpenCount(this)
         val kanjiMs = StudyTimeTracker.getTodayKanjiMs(this, currentKanji)
-        todayStatsView.text = getString(
-            R.string.today_study_stats_value,
-            formatDuration(totalMs),
-            openCount,
-            formatDuration(kanjiMs)
-        )
+        todayTotalView.text = formatDuration(totalMs)
+        todayOpenCountView.text = getString(R.string.today_study_open_count_value, openCount)
+        todayKanjiView.text = formatDuration(kanjiMs)
     }
 
     private fun formatDuration(durationMs: Long): String {

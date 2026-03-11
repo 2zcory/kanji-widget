@@ -11,10 +11,10 @@ Update this checklist whenever a task is completed so the current implementation
 
 ## Phase 1: Layout Refactor, Readings, And Stats
 
-- [ ] Replace the combined reading summary block with separate Onyomi and Kunyomi sections in the detail layout
-- [ ] Update `KanjiDetailActivity` binding logic to populate separate Onyomi and Kunyomi fields
-- [ ] Replace the single today-stats text block with three explicit metrics: Today total, Valid opens, and This kanji
-- [ ] Update the today-stats binding logic to populate the three metric fields
+- [x] Replace the combined reading summary block with separate Onyomi and Kunyomi sections in the detail layout
+- [x] Update `KanjiDetailActivity` binding logic to populate separate Onyomi and Kunyomi fields
+- [x] Replace the single today-stats text block with three explicit metrics: Today total, Valid opens, and This kanji
+- [x] Update the today-stats binding logic to populate the three metric fields
 - [ ] Review the revised layout on device or emulator for spacing, hierarchy, and fallback states
 
 ## Phase 2: Metadata Fields And Data Pipeline
@@ -45,3 +45,5 @@ Update this checklist whenever a task is completed so the current implementation
 ## Progress Log
 
 - 2026-03-11: Created the phased checklist for the Kanji Detail update work.
+- 2026-03-11: Completed the Phase 1 layout and binding refactor for separate readings and explicit today-study metrics.
+- 2026-03-11: Verified the Phase 1 changes with `./gradlew :app:compileDebugKotlin`.
