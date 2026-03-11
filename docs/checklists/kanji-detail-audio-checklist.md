@@ -1,7 +1,7 @@
 # Kanji Detail Audio Checklist
 
 Last updated: 2026-03-12
-Status: In review
+Status: Merged, pending release
 Working branch: `feature/kanji-detail-audio`
 
 ## Purpose
@@ -60,7 +60,7 @@ This feature should stay lightweight, fit the current local-first app model, and
 - [x] Verify the feature with the narrowest useful automated or build checks first
 - [x] Build a review APK and send it for user review before merge
 - [x] Create a Pull Request only after the work is ready for review and the review APK has already been sent
-- [ ] Merge into `master` only after user review passes
+- [x] Merge into `master` only after user review passes
 - [ ] Prepare release notes only after the reviewed work is merged
 
 ## Acceptance Criteria For User Verification
@@ -84,3 +84,4 @@ This feature should stay lightweight, fit the current local-first app model, and
 - 2026-03-12: Verified the implementation with `./gradlew :app:testDebugUnitTest --tests com.example.kanjiwidget.detail.KanjiCompoundRepositoryTest --tests com.example.kanjiwidget.stats.StudyStatsRepositoryTest`.
 - 2026-03-12: Built and sent the review APK `kanji-widget-debug-v1.2.0-audio-review.apk` to the user, and the user confirmed the review passed.
 - 2026-03-12: Opened Pull Request #1 for `feature/kanji-detail-audio` after the review APK had already been sent and approved.
+- 2026-03-12: Pull Request #1 was merged into `master` after the reviewed work passed user verification.
