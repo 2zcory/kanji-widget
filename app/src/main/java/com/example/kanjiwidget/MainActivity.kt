@@ -2,15 +2,16 @@ package com.example.kanjiwidget
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.appwidget.AppWidgetManager
-import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.kanjiwidget.home.HomeSummary
+import com.example.kanjiwidget.home.RecentKanjiSummaryItem
 import com.example.kanjiwidget.home.HomeSummaryRepository
 import com.example.kanjiwidget.stats.StudyStatsBottomSheet
 import com.example.kanjiwidget.stats.StudyStatsRepository
@@ -31,6 +32,8 @@ class MainActivity : Activity() {
     private lateinit var latestMeta: TextView
     private lateinit var openLatestButton: Button
     private lateinit var statsButton: Button
+    private lateinit var recentKanjiSection: View
+    private lateinit var recentKanjiContainer: LinearLayout
     private lateinit var widgetHelpSection: View
     private lateinit var widgetHelpBody: TextView
     private lateinit var widgetOpacityValue: TextView
@@ -52,6 +55,8 @@ class MainActivity : Activity() {
         latestMeta = findViewById(R.id.tvLatestMeta)
         openLatestButton = findViewById(R.id.btnOpenLatestKanji)
         statsButton = findViewById(R.id.btnTodayStats)
+        recentKanjiSection = findViewById(R.id.sectionRecentKanji)
+        recentKanjiContainer = findViewById(R.id.containerRecentKanji)
         widgetHelpSection = findViewById(R.id.sectionWidgetHelp)
         widgetHelpBody = findViewById(R.id.tvWidgetHelpBody)
         widgetOpacityValue = findViewById(R.id.tvWidgetOpacityValue)
@@ -103,6 +108,7 @@ class MainActivity : Activity() {
             openLatestButton.setOnClickListener(null)
         }
 
+        bindRecentKanji(summary.recentKanji.drop(1))
         statsButton.setOnClickListener { showStudyStatsBottomSheet(summary) }
         widgetHelpSection.visibility = if (summary.showWidgetHelp) View.VISIBLE else View.GONE
         widgetHelpBody.text = getString(R.string.home_widget_help_body)
@@ -177,4 +183,45 @@ class MainActivity : Activity() {
     }
 
     private fun formatDuration(durationMs: Long): String = formatDurationForUi(durationMs)
+
+    private fun bindRecentKanji(items: List<RecentKanjiSummaryItem>) {
+        recentKanjiContainer.removeAllViews()
+        recentKanjiSection.visibility = if (items.isEmpty()) View.GONE else View.VISIBLE
+        if (items.isEmpty()) return
+
+        val inflater = LayoutInflater.from(this)
+        items.forEach { item ->
+            val row = inflater.inflate(R.layout.item_recent_kanji, recentKanjiContainer, false)
+            row.findViewById<TextView>(R.id.tvRecentKanji).text = item.kanji
+            row.findViewById<TextView>(R.id.tvRecentMeaning).text =
+                item.meaning ?: getString(R.string.home_latest_meaning_placeholder)
+            row.findViewById<TextView>(R.id.tvRecentMeta).text = buildRecentMeta(item)
+            row.setOnClickListener { startActivity(buildDetailIntent(item)) }
+            recentKanjiContainer.addView(row)
+        }
+    }
+
+    private fun buildDetailIntent(item: RecentKanjiSummaryItem): Intent {
+        val entry = KanjiWidgetPrefs.getRemoteEntry(this, item.kanji)
+        return Intent(this, KanjiDetailActivity::class.java).apply {
+            putExtra(KanjiDetailActivity.EXTRA_KANJI, item.kanji)
+            putExtra(KanjiDetailActivity.EXTRA_SOURCE, entry?.source ?: getString(R.string.stroke_order_source_default))
+            putExtra(KanjiDetailActivity.EXTRA_JLPT, entry?.jlptLevel ?: item.jlpt)
+            putExtra(KanjiDetailActivity.EXTRA_ONYOMI, entry?.onyomi)
+            putExtra(KanjiDetailActivity.EXTRA_KUNYOMI, entry?.kunyomi)
+            putExtra(KanjiDetailActivity.EXTRA_MEANING, entry?.meaningVi ?: item.meaning)
+            putExtra(KanjiDetailActivity.EXTRA_NOTE, entry?.example)
+        }
+    }
+
+    private fun buildRecentMeta(item: RecentKanjiSummaryItem): String {
+        val parts = mutableListOf<String>()
+        parts += DateUtils.getRelativeTimeSpanString(
+            item.viewedAt,
+            System.currentTimeMillis(),
+            DateUtils.MINUTE_IN_MILLIS
+        ).toString()
+        item.jlpt?.takeIf { it.isNotBlank() }?.let { parts += "JLPT $it" }
+        return parts.joinToString(" • ")
+    }
 }

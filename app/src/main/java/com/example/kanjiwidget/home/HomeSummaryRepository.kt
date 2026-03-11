@@ -11,22 +11,30 @@ import com.example.kanjiwidget.widget.KanjiAppWidgetProvider
 class HomeSummaryRepository(private val context: Context) {
 
     fun loadSummary(): HomeSummary {
-        val latestKanji = RecentKanjiStore.getLatestKanji(context)
-        val latestViewedAt = RecentKanjiStore.getLatestViewedAt(context)
-        val latestEntry = latestKanji?.let { KanjiWidgetPrefs.getRemoteEntry(context, it) }
+        val recentItems = RecentKanjiStore.getRecentKanji(context).map { historyItem ->
+            val entry = KanjiWidgetPrefs.getRemoteEntry(context, historyItem.kanji)
+            RecentKanjiSummaryItem(
+                kanji = historyItem.kanji,
+                viewedAt = historyItem.viewedAt,
+                meaning = entry?.meaningVi,
+                jlpt = entry?.jlptLevel,
+            )
+        }
+        val latestItem = recentItems.firstOrNull()
         val isWidgetInstalled = hasInstalledWidget()
         val todayStudyMs = StudyTimeTracker.getTodayTotalMs(context)
         val todayOpenCount = StudyTimeTracker.getTodayOpenCount(context)
-        val showWidgetHelp = !isWidgetInstalled || (todayStudyMs <= 0L && latestKanji == null)
+        val showWidgetHelp = !isWidgetInstalled || (todayStudyMs <= 0L && latestItem == null)
 
         return HomeSummary(
             isWidgetInstalled = isWidgetInstalled,
             todayStudyMs = todayStudyMs,
             todayOpenCount = todayOpenCount,
-            latestKanji = latestKanji,
-            latestViewedAt = latestViewedAt,
-            latestMeaning = latestEntry?.meaningVi,
-            latestJlpt = latestEntry?.jlptLevel,
+            latestKanji = latestItem?.kanji,
+            latestViewedAt = latestItem?.viewedAt,
+            latestMeaning = latestItem?.meaning,
+            latestJlpt = latestItem?.jlpt,
+            recentKanji = recentItems,
             showWidgetHelp = showWidgetHelp,
         )
     }
@@ -46,5 +54,13 @@ data class HomeSummary(
     val latestViewedAt: Long?,
     val latestMeaning: String?,
     val latestJlpt: String?,
+    val recentKanji: List<RecentKanjiSummaryItem>,
     val showWidgetHelp: Boolean,
+)
+
+data class RecentKanjiSummaryItem(
+    val kanji: String,
+    val viewedAt: Long,
+    val meaning: String?,
+    val jlpt: String?,
 )

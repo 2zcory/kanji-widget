@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_widget_info_card"
                 android:ellipsize="end"
-                android:maxLines="2"
+                android:maxLines="3"
                 android:paddingLeft="10dp"
                 android:paddingTop="9dp"
                 android:paddingRight="10dp"
@@ -110,13 +110,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/bg_widget_info_card"
                 android:ellipsize="end"
-                android:maxLines="3"
-                android:paddingLeft="10dp"
-                android:paddingTop="9dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="9dp"
+                android:maxLines="2"
                 android:text="Mặt trời, ngày"
                 android:textColor="#4D555E"
                 android:textSize="14sp" />
@@ -137,7 +132,8 @@
                 android:paddingBottom="9dp"
                 android:text="日本（にほん）"
                 android:textColor="#59616A"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 
@@ -149,7 +145,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Nguồn: built-in"
-        android:textColor="#7A838C"
+        android:textColor="#59616A"
         android:textSize="12sp" />
 
         <Button

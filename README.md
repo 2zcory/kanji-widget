@@ -27,6 +27,7 @@ The project currently includes:
 - Today summary
 - Widget installation status
 - Quick access to the most recently opened Kanji
+- A bounded recent Kanji list for reopening recent study cards
 - Entry point for study statistics
 - Widget setup guidance
 

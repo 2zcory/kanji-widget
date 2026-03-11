@@ -135,7 +135,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
                 R.id.tvReading,
                 when {
                     !hasLoadedEntry -> "Đợi tải Kanji đầu tiên"
-                    revealAnswer -> "On: ${item!!.onyomi}  •  Kun: ${item.kunyomi}"
+                    revealAnswer -> formatReading(item!!, sizeClass)
                     else -> "Thử nhớ cách đọc trước khi mở"
                 }
             )
@@ -309,7 +309,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             hasLoadedEntry: Boolean,
         ) {
             val showMeaning = sizeClass != WidgetSizeClass.COMPACT
-            val showReading = sizeClass == WidgetSizeClass.EXPANDED
+            val showReading = sizeClass != WidgetSizeClass.COMPACT
             val showExample = sizeClass == WidgetSizeClass.EXPANDED
                 || (sizeClass == WidgetSizeClass.MEDIUM && revealAnswer && hasLoadedEntry)
             val showMeta = sizeClass != WidgetSizeClass.COMPACT
@@ -335,18 +335,31 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             }
         }
 
+        private fun formatReading(item: KanjiEntry, sizeClass: WidgetSizeClass): String {
+            return when (sizeClass) {
+                WidgetSizeClass.EXPANDED -> "On: ${item.onyomi}\nKun: ${item.kunyomi}"
+                WidgetSizeClass.MEDIUM -> "On: ${item.onyomi}\nKun: ${item.kunyomi}"
+                WidgetSizeClass.COMPACT -> "On: ${item.onyomi} • Kun: ${item.kunyomi}"
+            }
+        }
+
         private fun formatMeta(context: Context, item: KanjiEntry?): String {
             val total = KanjiWidgetPrefs.getKanjiCatalog(context).size
             val progress = if (total > 0) {
-                "Chế độ: ngẫu nhiên • Danh sách: $total chữ"
+                "Danh sách: $total chữ"
             } else {
                 "Danh sách: đang tải"
             }
             if (item == null) return "$progress • Nguồn: kanjiapi.dev"
 
+            val parts = mutableListOf<String>()
+            parts += progress
             val source = item.source ?: "kanjiapi.dev"
             val ts = item.lastUpdatedEpochMs
-            if (ts == null || ts <= 0L) return "$progress • Nguồn: $source"
+            if (ts == null || ts <= 0L) {
+                parts += "Nguồn: $source"
+                return parts.joinToString(" • ")
+            }
 
             val ageMs = (System.currentTimeMillis() - ts).coerceAtLeast(0L)
             val freshness = when {
@@ -355,7 +368,9 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
                 ageMs < 86_400_000L -> "${ageMs / 3_600_000L} giờ trước"
                 else -> "${ageMs / 86_400_000L} ngày trước"
             }
-            return "$progress • Nguồn: $source • $freshness"
+            parts += "Nguồn: $source"
+            parts += freshness
+            return parts.joinToString(" • ")
         }
 
         fun refreshAllWidgets(context: Context) {

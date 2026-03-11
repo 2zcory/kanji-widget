@@ -238,16 +238,20 @@ Current responsibility:
 - persist the latest opened kanji whenever `KanjiDetailActivity` starts
 - keep enough data for the launcher to reopen the latest viewed Kanji
 
-Current v1 data:
+Current data:
 - latest viewed kanji
 - latest viewed timestamp
+- bounded recent kanji list
 
-Suggested keys:
+Current keys:
 - `latest_kanji`
 - `latest_kanji_viewed_at`
+- `recent_kanji_history_v2`
 
-Future extension:
-- add a bounded recent list such as the latest 10 kanji
+Current behavior:
+- store the latest viewed kanji and timestamp for simple launcher access
+- maintain a bounded recent list of the latest 10 unique kanji
+- move a kanji to the top when it is opened again
 
 ### Widget appearance preferences
 
