@@ -27,6 +27,9 @@
     <string name="stroke_order_meta_grade">Grade %1$d</string>
     <string name="stroke_order_meta_frequency">#%1$d</string>
     <string name="stroke_order_hero_hint">Chạm Phát lại để xem từng nét theo thứ tự.</string>
+    <string name="detail_compounds_label">TỪ GHÉP PHỔ BIẾN</string>
+    <string name="detail_compounds_body">Một vài từ ghép dễ gặp để gắn kanji này với cách dùng thực tế.</string>
+    <string name="detail_compound_usage_value">Ứng dụng: %1$s</string>
     <string name="today_study_stats_label">HÔM NAY</string>
     <string name="today_study_total_label">Tổng xem hôm nay</string>
     <string name="today_study_open_count_label">Lượt mở hợp lệ</string>

@@ -10,6 +10,7 @@ This document covers:
 - detail navigation inputs
 - today-only study metrics
 - the Next random kanji action
+- the first compound-examples slice for practical vocabulary context
 
 ## Scope
 
@@ -19,12 +20,14 @@ In scope:
 - cached metadata usage for detail rendering
 - stroke-order loading and replay behavior
 - next-random navigation from the detail screen
+- a lightweight compounds section for the current kanji using one remote source and local cache support
 
 Out of scope for the current version:
 - editing or favoriting kanji
 - server-backed progress sync
 - spaced-repetition scheduling
 - prefetching the next random kanji in the background
+- full dictionary browsing or long-form example sentences from a second provider
 
 ## Current Components
 
@@ -47,6 +50,7 @@ It should let the user:
 - inspect one selected kanji in more detail
 - replay stroke order on demand
 - review readings, meaning, note, source, and available metadata
+- review a few practical compound examples for the current kanji
 - see today-only study totals for the current kanji context
 - continue to another random kanji without returning to the launcher
 
@@ -95,6 +99,27 @@ Current contents:
 
 Behavior:
 - use a shared placeholder when a reading field is unavailable
+
+### Compound examples section
+
+Current first-slice goal:
+- show a compact list of up to 5 compounds related to the current kanji
+
+Each visible compound row should include:
+- written form
+- reading
+- short meaning
+- short usage hint
+
+Current behavior target:
+- prefer compounds that appear common or readable based on source priority metadata
+- avoid unusually long, low-signal, or obviously obscure rows when better candidates exist
+- hide the entire section if no suitable compounds are available after filtering
+
+Usage hint rule for v1:
+- the usage field is a short label derived from source priority markers and meaning shape
+- it is not a generated full sentence example
+- example labels may include `Common word`, `News-heavy`, `Formal term`, or `Study word`
 
 ### Today section
 
@@ -206,11 +231,16 @@ Current local dependencies:
 - cached per-kanji detail entries from `KanjiWidgetPrefs`
 - recent-view history from `RecentKanjiStore`
 - local study stats from `StudyTimeTracker`
+- cached per-kanji compound entries from local preferences if the first compounds fetch has already completed
 
 Current remote dependency:
 - KanjiVG-derived stroke-order SVG loading through `KanjiStrokeOrderClient`
+- `kanjiapi.dev` word lookup for compound examples
 
-No new persistent storage keys were added specifically for the detail screen in the current phase.
+Current compounds caching rule:
+- cache filtered compound results locally for the current kanji
+- refresh when the compounds cache is missing or older than the approved freshness window
+- keep this cache independent from stroke-order loading so a failed compounds fetch does not block the rest of the detail screen
 
 ## Edge Cases
 
@@ -234,6 +264,13 @@ Behavior:
 - render placeholders for readings, meaning, and note
 - render the default source label
 
+### Missing or weak compounds data
+
+Behavior:
+- if the remote source returns no suitable compound rows after filtering, hide the compounds section
+- if the source is temporarily unavailable and no fresh cache exists, keep the rest of the screen fully usable
+- if a fresh enough compounds cache exists, prefer showing cached rows over blocking on a new fetch
+
 ### Stroke-order load failure
 
 Behavior:
@@ -254,6 +291,9 @@ Recommended checks:
 - open detail from widget, main screen, and stats ranking rows
 - verify cached meaning, JLPT, and metadata appear when available
 - verify placeholders render when cached detail is absent
+- verify compounds appear for a kanji with strong source matches
+- verify the compounds section hides when no suitable rows remain after filtering
+- verify cached compounds are reused on reopen inside the approved freshness window
 - verify stroke-order loading, replay, and retry-after-failure behavior
 - verify `Next random` avoids the current kanji when the catalog has multiple entries
 - verify `Next random` is disabled when the catalog is unavailable

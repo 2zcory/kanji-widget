@@ -1,8 +1,10 @@
 package com.example.kanjiwidget.widget
 
+import com.example.kanjiwidget.detail.RawKanjiCompound
 import org.json.JSONArray
 import org.json.JSONObject
 import java.net.HttpURLConnection
+import java.net.URLEncoder
 import java.net.URL
 
 object KanjiApiClient {
@@ -28,7 +30,7 @@ object KanjiApiClient {
 
     fun fetchKanji(kanji: String): KanjiEntry? {
         return try {
-            val body = get("/kanji/$kanji") ?: return null
+            val body = get("/kanji/${encodePath(kanji)}") ?: return null
             val json = JSONObject(body)
             val onyomi = join(json.optJSONArray("on_readings"))
             val kunyomi = join(json.optJSONArray("kun_readings"))
@@ -68,6 +70,40 @@ object KanjiApiClient {
         }
     }
 
+    fun fetchKanjiCompounds(kanji: String): List<com.example.kanjiwidget.detail.KanjiCompoundEntry>? {
+        return try {
+            val body = get("/words/${encodePath(kanji)}") ?: return null
+            val json = JSONArray(body)
+            val raw = buildList {
+                for (i in 0 until json.length()) {
+                    val item = json.optJSONObject(i) ?: continue
+                    val variants = item.optJSONArray("variants")
+                    val meanings = item.optJSONArray("meanings")
+                    val primaryVariant = variants?.optJSONObject(0)
+                    val written = primaryVariant?.optString("written").orEmpty()
+                    val reading = primaryVariant?.optString("pronounced").orEmpty()
+                    val priorities = primaryVariant?.optJSONArray("priorities").toStringList()
+                    val meaning = meanings
+                        ?.optJSONObject(0)
+                        ?.optJSONArray("glosses")
+                        .toStringList(maxItems = 2)
+                        .joinToString("; ")
+                    add(
+                        RawKanjiCompound(
+                            written = written,
+                            reading = reading,
+                            meaning = meaning.orEmpty(),
+                            priorities = priorities,
+                        )
+                    )
+                }
+            }
+            com.example.kanjiwidget.detail.selectDisplayCompounds(kanji, raw)
+        } catch (_: Exception) {
+            null
+        }
+    }
+
     private fun get(path: String): String? {
         val url = URL("$BASE_URL$path")
         val conn = (url.openConnection() as HttpURLConnection).apply {
@@ -87,6 +123,8 @@ object KanjiApiClient {
         }
     }
 
+    private fun encodePath(value: String): String = URLEncoder.encode(value, Charsets.UTF_8.name())
+
     private fun join(arr: JSONArray?, maxItems: Int = Int.MAX_VALUE): String {
         if (arr == null || arr.length() == 0) return ""
         return buildList {
@@ -96,6 +134,17 @@ object KanjiApiClient {
                 if (!v.isNullOrBlank()) add(v)
             }
         }.joinToString("、")
+    }
+
+    private fun JSONArray?.toStringList(maxItems: Int = Int.MAX_VALUE): List<String> {
+        if (this == null || this.length() == 0) return emptyList()
+        return buildList {
+            for (i in 0 until this@toStringList.length()) {
+                if (size >= maxItems) break
+                val v = this@toStringList.optString(i)
+                if (!v.isNullOrBlank()) add(v)
+            }
+        }
     }
 
     private fun sourceNoteNeeded(

@@ -5,11 +5,15 @@ import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.LayoutInflater
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.example.kanjiwidget.detail.KanjiCompoundEntry
+import com.example.kanjiwidget.detail.KanjiCompoundRepository
 import com.example.kanjiwidget.history.RecentKanjiStore
 import com.example.kanjiwidget.stats.StudyTimeTracker
 import com.example.kanjiwidget.widget.KanjiStrokeOrderClient
@@ -34,14 +38,18 @@ class KanjiDetailActivity : Activity() {
     private lateinit var todayTotalView: TextView
     private lateinit var todayOpenCountView: TextView
     private lateinit var todayKanjiView: TextView
+    private lateinit var compoundsSection: View
+    private lateinit var compoundsContainer: LinearLayout
 
     private var lastHtml: String? = null
     private var currentKanji: String = ""
+    private lateinit var compoundRepository: KanjiCompoundRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kanji_detail)
 
+        compoundRepository = KanjiCompoundRepository(this)
         titleView = findViewById(R.id.tvDetailKanji)
         subtitleView = findViewById(R.id.tvDetailSubtitle)
         heroMetaView = findViewById(R.id.tvDetailHeroMeta)
@@ -59,6 +67,8 @@ class KanjiDetailActivity : Activity() {
         todayTotalView = findViewById(R.id.tvTodayStudyTotal)
         todayOpenCountView = findViewById(R.id.tvTodayStudyOpenCount)
         todayKanjiView = findViewById(R.id.tvTodayStudyKanji)
+        compoundsSection = findViewById(R.id.sectionCompoundExamples)
+        compoundsContainer = findViewById(R.id.containerCompoundExamples)
 
         val kanji = intent.getStringExtra(EXTRA_KANJI)?.trim().orEmpty()
         currentKanji = kanji
@@ -78,6 +88,7 @@ class KanjiDetailActivity : Activity() {
             bindHeroMetadata(null, null, null)
             jlptBadgeView.text = getString(R.string.stroke_order_badge_placeholder)
             bindStudyInfo("", "", "", "", "")
+            renderCompounds(emptyList())
             refreshTodayStats()
             showError(getString(R.string.stroke_order_empty_message))
             return
@@ -94,6 +105,7 @@ class KanjiDetailActivity : Activity() {
             note = note,
             source = source
         )
+        bindCompounds(kanji)
         refreshTodayStats()
 
         configureWebView()
@@ -261,6 +273,41 @@ class KanjiDetailActivity : Activity() {
         } else {
             getString(R.string.stroke_order_source_value, getString(R.string.stroke_order_source_default))
         }
+    }
+
+    private fun bindCompounds(kanji: String) {
+        val cachedEntries = compoundRepository.getCachedCompounds(kanji)
+        renderCompounds(cachedEntries)
+
+        if (!compoundRepository.shouldRefreshCompounds(kanji)) return
+
+        thread(name = "compound-loader") {
+            val refreshed = compoundRepository.refreshCompounds(kanji)
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                renderCompounds(refreshed ?: cachedEntries)
+            }
+        }
+    }
+
+    private fun renderCompounds(entries: List<KanjiCompoundEntry>) {
+        compoundsContainer.removeAllViews()
+        if (entries.isEmpty()) {
+            compoundsSection.visibility = View.GONE
+            return
+        }
+
+        val inflater = LayoutInflater.from(this)
+        entries.forEach { entry ->
+            val row = inflater.inflate(R.layout.item_compound_example, compoundsContainer, false)
+            row.findViewById<TextView>(R.id.tvCompoundWritten).text = entry.written
+            row.findViewById<TextView>(R.id.tvCompoundReading).text = entry.reading
+            row.findViewById<TextView>(R.id.tvCompoundMeaning).text = entry.meaning
+            row.findViewById<TextView>(R.id.tvCompoundUsage).text =
+                getString(R.string.detail_compound_usage_value, entry.usageHint)
+            compoundsContainer.addView(row)
+        }
+        compoundsSection.visibility = View.VISIBLE
     }
 
     private fun refreshTodayStats() {

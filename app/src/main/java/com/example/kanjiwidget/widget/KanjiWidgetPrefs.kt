@@ -1,7 +1,10 @@
 package com.example.kanjiwidget.widget
 
 import android.content.Context
+import com.example.kanjiwidget.detail.CachedKanjiCompounds
+import com.example.kanjiwidget.detail.KanjiCompoundEntry
 import org.json.JSONObject
+import org.json.JSONArray
 
 object KanjiWidgetPrefs {
     private const val PREF = "kanji_widget_pref"
@@ -122,6 +125,65 @@ object KanjiWidgetPrefs {
         }
     }
 
+    fun saveCompoundEntries(
+        context: Context,
+        kanji: String,
+        entries: List<KanjiCompoundEntry>,
+        savedAtEpochMs: Long,
+    ) {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        val payload = JSONObject().apply {
+            put("lastUpdatedEpochMs", savedAtEpochMs)
+            put(
+                "entries",
+                JSONArray().apply {
+                    entries.forEach { entry ->
+                        put(
+                            JSONObject().apply {
+                                put("written", entry.written)
+                                put("reading", entry.reading)
+                                put("meaning", entry.meaning)
+                                put("usageHint", entry.usageHint)
+                                put("priorities", JSONArray(entry.priorities))
+                            }
+                        )
+                    }
+                }
+            )
+        }.toString()
+        sp.edit().putString("compounds_$kanji", payload).apply()
+    }
+
+    fun getCachedCompounds(context: Context, kanji: String): CachedKanjiCompounds? {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        val raw = sp.getString("compounds_$kanji", null) ?: return null
+        return try {
+            val json = JSONObject(raw)
+            val entriesJson = json.optJSONArray("entries") ?: JSONArray()
+            val entries = buildList {
+                for (i in 0 until entriesJson.length()) {
+                    val item = entriesJson.optJSONObject(i) ?: continue
+                    add(
+                        KanjiCompoundEntry(
+                            written = item.optString("written"),
+                            reading = item.optString("reading"),
+                            meaning = item.optString("meaning"),
+                            usageHint = item.optString("usageHint"),
+                            priorities = item.optJSONArray("priorities").toStringList(),
+                        )
+                    )
+                }
+            }.filter { it.written.isNotBlank() && it.reading.isNotBlank() && it.meaning.isNotBlank() }
+            if (entries.isEmpty()) return null
+            CachedKanjiCompounds(
+                entries = entries,
+                lastUpdatedEpochMs = json.optLong("lastUpdatedEpochMs").takeIf { it > 0L } ?: 0L,
+            )
+        } catch (_: Exception) {
+            null
+        }
+    }
+
     private fun parseJson(raw: String): KanjiEntry? {
         return try {
             val json = JSONObject(raw)
@@ -166,5 +228,15 @@ object KanjiWidgetPrefs {
             source = "legacy-cache",
             lastUpdatedEpochMs = null
         )
+    }
+
+    private fun JSONArray?.toStringList(): List<String> {
+        if (this == null || this.length() == 0) return emptyList()
+        return buildList {
+            for (i in 0 until this@toStringList.length()) {
+                val value = this@toStringList.optString(i)
+                if (!value.isNullOrBlank()) add(value)
+            }
+        }
     }
 }
