@@ -9,6 +9,7 @@ This file defines how an AI coding agent should operate in this repository.
 1. Read `docs/project-context.md` first for durable project context.
 2. Read `docs/basic-design.md` when the task may affect product behavior or UX.
 3. Read the relevant file in `docs/detail-design/` before changing an implemented feature.
+4. Read any relevant in-progress checklist in `docs/checklists/` when continuing multi-session implementation work.
 
 ## Repository Rules
 
@@ -35,3 +36,6 @@ This file defines how an AI coding agent should operate in this repository.
 - Use `docs/project-context.md` as the durable project summary.
 - If the current task changes scope, constraints, or status in a lasting way, update `docs/project-context.md`.
 - If the current task changes a shipped feature materially, update the corresponding detail design document under `docs/detail-design/`.
+- Use `docs/checklists/` for temporary multi-session work tracking.
+- Keep active checklists in `docs/checklists/` and move completed ones into `docs/checklists/archieved/`.
+- Update the relevant checklist whenever a tracked task is completed so progress is recoverable in later sessions.
