@@ -14,9 +14,9 @@ This checklist is intentionally narrow. It does not try to replace product plann
 
 ## Current Priority Order
 
-- Priority 1: expand automated test coverage for widget and state-management logic
-- Priority 2: clean up stale design-doc backlog notes so docs reflect shipped behavior accurately
-- Priority 3: choose the next widget UX slice with the best value-to-complexity ratio
+- Priority 1: align cached compound loading with the shipped Kanji Detail behavior for blank readings
+- Priority 2: choose the next widget UX slice with the best value-to-complexity ratio
+- Priority 3: review longer-term data-retention and ranking extensions after the current behavior gaps are closed
 
 ## Phase 1: Evidence Capture
 
@@ -26,9 +26,9 @@ This checklist is intentionally narrow. It does not try to replace product plann
 
 ## Priority 1: Test Coverage Expansion
 
-- [ ] Add focused tests for widget random selection avoiding immediate repeats
-- [ ] Add focused tests for widget size-class resolution and footer meta formatting
-- [ ] Add focused tests for per-widget preference read/write and cleanup on widget deletion
+- [x] Add focused tests for widget random selection avoiding immediate repeats
+- [x] Add focused tests for widget size-class resolution and footer meta formatting
+- [x] Add focused tests for per-widget preference read/write and cleanup on widget deletion
 
 Evidence:
 - `docs/detail-design/widget.md:440`
@@ -37,7 +37,17 @@ Evidence:
 - `docs/detail-design/widget.md:443`
 - `docs/detail-design/widget.md:444`
 - `docs/detail-design/widget.md:445`
-- Current repo tests live only under `app/src/test/java/com/example/kanjiwidget/detail/` and `app/src/test/java/com/example/kanjiwidget/stats/`
+- Widget logic coverage was added on `2026-03-12` in PR `#3`
+
+## Priority 1: Compound Cache Behavior Gap
+
+- [ ] Stop dropping cached compound rows only because the reading is blank
+- [ ] Add or update narrow tests for the cached-compounds read path so it matches the shipped Kanji Detail fallback behavior
+- [ ] Re-check Kanji Detail with cached compound data after the fix lands
+
+Evidence:
+- `app/src/main/java/com/example/kanjiwidget/widget/KanjiWidgetPrefs.kt:157`
+- Shipped Kanji Detail behavior now keeps supported compound rows visible when readings are missing
 
 ## Priority 2: Docs Consistency Cleanup
 
@@ -81,3 +91,5 @@ Evidence:
 - 2026-03-12: Prioritized test coverage first because widget logic remains central to the app while current automated coverage is concentrated in detail and stats only.
 - 2026-03-12: Recorded a stale docs item for main-screen future-work notes so a small cleanup task can keep backlog signals trustworthy.
 - 2026-03-12: Removed the stale main-screen future-work note about bounded recent history and re-checked the remaining design-doc future-work sections for obviously shipped items.
+- 2026-03-12: Completed the widget test coverage slice in PR `#3`, so that backlog item is no longer the next immediate priority.
+- 2026-03-12: Recorded a remaining behavior gap in cached compound loading: blank readings are still filtered out by `KanjiWidgetPrefs.getCachedCompounds(...)`, which can diverge from the shipped Kanji Detail behavior after cache reuse.

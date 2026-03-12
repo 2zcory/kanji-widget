@@ -31,6 +31,7 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 - The repository has published tags through `v1.3.0`, and `master` also contains the follow-up Kanji Detail reading-availability fix plus `v1.3.1` release notes
 - GitHub Actions workflows now cover debug APK builds and signed release builds
 - The phased Kanji Detail screen update is complete, including layout, metadata, study stats, next-random navigation, and related design docs
+- `master` now also includes direct unit coverage for widget selection, widget meta formatting, and widget-scoped preference cleanup through PR `#3`
 
 ## Working Notes
 
@@ -41,3 +42,4 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 - Any machine-specific `android.aapt2FromMavenOverride` configuration should stay outside the repository so CI can use the default toolchain
 - The Kanji Detail checklist remains useful as the implementation record for the completed phased update
 - New complex tasks should start from `docs/checklists/TEMPLATE-complex-task-checklist.md`, while completed task checklists should be moved into `docs/checklists/archieved/`
+- The next known behavior gap is in cached compound loading: `KanjiWidgetPrefs.getCachedCompounds(...)` still drops rows with blank readings even though the shipped Kanji Detail flow now keeps those rows visible with a placeholder
