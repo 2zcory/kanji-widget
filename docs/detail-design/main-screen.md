@@ -370,5 +370,4 @@ Manual test cases:
 ## Future Extensions
 
 Potential future improvements:
-- expand latest-history from one item to a bounded recent list
 - promote the launcher into a richer dashboard if the app grows beyond widget-first usage
