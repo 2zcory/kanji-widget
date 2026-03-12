@@ -34,7 +34,7 @@ The template should reduce repeated setup work and make the current branch, PR, 
 ## Phase 3: Verification
 
 - [x] Verify the template reads clearly and matches the branch-review-merge-release workflow already used in this repository
-- [ ] Review whether `docs/project-context.md` needs a durable note about the standardized checklist template
+- [x] Review whether `docs/project-context.md` needs a durable note about the standardized checklist template
 
 ## Acceptance Criteria
 
@@ -48,3 +48,4 @@ The template should reduce repeated setup work and make the current branch, PR, 
 - 2026-03-12: Added the reusable template file, updated the checklist README, and added a short AGENTS note to point new complex tasks toward the template.
 - 2026-03-12: The user reviewed the documentation changes and confirmed they pass review on branch `chore/checklist-template`.
 - 2026-03-12: Pull Request #2 was merged into `master`, so the standardized checklist template is now part of the default repository workflow.
+- 2026-03-12: Added a durable project-context note so future sessions can recover the standardized checklist-template workflow without relying on the merged task branch history.

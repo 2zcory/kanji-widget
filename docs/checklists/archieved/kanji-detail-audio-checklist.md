@@ -39,7 +39,7 @@ This feature should stay lightweight, fit the current local-first app model, and
 ## Phase 2: Design And Documentation
 
 - [x] Update `docs/detail-design/kanji-detail.md` to describe the audio controls, supported playback targets, and failure handling
-- [ ] Keep `docs/project-context.md` aligned if the shipped feature set changes materially
+- [x] Keep `docs/project-context.md` aligned if the shipped feature set changes materially
 - [x] Update this checklist with implementation notes and review status as work progresses
 
 ## Phase 3: Audio Engine And Lifecycle
@@ -86,3 +86,4 @@ This feature should stay lightweight, fit the current local-first app model, and
 - 2026-03-12: Opened Pull Request #1 for `feature/kanji-detail-audio` after the review APK had already been sent and approved.
 - 2026-03-12: Pull Request #1 was merged into `master` after the reviewed work passed user verification.
 - 2026-03-12: Prepared the follow-up `v1.3.1` release notes on `master` for the shipped Kanji Detail reading-availability fix.
+- 2026-03-12: Confirmed `docs/project-context.md` reflects the shipped pronunciation playback behavior and the follow-up reading-availability fix on `master`.
