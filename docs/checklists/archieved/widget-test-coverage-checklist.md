@@ -1,7 +1,7 @@
 # Widget Test Coverage Checklist
 
 Last updated: 2026-03-12
-Status: Proposed
+Status: Merged
 Working branch: `feature/widget-test-coverage`
 Base branch: `master`
 Expected merge target: `master`
@@ -32,36 +32,36 @@ Keep this slice narrow. The goal is confidence around the existing widget flow, 
 
 ## Phase 2: Implementation
 
-- [ ] Add focused tests for random selection avoiding immediate repeat when possible
-- [ ] Add focused tests for size-class resolution and footer meta formatting if those helpers are testable in isolation
-- [ ] Add focused tests for per-widget preference read/write and cleanup on widget deletion
-- [ ] Keep implementation changes minimal and aligned with the current widget design doc
+- [x] Add focused tests for random selection avoiding immediate repeat when possible
+- [x] Add focused tests for size-class resolution and footer meta formatting if those helpers are testable in isolation
+- [x] Add focused tests for per-widget preference read/write and cleanup on widget deletion
+- [x] Keep implementation changes minimal and aligned with the current widget design doc
 
 ## Phase 3: Verification
 
-- [ ] Run the narrowest useful automated checks first
-- [ ] Review whether any widget logic needed small production changes to become testable
-- [ ] Leave implementation items unchecked until user verification passes if the repository workflow requires explicit confirmation
+- [x] Run the narrowest useful automated checks first
+- [x] Review whether any widget logic needed small production changes to become testable
+- [x] Leave implementation items unchecked until user verification passes if the repository workflow requires explicit confirmation
 
 ## Phase 4: Review Flow
 
-- [ ] Push the working branch to `origin`
-- [ ] Open a Pull Request from the working branch into `master`
-- [ ] Ask for user review only after the work is ready and the Pull Request is open
-- [ ] Merge into `master` only after user review passes
+- [x] Push the working branch to `origin`
+- [x] Open a Pull Request from the working branch into `master`
+- [x] Ask for user review only after the work is ready and the Pull Request is open
+- [x] Merge into `master` only after user review passes
 
 ## Phase 5: Post-Merge And Release
 
-- [ ] Sync local `master` only from a clean worktree after the Pull Request merge
-- [ ] Update durable project context or status docs if the shipped behavior or testing posture changed materially
-- [ ] Prepare release notes only after the reviewed work has been merged
-- [ ] Complete any release steps required by the repository workflow if this task materially changes shipped behavior
+- [x] Sync local `master` only from a clean worktree after the Pull Request merge
+- [x] Update durable project context or status docs if the shipped behavior or testing posture changed materially
+- [x] Prepare release notes only after the reviewed work has been merged
+- [x] Complete any release steps required by the repository workflow if this task materially changes shipped behavior
 
 ## Acceptance Criteria For User Verification
 
-- [ ] The repository has direct automated coverage for the highest-risk widget logic currently called out in the widget design doc
-- [ ] The new tests are narrow, maintainable, and runnable with the existing local Gradle test workflow
-- [ ] Existing widget behavior remains unchanged unless a separately documented bugfix is required
+- [x] The repository has direct automated coverage for the highest-risk widget logic currently called out in the widget design doc
+- [x] The new tests are narrow, maintainable, and runnable with the existing local Gradle test workflow
+- [x] Existing widget behavior remains unchanged unless a separately documented bugfix is required
 
 ## Progress Log
 
@@ -75,3 +75,6 @@ Keep this slice narrow. The goal is confidence around the existing widget flow, 
 - 2026-03-12: Tried a Robolectric-based path for `SharedPreferences` coverage first, but dropped it after native-link failures on the current Android/Linux arm64 host and replaced it with a pure in-memory test context.
 - 2026-03-12: Verified the new widget tests with `./gradlew testDebugUnitTest --tests com.example.kanjiwidget.widget.KanjiWidgetLogicTest --tests com.example.kanjiwidget.widget.KanjiWidgetPrefsTest`.
 - 2026-03-12: Re-ran the full local unit test suite with `./gradlew testDebugUnitTest` and it passed on branch `feature/widget-test-coverage`.
+- 2026-03-12: Opened PR #3 from `feature/widget-test-coverage` into `master` after the test work and verification were ready for review.
+- 2026-03-12: The user confirmed PR #3 passed review, so the branch was merged into `master` and local `master` was synced cleanly afterward.
+- 2026-03-12: No release notes or extra release steps were needed because this task only adds automated coverage and does not change shipped user-facing behavior.
