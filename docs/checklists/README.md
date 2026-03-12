@@ -6,6 +6,7 @@ This folder stores temporary work checklists for tasks that may span multiple se
 
 - Keep in-progress or not-yet-finished checklists directly in this folder.
 - Move completed checklists into `archieved/`.
+- Keep reusable templates such as `TEMPLATE-complex-task-checklist.md` in the top-level `docs/checklists/` folder.
 
 ## Usage
 
