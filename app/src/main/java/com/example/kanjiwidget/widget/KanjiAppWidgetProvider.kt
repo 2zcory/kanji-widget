@@ -324,12 +324,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             val options = manager.getAppWidgetOptions(widgetId)
             val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 220)
             val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 110)
-
-            return when {
-                minWidth >= 250 && minHeight >= 160 -> WidgetSizeClass.EXPANDED
-                minHeight >= 130 || minWidth >= 200 -> WidgetSizeClass.MEDIUM
-                else -> WidgetSizeClass.COMPACT
-            }
+            return resolveWidgetSizeClass(minWidth, minHeight)
         }
 
         private fun formatReading(item: KanjiEntry, sizeClass: WidgetSizeClass): String {
@@ -341,33 +336,11 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
         }
 
         private fun formatMeta(context: Context, item: KanjiEntry?): String {
-            val total = KanjiWidgetPrefs.getKanjiCatalog(context).size
-            val progress = if (total > 0) {
-                "Danh sách: $total chữ"
-            } else {
-                "Danh sách: đang tải"
-            }
-            if (item == null) return "$progress • Nguồn: kanjiapi.dev"
-
-            val parts = mutableListOf<String>()
-            parts += progress
-            val source = item.source ?: "kanjiapi.dev"
-            val ts = item.lastUpdatedEpochMs
-            if (ts == null || ts <= 0L) {
-                parts += "Nguồn: $source"
-                return parts.joinToString(" • ")
-            }
-
-            val ageMs = (System.currentTimeMillis() - ts).coerceAtLeast(0L)
-            val freshness = when {
-                ageMs < 60_000L -> "Mới cập nhật"
-                ageMs < 3_600_000L -> "${ageMs / 60_000L} phút trước"
-                ageMs < 86_400_000L -> "${ageMs / 3_600_000L} giờ trước"
-                else -> "${ageMs / 86_400_000L} ngày trước"
-            }
-            parts += "Nguồn: $source"
-            parts += freshness
-            return parts.joinToString(" • ")
+            return formatWidgetMeta(
+                totalKanji = KanjiWidgetPrefs.getKanjiCatalog(context).size,
+                source = item?.source,
+                lastUpdatedEpochMs = item?.lastUpdatedEpochMs,
+            )
         }
 
         fun refreshAllWidgets(context: Context) {
@@ -376,12 +349,6 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             manager.getAppWidgetIds(provider).forEach { widgetId ->
                 renderWidget(context, manager, widgetId)
             }
-        }
-
-        private enum class WidgetSizeClass {
-            COMPACT,
-            MEDIUM,
-            EXPANDED,
         }
     }
 }

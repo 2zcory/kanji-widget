@@ -20,15 +20,15 @@ Keep this slice narrow. The goal is confidence around the existing widget flow, 
 
 ## Preconditions
 
-- [ ] Confirm `master` is clean and up to date with `origin/master` before creating the working branch
-- [ ] Confirm the working branch name for this task
-- [ ] Confirm the initial acceptance criteria and manual verification expectations before implementation starts
+- [x] Confirm `master` is clean and up to date with `origin/master` before creating the working branch
+- [x] Confirm the working branch name for this task
+- [x] Confirm the initial acceptance criteria and manual verification expectations before implementation starts
 
 ## Phase 1: Scope And Design Alignment
 
-- [ ] Review the current widget implementation and map the highest-value test seams
-- [ ] Confirm which widget helpers can be tested as pure JVM tests without introducing unnecessary framework weight
-- [ ] Record any blockers or testability gaps in the progress log before implementation starts
+- [x] Review the current widget implementation and map the highest-value test seams
+- [x] Confirm which widget helpers can be tested as pure JVM tests without introducing unnecessary framework weight
+- [x] Record any blockers or testability gaps in the progress log before implementation starts
 
 ## Phase 2: Implementation
 
@@ -66,3 +66,12 @@ Keep this slice narrow. The goal is confidence around the existing widget flow, 
 ## Progress Log
 
 - 2026-03-12: Created the proposed checklist for the widget test coverage backlog item identified during technical backlog triage.
+- 2026-03-12: Confirmed `master` was clean and in sync with `origin/master`, then created branch `feature/widget-test-coverage`.
+- 2026-03-12: Identified the highest-value seams as widget random selection in `KanjiRefreshWorker`, widget size/meta helpers in `KanjiAppWidgetProvider`, and persisted state plus cleanup behavior in `KanjiWidgetPrefs`.
+- 2026-03-12: The current testability plan is to start with pure or mostly pure JVM coverage and avoid heavier framework setup unless a helper cannot be isolated cleanly.
+- 2026-03-12: Noted a separate cache-layer risk outside this task: `KanjiWidgetPrefs.getCachedCompounds(...)` still drops rows with blank readings even though shipped detail behavior now keeps those rows visible.
+- 2026-03-12: Extracted pure widget helpers for size classification, metadata formatting, and next-index selection so they can be covered by local JVM tests without pulling the whole widget provider into test setup.
+- 2026-03-12: Added widget-focused unit tests for selection logic, size/meta helpers, widget-scoped preference state, alpha clamping, and cleanup behavior.
+- 2026-03-12: Tried a Robolectric-based path for `SharedPreferences` coverage first, but dropped it after native-link failures on the current Android/Linux arm64 host and replaced it with a pure in-memory test context.
+- 2026-03-12: Verified the new widget tests with `./gradlew testDebugUnitTest --tests com.example.kanjiwidget.widget.KanjiWidgetLogicTest --tests com.example.kanjiwidget.widget.KanjiWidgetPrefsTest`.
+- 2026-03-12: Re-ran the full local unit test suite with `./gradlew testDebugUnitTest` and it passed on branch `feature/widget-test-coverage`.

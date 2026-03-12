@@ -54,12 +54,12 @@ class KanjiRefreshWorker(
     }
 
     private fun selectNextKanji(widgetId: Int, catalog: List<String>, currentKanji: String?): String {
-        if (catalog.size == 1) return catalog.first()
-
         val currentIndex = catalog.indexOf(currentKanji).takeIf { it >= 0 } ?: -1
-        val nextIndex = catalog.indices
-            .filter { it != currentIndex }
-            .random()
+        val nextIndex = selectNextKanjiIndex(
+            catalogSize = catalog.size,
+            currentIndex = currentIndex,
+            nextRandomInt = { bound -> (0 until bound).random() },
+        )
 
         KanjiWidgetPrefs.setIndex(applicationContext, widgetId, nextIndex)
         return catalog[nextIndex]
