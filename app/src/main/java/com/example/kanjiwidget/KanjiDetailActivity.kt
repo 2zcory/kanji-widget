@@ -298,19 +298,18 @@ class KanjiDetailActivity : Activity() {
     }
 
     private fun bindMainReadingAudio(reading: String?) {
-        mainReadingToSpeak = reading?.takeIf { it.isNotBlank() }
-        val isEnabled = !mainReadingToSpeak.isNullOrBlank()
-        playMainReadingButton.visibility = if (isEnabled) View.VISIBLE else View.GONE
-        playMainReadingButton.isEnabled = isEnabled
-        playMainReadingButton.alpha = if (isEnabled && speechController.isReady()) 1f else 0.5f
+        mainReadingToSpeak = reading?.takeIf { isPlayableReading(it) }
+        val hasUsableReading = !mainReadingToSpeak.isNullOrBlank()
+        val isReady = speechController.isReady()
+        playMainReadingButton.visibility = if (hasUsableReading) View.VISIBLE else View.GONE
+        playMainReadingButton.isEnabled = hasUsableReading && isReady
+        playMainReadingButton.alpha = if (hasUsableReading && isReady) 1f else 0.5f
         playMainReadingButton.setOnClickListener(
-            if (!isEnabled) {
+            if (!hasUsableReading || !isReady) {
                 null
             } else {
                 View.OnClickListener {
-                    if (speechController.isReady()) {
-                        speechController.speak(mainReadingToSpeak.orEmpty())
-                    }
+                    speechController.speak(mainReadingToSpeak.orEmpty())
                 }
             }
         )
@@ -343,23 +342,24 @@ class KanjiDetailActivity : Activity() {
         entries.forEach { entry ->
             val row = inflater.inflate(R.layout.item_compound_example, compoundsContainer, false)
             row.findViewById<TextView>(R.id.tvCompoundWritten).text = entry.written
-            row.findViewById<TextView>(R.id.tvCompoundReading).text = entry.reading
+            row.findViewById<TextView>(R.id.tvCompoundReading).text = entry.reading.ifBlank {
+                getString(R.string.stroke_order_info_placeholder)
+            }
             row.findViewById<TextView>(R.id.tvCompoundMeaning).text = entry.meaning
             row.findViewById<TextView>(R.id.tvCompoundUsage).text =
                 getString(R.string.detail_compound_usage_value, entry.usageHint)
             val playButton = row.findViewById<ImageButton>(R.id.btnPlayCompoundReading)
-            val canPlay = entry.reading.isNotBlank()
+            val canPlay = isPlayableReading(entry.reading)
+            val isReady = speechController.isReady()
             playButton.visibility = if (canPlay) View.VISIBLE else View.GONE
-            playButton.isEnabled = canPlay
-            playButton.alpha = if (canPlay && speechController.isReady()) 1f else 0.5f
+            playButton.isEnabled = canPlay && isReady
+            playButton.alpha = if (canPlay && isReady) 1f else 0.5f
             playButton.setOnClickListener(
-                if (!canPlay) {
+                if (!canPlay || !isReady) {
                     null
                 } else {
                     View.OnClickListener {
-                        if (speechController.isReady()) {
-                            speechController.speak(entry.reading)
-                        }
+                        speechController.speak(entry.reading)
                     }
                 }
             )
@@ -377,7 +377,10 @@ class KanjiDetailActivity : Activity() {
     }
 
     private fun isPlayableReading(value: String?): Boolean {
-        return !value.isNullOrBlank() && value != getString(R.string.stroke_order_info_placeholder)
+        val normalized = value?.trim()
+        return !normalized.isNullOrBlank() &&
+            normalized != "-" &&
+            normalized != getString(R.string.stroke_order_info_placeholder)
     }
 
     private fun refreshTodayStats() {

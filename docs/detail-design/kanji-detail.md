@@ -104,6 +104,7 @@ Current contents:
 
 Behavior:
 - use a shared placeholder when a reading field is unavailable
+- treat placeholder-style values such as `-` as unavailable reading data
 - for v1, the main playback target prefers `onyomi` and falls back to `kunyomi`
 - hide or disable the playback control when neither reading is usable
 - if a new playback starts, stop the previous playback first
@@ -119,6 +120,10 @@ Each visible compound row should include:
 - short meaning
 - short usage hint
 - a small pronunciation playback control when the row has a usable reading
+
+Behavior:
+- keep the row visible when written form and meaning are usable, even if the reading is missing
+- use the shared unavailable-reading placeholder when the row reading is blank
 
 Current behavior target:
 - prefer compounds that appear common or readable based on source priority metadata
@@ -220,6 +225,7 @@ Current v1 behavior:
 3. If initialization or language setup fails, audio controls stay unavailable without blocking the rest of the screen
 4. A new play action stops any current playback before speaking the new target
 5. Activity teardown stops playback and releases `TextToSpeech`
+6. Placeholder-style or sentinel reading values should not be treated as playable targets
 
 ## Random Navigation Behavior
 

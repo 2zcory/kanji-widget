@@ -47,9 +47,11 @@ class KanjiCompoundRepositoryTest {
             ),
         )
 
-        assertEquals(1, selected.size)
-        assertEquals("日記", selected.first().written)
-        assertEquals("Study word", selected.first().usageHint)
+        assertEquals(2, selected.size)
+        assertEquals(listOf("日本", "日記"), selected.map { it.written })
+        assertEquals("", selected.first().reading)
+        assertEquals("News-heavy", selected.first().usageHint)
+        assertEquals("Study word", selected[1].usageHint)
     }
 
     @Test

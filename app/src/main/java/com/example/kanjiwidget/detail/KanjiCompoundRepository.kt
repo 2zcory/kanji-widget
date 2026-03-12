@@ -49,7 +49,6 @@ internal fun selectDisplayCompounds(
     return candidates
         .filter { candidate ->
             candidate.written.isNotBlank() &&
-                candidate.reading.isNotBlank() &&
                 candidate.meaning.isNotBlank() &&
                 candidate.written.contains(kanji) &&
                 candidate.written.length in 2..8
