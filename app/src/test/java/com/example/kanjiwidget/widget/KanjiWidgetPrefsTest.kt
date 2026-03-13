@@ -3,6 +3,8 @@ package com.example.kanjiwidget.widget
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.SharedPreferences
+import com.example.kanjiwidget.detail.KanjiCompoundEntry
+import com.example.kanjiwidget.detail.UsageHintKey
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -59,6 +61,63 @@ class KanjiWidgetPrefsTest {
 
         KanjiWidgetPrefs.setWidgetSurfaceAlpha(context, 1.8f)
         assertEquals(1f, KanjiWidgetPrefs.getWidgetSurfaceAlpha(context))
+    }
+
+    @Test
+    fun cachedCompounds_keepEntriesWithBlankReadingWhenWrittenAndMeaningExist() {
+        val entries = filterCachedCompoundEntries(
+            listOf(
+                KanjiCompoundEntry(
+                    written = "日本",
+                    reading = "",
+                    meaning = "Japan",
+                    usageHintKey = UsageHintKey.COMMON_WORD,
+                    priorities = listOf("ichi1"),
+                ),
+                KanjiCompoundEntry(
+                    written = "日光",
+                    reading = "にっこう",
+                    meaning = "sunlight",
+                    usageHintKey = UsageHintKey.NEWS_HEAVY,
+                    priorities = listOf("news1"),
+                ),
+                KanjiCompoundEntry(
+                    written = "",
+                    reading = "ひ",
+                    meaning = "sun",
+                    usageHintKey = UsageHintKey.STUDY_WORD,
+                ),
+            )
+        )
+
+        assertEquals(2, entries.size)
+        assertEquals("日本", entries[0].written)
+        assertEquals("", entries[0].reading)
+        assertEquals("Japan", entries[0].meaning)
+        assertEquals(UsageHintKey.COMMON_WORD, entries[0].usageHintKey)
+        assertEquals(listOf("ichi1"), entries[0].priorities)
+    }
+
+    @Test
+    fun cachedCompounds_returnNullWhenNoEntryHasWrittenAndMeaning() {
+        val entries = filterCachedCompoundEntries(
+            listOf(
+                KanjiCompoundEntry(
+                    written = "",
+                    reading = "",
+                    meaning = "Japan",
+                    usageHintKey = UsageHintKey.COMMON_WORD,
+                ),
+                KanjiCompoundEntry(
+                    written = "日本",
+                    reading = "にほん",
+                    meaning = "",
+                    usageHintKey = UsageHintKey.COMMON_WORD,
+                ),
+            )
+        )
+
+        assertTrue(entries.isEmpty())
     }
 
     private class TestContext : ContextWrapper(null) {

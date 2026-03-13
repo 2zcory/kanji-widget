@@ -56,9 +56,9 @@ Evidence:
 
 ## Priority 1: Compound Cache Behavior Gap
 
-- [ ] Stop dropping cached compound rows only because the reading is blank
-- [ ] Add or update narrow tests for the cached-compounds read path so it matches the shipped Kanji Detail fallback behavior
-- [ ] Re-check Kanji Detail with cached compound data after the fix lands
+- [x] Stop dropping cached compound rows only because the reading is blank
+- [x] Add or update narrow tests for the cached-compounds read path so it matches the shipped Kanji Detail fallback behavior
+- [x] Re-check Kanji Detail with cached compound data after the fix lands
 
 Evidence:
 - `app/src/main/java/com/example/kanjiwidget/widget/KanjiWidgetPrefs.kt:157`
@@ -108,3 +108,5 @@ Evidence:
 - 2026-03-12: Removed the stale main-screen future-work note about bounded recent history and re-checked the remaining design-doc future-work sections for obviously shipped items.
 - 2026-03-12: Completed the widget test coverage slice in PR `#3`, so that backlog item is no longer the next immediate priority.
 - 2026-03-12: Recorded a remaining behavior gap in cached compound loading: blank readings are still filtered out by `KanjiWidgetPrefs.getCachedCompounds(...)`, which can diverge from the shipped Kanji Detail behavior after cache reuse.
+- 2026-03-13: Aligned cached compound filtering with shipped Kanji Detail behavior so rows with blank readings remain visible when written and meaning are present.
+- 2026-03-13: Added narrow unit coverage for the cached compound normalization path to keep the blank-reading fallback behavior from regressing.

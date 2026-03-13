@@ -162,7 +162,7 @@ object KanjiWidgetPrefs {
         return try {
             val json = JSONObject(raw)
             val entriesJson = json.optJSONArray("entries") ?: JSONArray()
-            val entries = buildList {
+            val entries = filterCachedCompoundEntries(buildList {
                 for (i in 0 until entriesJson.length()) {
                     val item = entriesJson.optJSONObject(i) ?: continue
                     add(
@@ -177,7 +177,7 @@ object KanjiWidgetPrefs {
                         )
                     )
                 }
-            }.filter { it.written.isNotBlank() && it.reading.isNotBlank() && it.meaning.isNotBlank() }
+            })
             if (entries.isEmpty()) return null
             CachedKanjiCompounds(
                 entries = entries,
@@ -246,4 +246,8 @@ object KanjiWidgetPrefs {
             }
         }
     }
+}
+
+internal fun filterCachedCompoundEntries(entries: List<KanjiCompoundEntry>): List<KanjiCompoundEntry> {
+    return entries.filter { it.written.isNotBlank() && it.meaning.isNotBlank() }
 }

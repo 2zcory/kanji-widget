@@ -27,6 +27,7 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 - The Kanji Detail screen now includes a lightweight compounds section with up to five filtered examples, each showing written form, reading, meaning, and a derived usage hint backed by local cache
 - The Kanji Detail screen on `master` now includes on-device pronunciation playback for the main reading target and eligible compound rows using Android `TextToSpeech`
 - `master` includes the Kanji Detail reading-availability fix from commit `69ca85e`, which keeps compound rows visible when readings are missing, treats placeholder-style readings as unavailable for playback, and has passing local unit coverage
+- `master` now also keeps cached compound rows visible when readings are blank, so cached and freshly fetched detail behavior stay aligned
 - Detailed design documents now exist for the major shipped features, including the Kanji Detail screen
 - The repository has published tags through `v1.4.0`, including multilanguage support for EN + VI plus an in-app language picker
 - GitHub Actions workflows now cover debug APK builds and signed release builds
@@ -83,4 +84,4 @@ flowchart TD
 - Any machine-specific `android.aapt2FromMavenOverride` configuration should stay outside the repository so CI can use the default toolchain
 - The Kanji Detail checklist remains useful as the implementation record for the completed phased update
 - New complex tasks should start from `docs/checklists/TEMPLATE-complex-task-checklist.md`, while completed task checklists should be moved into `docs/checklists/archieved/`
-- The next known behavior gap is in cached compound loading: `KanjiWidgetPrefs.getCachedCompounds(...)` still drops rows with blank readings even though the shipped Kanji Detail flow now keeps those rows visible with a placeholder
+- The current highest-priority backlog item is the next approved widget UX slice after the cached-compound behavior gap was closed on `2026-03-13`
