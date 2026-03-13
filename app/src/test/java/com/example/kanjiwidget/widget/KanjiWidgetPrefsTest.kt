@@ -64,6 +64,23 @@ class KanjiWidgetPrefsTest {
     }
 
     @Test
+    fun perWidgetSurfaceAlpha_fallsBackToSharedDefaultAndCleansUp() {
+        KanjiWidgetPrefs.setWidgetSurfaceAlpha(context, 0.7f)
+        assertEquals(0.7f, KanjiWidgetPrefs.getWidgetSurfaceAlpha(context, 11))
+
+        KanjiWidgetPrefs.setWidgetSurfaceAlpha(context, widgetId = 11, value = 0.55f)
+        KanjiWidgetPrefs.setWidgetSurfaceAlpha(context, widgetId = 12, value = 1.0f)
+
+        assertEquals(0.55f, KanjiWidgetPrefs.getWidgetSurfaceAlpha(context, 11))
+        assertEquals(1.0f, KanjiWidgetPrefs.getWidgetSurfaceAlpha(context, 12))
+
+        KanjiWidgetPrefs.clearWidgetState(context, 11)
+
+        assertEquals(0.7f, KanjiWidgetPrefs.getWidgetSurfaceAlpha(context, 11))
+        assertEquals(1.0f, KanjiWidgetPrefs.getWidgetSurfaceAlpha(context, 12))
+    }
+
+    @Test
     fun cachedCompounds_keepEntriesWithBlankReadingWhenWrittenAndMeaningExist() {
         val entries = filterCachedCompoundEntries(
             listOf(

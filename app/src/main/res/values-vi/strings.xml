@@ -61,14 +61,22 @@
     <string name="home_recent_latest_label">MỚI NHẤT</string>
     <string name="home_recent_chevron">›</string>
     <string name="home_widget_controls_title">WIDGET CONTROLS</string>
-    <string name="home_widget_controls_body_installed">Widget đang hoạt động. Đổi độ trong suốt để hợp với wallpaper hoặc mở lại hướng dẫn nếu bạn muốn thêm ở màn hình khác.</string>
+    <string name="home_widget_controls_body_installed">Widget đang hoạt động. Đổi độ trong suốt mặc định dùng chung cho các widget cũ, hoặc mở lại hướng dẫn nếu bạn muốn thêm widget khác.</string>
     <string name="home_widget_controls_body_missing">Chưa thấy widget nào đang hoạt động. Hãy mở hướng dẫn bên dưới, rồi thêm widget ra home screen để có vòng review nhanh nhất.</string>
     <string name="home_widget_help_title">THÊM WIDGET</string>
     <string name="home_widget_help_body">1. Từ màn hình chính của điện thoại, nhấn giữ vào vùng trống.\n2. Mở mục Widgets và kéo Kanji Widget ra màn hình.\n3. Chạm vào thẻ widget để mở chi tiết và luyện thứ tự nét.</string>
     <string name="home_widget_help_dialog_message">1. Nhấn giữ vào vùng trống trên home screen.\n2. Chọn Widgets.\n3. Tìm Kanji Widget.\n4. Kéo widget ra màn hình chính.</string>
-    <string name="home_widget_opacity_body" formatted="false">Áp dụng cho nền chính của tất cả widget. Bấm để chuyển qua các mức 100%, 85%, 70%, 55%, 40%.</string>
+    <string name="home_widget_opacity_body" formatted="false">Áp dụng cho độ trong suốt mặc định dùng chung. Khi thêm widget mới, bạn có thể ghi đè theo từng widget. Bấm để chuyển qua các mức 100%, 85%, 70%, 55%, 40%.</string>
     <string name="home_widget_opacity_value">%1$d%%</string>
     <string name="home_action_open_random_disabled">Chưa có deck để chọn ngẫu nhiên</string>
+    <string name="widget_config_title">Thiết lập widget</string>
+    <string name="widget_config_body">Chọn sẵn một mức độ trong suốt nền trước khi widget được thêm. Bạn có thể làm widget này khác các widget cũ mà không phải đổi tất cả cùng lúc.</string>
+    <string name="widget_config_opacity_title">ĐỘ TRONG SUỐT WIDGET</string>
+    <string name="widget_config_opacity_body" formatted="false">Chỉ áp dụng cho widget bạn đang thêm. Phần chữ và nút hành động vẫn giữ nguyên độ đậm để dễ đọc.</string>
+    <string name="widget_config_selection_value">Độ trong suốt đã chọn: %1$d%%</string>
+    <string name="widget_config_opacity_option">%1$d%%</string>
+    <string name="widget_config_action_add">Thêm widget</string>
+    <string name="widget_config_action_cancel">Hủy</string>
     <string name="chart_title">Thống kê thời gian học</string>
     <string name="chart_range_7">7 ngày</string>
     <string name="chart_range_30">30 ngày</string>

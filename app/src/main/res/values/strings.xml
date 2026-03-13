@@ -61,14 +61,22 @@
     <string name="home_recent_latest_label">LATEST</string>
     <string name="home_recent_chevron">›</string>
     <string name="home_widget_controls_title">WIDGET CONTROLS</string>
-    <string name="home_widget_controls_body_installed">The widget is active. Adjust opacity to match your wallpaper, or reopen the guide if you want it on another screen.</string>
+    <string name="home_widget_controls_body_installed">The widget is active. Change the shared default opacity for older widgets, or reopen the guide if you want to add another widget.</string>
     <string name="home_widget_controls_body_missing">No active widget found. Open the guide below, then add the widget to your home screen for the fastest review flow.</string>
     <string name="home_widget_help_title">ADD WIDGET</string>
     <string name="home_widget_help_body">1. Long-press an empty area on your home screen.\n2. Open Widgets and drag Kanji Widget to the screen.\n3. Tap the widget card to open details and practice stroke order.</string>
     <string name="home_widget_help_dialog_message">1. Long-press an empty area on the home screen.\n2. Choose Widgets.\n3. Find Kanji Widget.\n4. Drag the widget to the home screen.</string>
-    <string name="home_widget_opacity_body" formatted="false">Applies to the main background of all widgets. Tap to cycle through 100%, 85%, 70%, 55%, 40%.</string>
+    <string name="home_widget_opacity_body" formatted="false">Applies to the shared default background opacity. New widget setup can override it per widget. Tap to cycle through 100%, 85%, 70%, 55%, 40%.</string>
     <string name="home_widget_opacity_value">%1$d%%</string>
     <string name="home_action_open_random_disabled">No deck available for random selection</string>
+    <string name="widget_config_title">Set up your widget</string>
+    <string name="widget_config_body">Choose a background opacity preset before the widget is added. You can keep this widget distinct from older ones without changing every active widget at once.</string>
+    <string name="widget_config_opacity_title">WIDGET OPACITY</string>
+    <string name="widget_config_opacity_body" formatted="false">This applies only to the widget you are adding. Text and action surfaces stay fully opaque for readability.</string>
+    <string name="widget_config_selection_value">Selected opacity: %1$d%%</string>
+    <string name="widget_config_opacity_option">%1$d%%</string>
+    <string name="widget_config_action_add">Add widget</string>
+    <string name="widget_config_action_cancel">Cancel</string>
     <string name="chart_title">Study time stats</string>
     <string name="chart_range_7">7 days</string>
     <string name="chart_range_30">30 days</string>

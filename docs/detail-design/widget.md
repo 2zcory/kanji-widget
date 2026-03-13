@@ -10,6 +10,7 @@ This document covers:
 - rendering logic
 - interaction model
 - data dependencies
+- configuration flow
 
 ## Scope
 
@@ -19,9 +20,9 @@ In scope:
 - widget rendering rules
 - widget-to-detail navigation
 - adaptive layout behavior based on widget size
+- lightweight configuration during widget placement
 
 Out of scope for the first version:
-- widget configuration screen
 - multiple widget themes
 - offline bundled Kanji dataset
 - autonomous rotation to a different Kanji without either a widget update event or explicit user interaction
@@ -58,6 +59,19 @@ Current behavior:
    - the widget switches to another random Kanji
 5. User can tap the widget card to open the detail screen
 
+### Widget placement configuration
+
+First-slice behavior:
+1. User adds the widget from the system widget picker
+2. Android opens a lightweight configuration activity before placement completes
+3. User chooses one background-opacity preset for that widget instance
+4. The app stores the selected per-widget opacity, returns `RESULT_OK`, and triggers the normal first refresh flow
+
+Purpose:
+- give the user one meaningful setup choice at the right moment
+- establish a durable entry point for future widget-specific customization
+- avoid forcing the main screen to own all widget appearance setup
+
 ### Content shown in widget
 
 Possible fields:
@@ -81,6 +95,14 @@ sequenceDiagram
     participant Prefs as SharedPreferences
     participant API as kanjiapi.dev
     participant Detail as KanjiDetailActivity
+    participant Config as WidgetConfigActivity
+
+    User->>Widget: Add widget from picker
+    Widget->>Config: Open configuration activity
+    Config->>Prefs: Save per-widget opacity preset
+    Config->>Provider: Return RESULT_OK for widget id
+    Provider->>Widget: Render initial state
+    Provider->>Worker: Enqueue initial refresh
 
     User->>Widget: Tap action button
     Widget->>Provider: ACTION_NEXT_KANJI
@@ -118,6 +140,21 @@ Reason:
 Notes:
 - `onUpdate` covers both first placement and later app-widget update callbacks from the provider configuration
 - in the current implementation, these updates refresh data for the current widget instance but do not auto-advance to a different Kanji
+
+### Placement configuration
+
+Trigger:
+- widget placement when Android passes a valid widget id into the configuration activity
+
+Behavior:
+- the activity should validate the widget id before saving
+- the activity should default to the current shared opacity preset so existing behavior remains familiar
+- completing the flow should persist a per-widget opacity value and finish with `RESULT_OK`
+- cancelling the flow should finish with `RESULT_CANCELED` and should not create orphaned widget-specific state
+
+Reason:
+- Android widget configuration is the standard host-compatible entry point for per-widget setup
+- the flow keeps the initial scope small while enabling future widget-specific controls
 
 ### Resize
 
@@ -215,8 +252,9 @@ Stored widget-related data includes:
 - current Kanji per widget
 - reveal state per widget
 - current selected index per widget
+- background opacity per widget
 - cached remote entry per Kanji
-- one global widget background opacity value
+- one shared default widget background opacity value used as the fallback seed for new widgets and older instances
 
 ## Refresh Architecture
 
@@ -347,15 +385,16 @@ When answer is visible:
 
 The widget supports a user-controlled background opacity setting.
 
-Current behavior:
+Current behavior after the configuration first slice:
 - opacity is applied only to the main widget background surface
 - text and action surfaces stay fully opaque for readability
-- the value is global for all active widget instances in v1
+- a widget instance may use its own configured opacity preset
+- existing widgets without a per-widget value should fall back to the shared default opacity safely
 - supported presets are `100%`, `85%`, `70%`, `55%`, and `40%`
 
 Reason:
 - preserving opaque text and controls is more readable on busy wallpapers
-- a global preset keeps the implementation simple while still solving the primary wallpaper-contrast problem
+- per-widget presets improve multi-widget flexibility without requiring freeform styling or a heavier settings surface
 
 ### Footer meta line
 
@@ -395,7 +434,8 @@ Shared cached state:
 - remote entries by Kanji
 
 Shared appearance state:
-- global widget background opacity
+- shared default widget background opacity
+- optional per-widget background opacity override
 
 ## Constraints
 
@@ -455,10 +495,24 @@ If detail fetch fails and cache is missing:
 If the user is offline after a Kanji was previously cached:
 - widget can still show the cached entry for that Kanji
 
+### Configuration canceled
+
+If the user backs out of the configuration activity:
+- placement should be canceled cleanly
+- the app should not save partial widget state for that widget id
+
+### Legacy widget without per-widget opacity
+
+If an older widget instance exists from before the configuration slice:
+- read the shared default opacity as a fallback
+- keep rendering without forcing the user to recreate the widget
+
 ## Testing Notes
 
 Manual test cases:
 - add a new widget and verify the first refresh flow
+- add a new widget and verify the configuration activity appears before placement completes
+- choose a non-default opacity during configuration and verify only that widget uses it
 - tap reveal and verify answer state changes
 - tap next and verify a different Kanji is selected
 - resize widget between small and large sizes
@@ -466,6 +520,7 @@ Manual test cases:
 - test offline behavior after at least one Kanji has been cached
 - place multiple widget instances and verify they behave independently
 - change widget opacity from the main screen and verify all active widgets rerender
+- verify a pre-existing widget without per-widget opacity still renders safely after the update
 - verify widgets can still be added successfully after appearance customizations
 
 Suggested unit or integration tests:
@@ -473,13 +528,12 @@ Suggested unit or integration tests:
 - size class resolution logic
 - footer meta formatting
 - preference read/write for per-widget state
+- preference fallback from shared opacity to per-widget opacity
 - cleanup removes per-widget state when a widget instance is deleted
 
 ## Future Extensions
 
 Potential future improvements:
-- widget configuration activity exposed during widget placement
-- per-widget opacity instead of one global value
 - theme selection
 - scheduled daily rotation
 - local bundled fallback dataset

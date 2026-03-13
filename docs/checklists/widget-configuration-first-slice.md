@@ -22,12 +22,12 @@ Add a lightweight widget configuration activity that appears during widget place
 
 - [x] Confirm `master` is clean and up to date with `origin/master` before creating the working branch
 - [x] Confirm the working branch name for this task
-- [ ] Confirm the initial acceptance criteria and manual verification expectations before implementation starts
+- [x] Confirm the initial acceptance criteria and manual verification expectations before implementation starts
 
 ## Phase 1: Scope And Design Alignment
 
 - [x] Review the relevant current widget behavior, backlog notes, and implementation constraints
-- [ ] Update or create the necessary design or product docs before implementation when behavior changes materially
+- [x] Update or create the necessary design or product docs before implementation when behavior changes materially
 - [x] Record key constraints, assumptions, or external dependencies in the progress log
 
 ## Phase 2: Implementation
@@ -77,3 +77,6 @@ Add a lightweight widget configuration activity that appears during widget place
 
 - 2026-03-13: Confirmed `master` was clean and up to date with `origin/master`, created branch `feature/widget-configuration-first-slice`, and reviewed backlog notes plus the current widget provider and preference model.
 - 2026-03-13: Chose `configuration activity` over a standalone `per-widget opacity` slice because the placement flow creates a durable extension point for future widget-specific customization while also solving the current per-widget opacity need in one coherent UX entry point.
+- 2026-03-13: Approved the first-slice scope for widget configuration and updated `docs/detail-design/widget.md` to define placement-time setup, per-widget opacity persistence, and safe fallback behavior for legacy widgets before implementation.
+- 2026-03-13: Implemented the configuration first slice with a placement-time activity, per-widget opacity persistence, widget metadata updates, and shared-default fallback for legacy widgets.
+- 2026-03-13: Verified the slice with `./gradlew :app:testDebugUnitTest --tests com.example.kanjiwidget.widget.KanjiWidgetPrefsTest`, `./gradlew :app:compileDebugKotlin`, and `./gradlew :app:assembleDebug`, then delivered review APK `/sdcard/Download/kanji_widget_widget_configuration_review.apk`.
