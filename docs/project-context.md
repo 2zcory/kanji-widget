@@ -37,6 +37,7 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 ## Working Notes
 
 - Use this file as the first stop for durable project context inside the repo
+- Follow `docs/diagram-standards.md` when adding or revising durable design documents
 - Add or update detailed design docs in `docs/detail-design/` when a feature changes materially
 - Release signing remains secret-backed and must not be committed into the repository
 - The release workflow expects `RELEASE_KEYSTORE_BASE64`, `RELEASE_STORE_PASSWORD`, `RELEASE_KEY_ALIAS`, and `RELEASE_KEY_PASSWORD` in GitHub Secrets
