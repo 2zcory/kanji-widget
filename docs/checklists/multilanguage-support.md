@@ -55,7 +55,7 @@ Implement multilanguage support for the app and widget, starting with EN + VI us
 
 - [ ] Sync local `master` or the expected merge target only from a clean worktree after the Pull Request merge
 - [ ] Update durable project context or status docs if the shipped feature set changed materially
-- [ ] Prepare release notes only after the reviewed work has been merged
+- [x] Prepare release notes only after the reviewed work has been merged
 - [ ] Complete the release steps required by the repository workflow
 
 ## Android Review Artifact
@@ -80,3 +80,4 @@ Implement multilanguage support for the app and widget, starting with EN + VI us
 - 2026-03-13: Self-review found and fixed Android string escaping plus locale persistence/widget-context issues for pre-Android 13 devices.
 - 2026-03-13: `./gradlew testDebugUnitTest` and `./gradlew assembleDebug` passed; review APK copied to `/sdcard/Download/kanji-widget-multilanguage-review.apk`.
 - 2026-03-13: Pushed `feature/multilanguage` and opened PR `#4` into `master`.
+- 2026-03-13: After PR `#4` was reviewed and merged, prepared draft release notes in `docs/releases/v1.4.0.md`.
