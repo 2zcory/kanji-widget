@@ -30,6 +30,9 @@ jobs:
           sdk.dir=${ANDROID_SDK_ROOT}
           EOF
 
+      - name: Run unit tests
+        run: ./gradlew :app:testDebugUnitTest
+
       - name: Build debug APK
         run: ./gradlew :app:assembleDebug
 

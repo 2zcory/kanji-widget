@@ -59,16 +59,6 @@ jobs:
           release.keyPassword=${RELEASE_KEY_PASSWORD}
           EOF
 
-      - name: Build signed release APK
-        run: ./gradlew :app:assembleRelease
-
-      - name: Upload release APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: kanji-widget-release-apk
-          path: app/build/outputs/apk/release/app-release.apk
-          if-no-files-found: error
-
       - name: Resolve release metadata
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
@@ -85,6 +75,19 @@ jobs:
 
           echo "RELEASE_TAG=$RELEASE_TAG" >> "$GITHUB_ENV"
           echo "RELEASE_NOTES_FILE=$RELEASE_NOTES_FILE" >> "$GITHUB_ENV"
+
+      - name: Run unit tests
+        run: ./gradlew :app:testDebugUnitTest
+
+      - name: Build signed release APK
+        run: ./gradlew :app:assembleRelease
+
+      - name: Upload release APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kanji-widget-release-apk
+          path: app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
 
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
