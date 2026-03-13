@@ -1,7 +1,7 @@
 # Widget Configuration First Slice Checklist
 
 Last updated: 2026-03-13
-Status: Proposed
+Status: Merged
 Working branch: `feature/widget-configuration-first-slice`
 Base branch: `master`
 Expected merge target: `master`
@@ -32,46 +32,46 @@ Add a lightweight widget configuration activity that appears during widget place
 
 ## Phase 2: Implementation
 
-- [ ] Add the configuration activity and wire it into widget placement
-- [ ] Implement per-widget opacity persistence with safe fallback behavior for existing widgets
-- [ ] Keep the existing widget interaction flow and main-screen behavior coherent after the new setup path lands
-- [ ] Keep the implementation aligned with the current design docs and repository rules
-- [ ] Add or update the narrowest useful automated checks for the changed behavior
+- [x] Add the configuration activity and wire it into widget placement
+- [x] Implement per-widget opacity persistence with safe fallback behavior for existing widgets
+- [x] Keep the existing widget interaction flow and main-screen behavior coherent after the new setup path lands
+- [x] Keep the implementation aligned with the current design docs and repository rules
+- [x] Add or update the narrowest useful automated checks for the changed behavior
 
 ## Phase 3: Verification
 
-- [ ] Run the narrowest useful automated or build checks first
-- [ ] Manually verify widget placement, configured opacity, existing-widget fallback behavior, and post-placement refresh
-- [ ] Leave implementation items unchecked until user verification passes if the repository workflow requires explicit user confirmation
+- [x] Run the narrowest useful automated or build checks first
+- [x] Manually verify widget placement, configured opacity, existing-widget fallback behavior, and post-placement refresh
+- [x] Leave implementation items unchecked until user verification passes if the repository workflow requires explicit user confirmation
 
 ## Phase 4: Review Flow
 
-- [ ] Build the review artifact required for this repository before asking for final review
-- [ ] Push the working branch to `origin`
-- [ ] Open a Pull Request from the working branch into the expected merge target
-- [ ] Ask for user review only after the review artifact has been sent and the Pull Request is open
-- [ ] Merge into the expected merge target only after user review passes
+- [x] Build the review artifact required for this repository before asking for final review
+- [x] Push the working branch to `origin`
+- [x] Open a Pull Request from the working branch into the expected merge target
+- [x] Ask for user review only after the review artifact has been sent and the Pull Request is open
+- [x] Merge into the expected merge target only after user review passes
 
 ## Phase 5: Post-Merge And Release
 
-- [ ] Sync local `master` or the expected merge target only from a clean worktree after the Pull Request merge
-- [ ] Update durable project context or status docs if the shipped feature set changed materially
+- [x] Sync local `master` or the expected merge target only from a clean worktree after the Pull Request merge
+- [x] Update durable project context or status docs if the shipped feature set changed materially
 - [ ] Prepare release notes only after the reviewed work has been merged
 - [ ] Complete the release steps required by the repository workflow
 
 ## Android Review Artifact
 
-- [ ] Build a clearly labeled review APK or other Android review artifact if the task changes app behavior
-- [ ] Move the review APK to `/sdcard/Download` when that workflow applies
-- [ ] Record the delivered filename in the progress log
+- [x] Build a clearly labeled review APK or other Android review artifact if the task changes app behavior
+- [x] Move the review APK to `/sdcard/Download` when that workflow applies
+- [x] Record the delivered filename in the progress log
 
 ## Acceptance Criteria For User Verification
 
-- [ ] Adding a new widget opens a lightweight configuration activity before placement completes
-- [ ] The configuration activity lets the user choose a background-opacity preset for that widget instance
-- [ ] The selected opacity applies to the configured widget without changing other widget instances unexpectedly
-- [ ] Existing widgets created before this change continue to render safely with a reasonable opacity fallback
-- [ ] The reveal, next, resize, and detail-open widget interactions still work after the configuration flow is introduced
+- [x] Adding a new widget opens a lightweight configuration activity before placement completes
+- [x] The configuration activity lets the user choose a background-opacity preset for that widget instance
+- [x] The selected opacity applies to the configured widget without changing other widget instances unexpectedly
+- [x] Existing widgets created before this change continue to render safely with a reasonable opacity fallback
+- [x] The reveal, next, resize, and detail-open widget interactions still work after the configuration flow is introduced
 
 ## Progress Log
 
@@ -81,3 +81,4 @@ Add a lightweight widget configuration activity that appears during widget place
 - 2026-03-13: Implemented the configuration first slice with a placement-time activity, per-widget opacity persistence, widget metadata updates, and shared-default fallback for legacy widgets.
 - 2026-03-13: Verified the slice with `./gradlew :app:testDebugUnitTest --tests com.example.kanjiwidget.widget.KanjiWidgetPrefsTest`, `./gradlew :app:compileDebugKotlin`, and `./gradlew :app:assembleDebug`, then delivered review APK `/sdcard/Download/kanji_widget_widget_configuration_review.apk`.
 - 2026-03-13: Pushed branch `feature/widget-configuration-first-slice` to `origin` and opened PR `#6` for review: `https://github.com/2zcory/kanji-widget/pull/6`.
+- 2026-03-13: User confirmed the review passed. PR `#6` was merged into `master`, local `master` was fast-forwarded to the merge commit, and the checklist was archived.

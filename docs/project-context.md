@@ -35,6 +35,7 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 - The debug APK workflow now runs on pull requests and manual dispatch only, instead of every push to `master`
 - The phased Kanji Detail screen update is complete, including layout, metadata, study stats, next-random navigation, and related design docs
 - `master` now also includes direct unit coverage for widget selection, widget meta formatting, and widget-scoped preference cleanup through PR `#3`
+- `master` now includes a widget configuration first slice: adding a widget opens a lightweight setup activity, new widgets can store per-widget opacity presets, and legacy widgets fall back safely to the shared default opacity
 
 ## Runtime Diagram
 
