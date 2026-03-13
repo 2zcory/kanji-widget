@@ -9,6 +9,13 @@ Capture the current short-list technical backlog for `kanji-widget` so later ses
 
 This backlog is intentionally narrow. It does not try to replace product planning or act as a full roadmap.
 
+## Maintenance Rules
+
+- Update this file whenever a listed backlog item is completed, superseded, split into a dedicated task, or invalidated by shipped work.
+- Keep the `Current Priority Order` aligned with the highest-value remaining work instead of preserving historical ordering.
+- When a current-priority item turns into implementation work, create a dedicated checklist from `docs/checklists/TEMPLATE-complex-task-checklist.md` and note that handoff in the progress log here.
+- Leave completed historical notes in the progress log, but rewrite stale open items instead of letting them linger as outdated priorities.
+
 ## Current Priority Order
 
 - Priority 1: choose the next widget UX slice after the shipped configuration first slice

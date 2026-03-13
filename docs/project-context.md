@@ -89,4 +89,5 @@ flowchart TD
 - The Kanji Detail checklist remains useful as the implementation record for the completed phased update
 - New complex tasks should start from `docs/checklists/TEMPLATE-complex-task-checklist.md`, while merged task checklists should be moved into `docs/checklists/archieved/` and later backfilled with `First released in` after the first tagged release ships
 - `docs/checklists/technical-backlog.md` is the active short-list backlog for cross-session technical prioritization and should not be treated as a feature checklist to archive
+- `docs/checklists/technical-backlog.md` should be updated whenever a backlog item is completed, superseded, or invalidated by newly shipped work so the next session inherits current priorities
 - The current highest-priority technical backlog item is the next approved widget UX slice after the cached-compound behavior gap was closed on `2026-03-13`

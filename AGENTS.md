@@ -41,3 +41,5 @@ This file defines how an AI coding agent should operate in this repository.
 - For a new complex task, start from `docs/checklists/TEMPLATE-complex-task-checklist.md` unless a more specific checklist already exists.
 - Keep active checklists in `docs/checklists/` and move completed ones into `docs/checklists/archieved/`.
 - Update the relevant checklist whenever a tracked task is completed so progress is recoverable in later sessions.
+- Treat `docs/checklists/technical-backlog.md` as a living backlog document, not as a feature checklist.
+- When a backlog item is completed, superseded, or no longer the top priority, update `docs/checklists/technical-backlog.md` in the same change or session so later sessions do not inherit stale priority guidance.
