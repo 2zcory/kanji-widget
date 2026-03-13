@@ -35,6 +35,30 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Resolve release metadata
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            RELEASE_TAG="${{ inputs.tag_name }}"
+          else
+            RELEASE_TAG="${GITHUB_REF_NAME}"
+          fi
+
+          test -n "$RELEASE_TAG"
+          git rev-parse "refs/tags/${RELEASE_TAG}" >/dev/null 2>&1
+
+          RELEASE_NOTES_FILE="docs/releases/${RELEASE_TAG}.md"
+          test -f "$RELEASE_NOTES_FILE"
+
+          echo "RELEASE_TAG=$RELEASE_TAG" >> "$GITHUB_ENV"
+          echo "RELEASE_NOTES_FILE=$RELEASE_NOTES_FILE" >> "$GITHUB_ENV"
+
+      - name: Validate app version matches release tag
+        run: |
+          APP_VERSION_NAME="$(sed -n 's/.*versionName = "\(.*\)"/\1/p' app/build.gradle.kts | head -n 1)"
+          test -n "$APP_VERSION_NAME"
+          EXPECTED_TAG="v${APP_VERSION_NAME}"
+          test "$RELEASE_TAG" = "$EXPECTED_TAG"
+
       - name: Decode release keystore
         env:
           RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
@@ -58,23 +82,6 @@ jobs:
           release.keyAlias=${RELEASE_KEY_ALIAS}
           release.keyPassword=${RELEASE_KEY_PASSWORD}
           EOF
-
-      - name: Resolve release metadata
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            RELEASE_TAG="${{ inputs.tag_name }}"
-          else
-            RELEASE_TAG="${GITHUB_REF_NAME}"
-          fi
-
-          test -n "$RELEASE_TAG"
-          git rev-parse "refs/tags/${RELEASE_TAG}" >/dev/null 2>&1
-
-          RELEASE_NOTES_FILE="docs/releases/${RELEASE_TAG}.md"
-          test -f "$RELEASE_NOTES_FILE"
-
-          echo "RELEASE_TAG=$RELEASE_TAG" >> "$GITHUB_ENV"
-          echo "RELEASE_NOTES_FILE=$RELEASE_NOTES_FILE" >> "$GITHUB_ENV"
 
       - name: Run unit tests
         run: ./gradlew :app:testDebugUnitTest
