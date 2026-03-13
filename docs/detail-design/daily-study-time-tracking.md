@@ -257,3 +257,12 @@ Suggested unit tests:
 Potential future improvements:
 - add a retention or compaction policy for very old daily keys
 - expose per-kanji history beyond today if a richer stats surface is added later
+
+Retention review note:
+- reviewed on `2026-03-13`
+- current storage remains acceptable without active compaction because the tracker writes only:
+  - one daily total key per studied day
+  - one daily open-count key per studied day
+  - one per-kanji daily total key only when that kanji is actually studied on that day
+- the current chart surfaces read bounded day ranges, so long-lived growth mainly affects `prefs.all` scans for all-time ranking rather than the common 7-day or 30-day chart paths
+- defer active retention or compaction until there is evidence of visible ranking slowdown, much larger local history, or a broader analytics feature set that increases full-history scans

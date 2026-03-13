@@ -18,9 +18,9 @@ This backlog is intentionally narrow. It does not try to replace product plannin
 
 ## Current Priority Order
 
-- Priority 1: review longer-term data-retention policy for local study storage
-- Priority 2: review ranking extensions only after the storage decision is clearer
-- Priority 3: choose the next widget UX slice after daily rotation only when the stats and storage backlog is better understood
+- Priority 1: review ranking extensions now that the storage-retention decision is documented
+- Priority 2: choose the next widget UX slice after daily rotation once the stats backlog is clearer
+- Priority 3: revisit storage retention only if usage patterns or analytics scope make the current decision stale
 
 ## Triage Flow
 
@@ -91,25 +91,36 @@ Evidence:
 
 ## Current Priority: Study Storage Retention Review
 
-- [ ] Review the current `StudyTimeTracker` storage shape and estimate when the key count could become uncomfortable for a local-only app
-- [ ] Decide whether the next slice needs active compaction, a retention window, or only a documented decision to defer
-- [ ] If implementation is approved, create a dedicated complex-task checklist from `docs/checklists/TEMPLATE-complex-task-checklist.md`
-- [ ] Update the relevant study-tracking design doc before implementation starts
+- [x] Review the current `StudyTimeTracker` storage shape and estimate when the key count could become uncomfortable for a local-only app
+- [x] Decide whether the next slice needs active compaction, a retention window, or only a documented decision to defer
+- [x] If implementation is approved, create a dedicated complex-task checklist from `docs/checklists/TEMPLATE-complex-task-checklist.md`
+- [x] Update the relevant study-tracking design doc before implementation starts
 
 Evidence:
 - `docs/detail-design/daily-study-time-tracking.md` still calls out a future retention or compaction policy for very old daily keys
-- The new widget daily-rotation slice is merged, so storage policy is now the highest remaining backlog item with direct durability impact
+- `StudyTimeTracker` writes only one total key, one open-count key, and one per-kanji daily total key for the kanji actually studied on a given day
+- `StudyStatsRepository` reads bounded 7-day or 30-day windows, while `KanjiRankingRepository` is the only current path that scans full stored entries for all-time aggregation
+- Decision on `2026-03-13`: defer active retention or compaction for now and revisit only if ranking scans become visibly slow or the analytics scope expands
+
+## Current Priority: Ranking Extensions Review
+
+- [ ] Review whether ranking should later support per-kanji open-count metrics or custom time ranges
+- [ ] Decide whether ranking remains lightweight enough with the current storage contract or needs a dedicated aggregation strategy before feature expansion
+- [ ] If implementation is approved, create a dedicated complex-task checklist from `docs/checklists/TEMPLATE-complex-task-checklist.md`
+- [ ] Update the relevant ranking design doc before implementation starts
+
+Evidence:
+- `docs/detail-design/kanji-study-ranking.md` still lists open-count metrics and custom time ranges as future extensions
+- The storage-retention review is now documented as deferred, so ranking is the highest remaining stats-layer backlog item
 
 ## Deferred Backlog
 
-- [ ] Review whether daily-study storage needs a retention or compaction policy before the local data footprint grows further
-- [ ] Review whether ranking should later support per-kanji open-count metrics or custom time ranges
+- [ ] Revisit retention or compaction only if study-history growth makes all-time ranking scans meaningfully slower
+- [ ] Revisit widget future extensions such as theme selection, local fallback data, or streak or progress surfacing after the stats backlog is clearer
 
 Evidence:
-- `docs/detail-design/daily-study-time-tracking.md:232`
-- `docs/detail-design/kanji-study-ranking.md:309`
-- `docs/detail-design/kanji-study-ranking.md:310`
-- `docs/detail-design/kanji-study-ranking.md:311`
+- `docs/detail-design/daily-study-time-tracking.md` now documents the deferred retention decision from `2026-03-13`
+- `docs/detail-design/widget.md` still lists future widget extensions, but they are lower priority than ranking review right now
 
 ## Backlog Goals
 
@@ -132,3 +143,5 @@ Evidence:
 - 2026-03-13: Chose `scheduled daily rotation` as the next widget UX slice because it appears to add more recurring study value than `theme selection`, stays lighter than a local fallback dataset, and has a narrower first-slice scope than a streak or progress badge.
 - 2026-03-13: Created proposed checklist `docs/checklists/widget-daily-rotation-first-slice.md` on branch `feature/widget-daily-rotation-first-slice` so the task can move through approval before implementation starts.
 - 2026-03-13: PR `#7` merged the widget daily-rotation first slice into `master`, so the backlog now promotes study-storage retention review to the top remaining priority.
+- 2026-03-13: Reviewed `StudyTimeTracker`, `StudyStatsRepository`, and `KanjiRankingRepository` and decided to defer active retention or compaction for now because common chart reads are bounded and current full-history scanning is limited to ranking.
+- 2026-03-13: Promoted ranking extensions review to the top remaining backlog item now that the storage-retention decision is documented.
