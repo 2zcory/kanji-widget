@@ -1,6 +1,6 @@
 # Project Context
 
-Last updated: 2026-03-12
+Last updated: 2026-03-13
 
 ## Goal
 
@@ -28,11 +28,10 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 - The Kanji Detail screen on `master` now includes on-device pronunciation playback for the main reading target and eligible compound rows using Android `TextToSpeech`
 - `master` includes the Kanji Detail reading-availability fix from commit `69ca85e`, which keeps compound rows visible when readings are missing, treats placeholder-style readings as unavailable for playback, and has passing local unit coverage
 - Detailed design documents now exist for the major shipped features, including the Kanji Detail screen
-- The repository has published tags through `v1.3.0`, and `master` also contains the follow-up Kanji Detail reading-availability fix plus `v1.3.1` release notes
+- The repository has published tags through `v1.4.0`, including multilanguage support for EN + VI plus an in-app language picker
 - GitHub Actions workflows now cover debug APK builds and signed release builds
 - The phased Kanji Detail screen update is complete, including layout, metadata, study stats, next-random navigation, and related design docs
 - `master` now also includes direct unit coverage for widget selection, widget meta formatting, and widget-scoped preference cleanup through PR `#3`
-- Multilanguage support (EN + VI) with an in-app language picker is in progress on `feature/multilanguage` and not yet merged
 
 ## Working Notes
 

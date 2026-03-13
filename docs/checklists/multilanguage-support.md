@@ -1,7 +1,7 @@
 # Multilanguage Support Checklist
 
 Last updated: 2026-03-13
-Status: In Progress
+Status: Released
 Working branch: `feature/multilanguage`
 Base branch: `master`
 Expected merge target: `master`
@@ -18,58 +18,58 @@ Implement multilanguage support for the app and widget, starting with EN + VI us
 
 ## Preconditions
 
-- [ ] Confirm `master` is clean and up to date with `origin/master` before creating the working branch
-- [ ] Confirm the working branch name for this task
-- [ ] Confirm the initial acceptance criteria and manual verification expectations before implementation starts
+- [x] Confirm `master` is clean and up to date with `origin/master` before creating the working branch
+- [x] Confirm the working branch name for this task
+- [x] Confirm the initial acceptance criteria and manual verification expectations before implementation starts
 
 ## Phase 1: Scope And Design Alignment
 
-- [ ] Review current UI strings and widget layouts to identify all hardcoded or missing resource entries
-- [ ] Add or update the localization design doc for string keys, glossary, and language-selection behavior
-- [ ] Record key constraints, assumptions, or external dependencies in the progress log
+- [x] Review current UI strings and widget layouts to identify all hardcoded or missing resource entries
+- [x] Add or update the localization design doc for string keys, glossary, and language-selection behavior
+- [x] Record key constraints, assumptions, or external dependencies in the progress log
 
 ## Phase 2: Implementation
 
-- [ ] Move all user-facing strings into resources with consistent naming and grouping
-- [ ] Add `values-vi/strings.xml` and populate required translations using the glossary
-- [ ] Implement plurals and locale-aware formatting for stats and date/time strings
-- [ ] Add in-app language selector UI and persistence
-- [ ] Integrate AppCompat per-app language APIs and refresh widget/app surfaces on change
-- [ ] Add or update narrow automated checks for localization-sensitive formatting if practical
+- [x] Move all user-facing strings into resources with consistent naming and grouping
+- [x] Add `values-vi/strings.xml` and populate required translations using the glossary
+- [x] Implement plurals and locale-aware formatting for stats and date/time strings
+- [x] Add in-app language selector UI and persistence
+- [x] Integrate AppCompat per-app language APIs and refresh widget/app surfaces on change
+- [x] Add or update narrow automated checks for localization-sensitive formatting if practical
 
 ## Phase 3: Verification
 
-- [ ] Run the narrowest useful automated or build checks first
-- [ ] Manually verify EN + VI in app and widget flows
-- [ ] Leave implementation items unchecked until user verification passes if the repository workflow requires explicit user confirmation
+- [x] Run the narrowest useful automated or build checks first
+- [x] Manually verify EN + VI in app and widget flows
+- [x] Leave implementation items unchecked until user verification passes if the repository workflow requires explicit user confirmation
 
 ## Phase 4: Review Flow
 
-- [ ] Build the review artifact required for this repository before asking for final review
-- [ ] Push the working branch to `origin`
-- [ ] Open a Pull Request from the working branch into the expected merge target
-- [ ] Ask for user review only after the review artifact has been sent and the Pull Request is open
-- [ ] Merge into the expected merge target only after user review passes
+- [x] Build the review artifact required for this repository before asking for final review
+- [x] Push the working branch to `origin`
+- [x] Open a Pull Request from the working branch into the expected merge target
+- [x] Ask for user review only after the review artifact has been sent and the Pull Request is open
+- [x] Merge into the expected merge target only after user review passes
 
 ## Phase 5: Post-Merge And Release
 
-- [ ] Sync local `master` or the expected merge target only from a clean worktree after the Pull Request merge
-- [ ] Update durable project context or status docs if the shipped feature set changed materially
+- [x] Sync local `master` or the expected merge target only from a clean worktree after the Pull Request merge
+- [x] Update durable project context or status docs if the shipped feature set changed materially
 - [x] Prepare release notes only after the reviewed work has been merged
-- [ ] Complete the release steps required by the repository workflow
+- [x] Complete the release steps required by the repository workflow
 
 ## Android Review Artifact
 
-- [ ] Build a clearly labeled review APK or other Android review artifact if the task changes app behavior
-- [ ] Move the review APK to `/sdcard/Download` when that workflow applies
-- [ ] Record the delivered filename in the progress log
+- [x] Build a clearly labeled review APK or other Android review artifact if the task changes app behavior
+- [x] Move the review APK to `/sdcard/Download` when that workflow applies
+- [x] Record the delivered filename in the progress log
 
 ## Acceptance Criteria For User Verification
 
-- [ ] All user-facing strings in app + widget are localized via resources (no hardcoded UI strings remain).
-- [ ] System locale switches between EN and VI are reflected in app + widget after refresh.
-- [ ] In-app language selector switches between EN and VI without app crash and updates widget content after change.
-- [ ] Pluralized/stat strings and date/time formatting are locale-correct in EN and VI.
+- [x] All user-facing strings in app + widget are localized via resources (no hardcoded UI strings remain).
+- [x] System locale switches between EN and VI are reflected in app + widget after refresh.
+- [x] In-app language selector switches between EN and VI without app crash and updates widget content after change.
+- [x] Pluralized/stat strings and date/time formatting are locale-correct in EN and VI.
 
 ## Progress Log
 
@@ -81,3 +81,4 @@ Implement multilanguage support for the app and widget, starting with EN + VI us
 - 2026-03-13: `./gradlew testDebugUnitTest` and `./gradlew assembleDebug` passed; review APK copied to `/sdcard/Download/kanji-widget-multilanguage-review.apk`.
 - 2026-03-13: Pushed `feature/multilanguage` and opened PR `#4` into `master`.
 - 2026-03-13: After PR `#4` was reviewed and merged, prepared draft release notes in `docs/releases/v1.4.0.md`.
+- 2026-03-13: User review passed, PR `#4` was merged, local `master` was synced, and release `v1.4.0` was published from tag `v1.4.0`.
