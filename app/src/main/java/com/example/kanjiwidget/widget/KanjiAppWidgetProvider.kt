@@ -120,7 +120,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             views.setInt(
                 R.id.widgetBackground,
                 "setImageAlpha",
-                (KanjiWidgetPrefs.getWidgetSurfaceAlpha(context) * 255).toInt()
+                (KanjiWidgetPrefs.getWidgetSurfaceAlpha(context, widgetId) * 255).toInt()
             )
             views.setTextViewText(
                 R.id.tvKanji,

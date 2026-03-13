@@ -220,13 +220,13 @@ If study data exists:
 The launcher exposes a lightweight widget opacity control.
 
 Current behavior:
-- store one global opacity value for the widget background surface
+- store one shared default opacity value for the widget background surface
 - support preset values `100%`, `85%`, `70%`, `55%`, and `40%`
-- rerender all active widget instances immediately after the value changes
+- rerender active widget instances immediately after the value changes so widgets still using the shared default update in place
 
 Reason:
-- global presets are simpler than per-widget styling for the first version
-- the approach is compatible with the current `RemoteViews` implementation
+- the main screen remains a lightweight shared-default control
+- widget-specific overrides can now be introduced during placement without turning the main screen into a heavier settings surface
 
 ### Widget detection rule
 

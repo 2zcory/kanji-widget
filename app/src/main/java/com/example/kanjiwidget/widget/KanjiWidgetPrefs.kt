@@ -11,6 +11,7 @@ object KanjiWidgetPrefs {
     private const val PREF = "kanji_widget_pref"
     private const val LEGACY_DELIMITER = "\u001F"
     private const val KEY_WIDGET_SURFACE_ALPHA = "widget_surface_alpha"
+    private const val KEY_WIDGET_SURFACE_ALPHA_PREFIX = "widget_surface_alpha_"
 
     fun getKanjiCatalog(context: Context): List<String> {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
@@ -84,6 +85,7 @@ object KanjiWidgetPrefs {
             .remove("idx_$widgetId")
             .remove("current_kanji_$widgetId")
             .remove("reveal_$widgetId")
+            .remove("$KEY_WIDGET_SURFACE_ALPHA_PREFIX$widgetId")
             .apply()
     }
 
@@ -95,6 +97,22 @@ object KanjiWidgetPrefs {
     fun setWidgetSurfaceAlpha(context: Context, value: Float) {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
         sp.edit().putFloat(KEY_WIDGET_SURFACE_ALPHA, value.coerceIn(0.4f, 1f)).apply()
+    }
+
+    fun getWidgetSurfaceAlpha(context: Context, widgetId: Int): Float {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        val key = "$KEY_WIDGET_SURFACE_ALPHA_PREFIX$widgetId"
+        if (!sp.contains(key)) {
+            return getWidgetSurfaceAlpha(context)
+        }
+        return sp.getFloat(key, getWidgetSurfaceAlpha(context)).coerceIn(0.4f, 1f)
+    }
+
+    fun setWidgetSurfaceAlpha(context: Context, widgetId: Int, value: Float) {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        sp.edit()
+            .putFloat("$KEY_WIDGET_SURFACE_ALPHA_PREFIX$widgetId", value.coerceIn(0.4f, 1f))
+            .apply()
     }
 
     fun saveRemoteEntry(context: Context, kanji: String, entry: KanjiEntry) {

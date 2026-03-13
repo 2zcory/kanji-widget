@@ -26,6 +26,11 @@
             android:label="@string/stroke_order_title"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
+        <activity
+            android:name=".widget.WidgetConfigurationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <receiver
             android:name=".widget.KanjiAppWidgetProvider"
             android:exported="false">
