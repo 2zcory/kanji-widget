@@ -24,7 +24,21 @@ class KanjiWidgetLogicTest {
     fun formatWidgetMeta_formatsLoadingStateWithoutTimestamp() {
         assertEquals(
             "Danh sách: đang tải • Nguồn: kanjiapi.dev",
-            formatWidgetMeta(totalKanji = 0, source = null, lastUpdatedEpochMs = null, nowEpochMs = 1_000L),
+            formatWidgetMeta(
+                totalKanji = 0,
+                source = null,
+                lastUpdatedEpochMs = null,
+                nowEpochMs = 1_000L,
+                separator = " • ",
+                catalogLoadingText = "Danh sách: đang tải",
+                catalogCountText = { count -> "Danh sách: $count chữ" },
+                defaultSource = "kanjiapi.dev",
+                sourceText = { value -> "Nguồn: $value" },
+                freshnessJustNowText = "Mới cập nhật",
+                freshnessMinutesText = { value -> "$value phút trước" },
+                freshnessHoursText = { value -> "$value giờ trước" },
+                freshnessDaysText = { value -> "$value ngày trước" },
+            ),
         )
     }
 
@@ -32,7 +46,21 @@ class KanjiWidgetLogicTest {
     fun formatWidgetMeta_formatsRelativeAge() {
         assertEquals(
             "Danh sách: 12 chữ • Nguồn: cache • 2 giờ trước",
-            formatWidgetMeta(totalKanji = 12, source = "cache", lastUpdatedEpochMs = 1_000L, nowEpochMs = 7_201_000L),
+            formatWidgetMeta(
+                totalKanji = 12,
+                source = "cache",
+                lastUpdatedEpochMs = 1_000L,
+                nowEpochMs = 7_201_000L,
+                separator = " • ",
+                catalogLoadingText = "Danh sách: đang tải",
+                catalogCountText = { count -> "Danh sách: $count chữ" },
+                defaultSource = "kanjiapi.dev",
+                sourceText = { value -> "Nguồn: $value" },
+                freshnessJustNowText = "Mới cập nhật",
+                freshnessMinutesText = { value -> "$value phút trước" },
+                freshnessHoursText = { value -> "$value giờ trước" },
+                freshnessDaysText = { value -> "$value ngày trước" },
+            ),
         )
     }
 

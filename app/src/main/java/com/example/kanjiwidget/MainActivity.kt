@@ -1,7 +1,7 @@
 package com.example.kanjiwidget
 
-import android.app.Activity
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -10,6 +10,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import com.example.kanjiwidget.home.HomeSummary
 import com.example.kanjiwidget.home.RecentKanjiSummaryItem
 import com.example.kanjiwidget.home.HomeSummaryRepository
@@ -18,7 +20,7 @@ import com.example.kanjiwidget.stats.StudyStatsRepository
 import com.example.kanjiwidget.widget.KanjiAppWidgetProvider
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
     private val widgetOpacityLevels = listOf(1.0f, 0.85f, 0.70f, 0.55f, 0.40f)
     private lateinit var repository: HomeSummaryRepository
     private lateinit var studyStatsRepository: StudyStatsRepository
@@ -35,6 +37,8 @@ class MainActivity : Activity() {
     private lateinit var widgetControlsBody: TextView
     private lateinit var widgetOpacityValue: TextView
     private lateinit var widgetOpacityButton: Button
+    private lateinit var languageValue: TextView
+    private lateinit var languageButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,24 +59,33 @@ class MainActivity : Activity() {
         widgetControlsBody = findViewById(R.id.tvWidgetControlsBody)
         widgetOpacityValue = findViewById(R.id.tvWidgetOpacityValue)
         widgetOpacityButton = findViewById(R.id.btnWidgetOpacity)
+        languageValue = findViewById(R.id.tvLanguageValue)
+        languageButton = findViewById(R.id.btnLanguage)
 
         findViewById<Button>(R.id.btnWidgetHelp).setOnClickListener {
             showWidgetHelpDialog()
         }
         widgetOpacityButton.setOnClickListener { cycleWidgetOpacity() }
+        languageButton.setOnClickListener { showLanguageDialog() }
     }
 
     override fun onResume() {
         super.onResume()
         bindSummary(repository.loadSummary())
+        updateLanguageSummary()
     }
 
     private fun bindSummary(summary: HomeSummary) {
         summaryCardTitle.text = getString(R.string.home_today_summary_title)
+        val openCountText = resources.getQuantityString(
+            R.plurals.open_count,
+            summary.todayOpenCount,
+            summary.todayOpenCount
+        )
         summaryCardSubtitle.text = getString(
             R.string.home_today_summary_value,
             formatDuration(summary.todayStudyMs),
-            summary.todayOpenCount
+            openCountText
         )
         summaryMeta.text = if (summary.todayStudyMs > 0L) {
             getString(R.string.home_today_summary_meta_active)
@@ -154,10 +167,20 @@ class MainActivity : Activity() {
         val totalSeconds = durationMs / 1000L
         val minutes = totalSeconds / 60L
         val seconds = totalSeconds % 60L
+        val minutesText = resources.getQuantityString(
+            R.plurals.duration_minutes,
+            minutes.toInt(),
+            minutes
+        )
+        val secondsText = resources.getQuantityString(
+            R.plurals.duration_seconds,
+            seconds.toInt(),
+            seconds
+        )
         return if (minutes > 0L) {
-            getString(R.string.study_duration_minutes_seconds, minutes, seconds)
+            getString(R.string.duration_minutes_seconds, minutesText, secondsText)
         } else {
-            getString(R.string.study_duration_seconds, seconds)
+            secondsText
         }
     }
 
@@ -227,7 +250,56 @@ class MainActivity : Activity() {
             System.currentTimeMillis(),
             DateUtils.MINUTE_IN_MILLIS
         ).toString()
-        item.jlpt?.takeIf { it.isNotBlank() }?.let { parts += "JLPT $it" }
-        return parts.joinToString(" • ")
+        item.jlpt?.takeIf { it.isNotBlank() }?.let { parts += getString(R.string.jlpt_format, it) }
+        return parts.joinToString(getString(R.string.bullet_separator))
+    }
+
+    private fun showLanguageDialog() {
+        val options = arrayOf(
+            getString(R.string.language_option_system),
+            getString(R.string.language_option_english),
+            getString(R.string.language_option_vietnamese),
+        )
+        val currentIndex = resolveLanguageOptionIndex()
+        AlertDialog.Builder(this)
+            .setTitle(R.string.language_dialog_title)
+            .setSingleChoiceItems(options, currentIndex) { dialog, which ->
+                applyLanguageSelection(which)
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun updateLanguageSummary() {
+        val option = resolveLanguageOptionIndex()
+        languageValue.text = when (option) {
+            1 -> getString(R.string.language_option_english)
+            2 -> getString(R.string.language_option_vietnamese)
+            else -> getString(R.string.language_option_system)
+        }
+    }
+
+    private fun resolveLanguageOptionIndex(): Int {
+        val locales = AppCompatDelegate.getApplicationLocales()
+        if (locales.isEmpty) return 0
+        val tag = locales.toLanguageTags()
+        return when {
+            tag.startsWith("en") -> 1
+            tag.startsWith("vi") -> 2
+            else -> 0
+        }
+    }
+
+    private fun applyLanguageSelection(optionIndex: Int) {
+        val locales = when (optionIndex) {
+            1 -> LocaleListCompat.forLanguageTags("en")
+            2 -> LocaleListCompat.forLanguageTags("vi")
+            else -> LocaleListCompat.getEmptyLocaleList()
+        }
+        AppCompatDelegate.setApplicationLocales(locales)
+        KanjiAppWidgetProvider.refreshAllWidgets(this)
+        updateLanguageSummary()
+        recreate()
     }
 }

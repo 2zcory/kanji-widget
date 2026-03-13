@@ -120,6 +120,22 @@ Current v1 behavior:
 - opacity is global across all active widget instances
 - the action cycles through preset levels rather than exposing a slider
 
+### 6. Language Section
+
+Contents:
+- short description that language can follow the system or be overridden
+- current app language label
+- action to open the language picker
+
+Purpose:
+- allow quick language switching without adding a full settings screen
+- keep the control lightweight and consistent with the widget-first launcher flow
+
+Behavior:
+- default selection is system language
+- selection updates the app locale via AppCompat per-app language APIs
+- changing language refreshes the launcher screen and active widgets
+
 ## User Flow
 
 ### Flow A: First app launch

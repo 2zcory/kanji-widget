@@ -245,5 +245,51 @@
                 android:textColor="#FFF9F0" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/sectionLanguage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_detail_card"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_section_title"
+                android:textColor="#A1482E"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvLanguageBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/language_section_body"
+                android:textColor="#3F3529"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvLanguageValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="#231D16"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnLanguage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_detail_button"
+                android:text="@string/language_action_change"
+                android:textAllCaps="false"
+                android:textColor="#FFF9F0" />
+        </LinearLayout>
+
     </LinearLayout>
 </ScrollView>

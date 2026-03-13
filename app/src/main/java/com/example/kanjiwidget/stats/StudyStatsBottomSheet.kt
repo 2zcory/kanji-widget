@@ -21,6 +21,8 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.util.Locale
 
 class StudyStatsBottomSheet(
     private val activity: MainActivity,
@@ -93,14 +95,15 @@ class StudyStatsBottomSheet(
         val chartSummary = repository.getDailyChart(days)
         val hasStudyData = chartSummary.totalMs > 0L
         chartView.points = chartSummary.points
-        rangeLabel.text = activity.getString(R.string.chart_range_value, days)
+        val dayCountText = activity.resources.getQuantityString(R.plurals.day_count, days, days)
+        rangeLabel.text = activity.getString(R.string.chart_range_value, dayCountText)
         totalView.text = if (hasStudyData) {
             activity.getString(
                 R.string.chart_total_value,
                 activity.formatDurationForUi(chartSummary.totalMs)
             )
         } else {
-            activity.getString(R.string.chart_total_empty_value, days)
+            activity.getString(R.string.chart_total_empty_value, dayCountText)
         }
         averageView.text = if (hasStudyData) {
             activity.getString(
@@ -112,21 +115,28 @@ class StudyStatsBottomSheet(
         }
         activeDaysView.text = activity.getString(
             R.string.chart_active_days_value,
-            days,
+            dayCountText,
             chartSummary.activeDays
         )
         currentStreakView.text = if (chartSummary.currentStreakDays > 0) {
+            val streakText = activity.resources.getQuantityString(
+                R.plurals.day_count,
+                chartSummary.currentStreakDays,
+                chartSummary.currentStreakDays
+            )
             activity.getString(
                 R.string.chart_current_streak_value,
-                chartSummary.currentStreakDays
+                streakText
             )
         } else {
             activity.getString(R.string.chart_current_streak_empty_value)
         }
         bestDayView.text = chartSummary.bestDay?.let {
+            val locale = currentLocale()
+            val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(locale)
             activity.getString(
                 R.string.chart_best_day_value,
-                it.date.format(java.time.format.DateTimeFormatter.ofPattern("d/M")),
+                it.date.format(formatter),
                 activity.formatDurationForUi(it.totalMs)
             )
         } ?: activity.getString(R.string.chart_best_day_empty)
@@ -174,7 +184,7 @@ class StudyStatsBottomSheet(
     private fun buildSecondaryText(item: KanjiStudyRankItem): String {
         val parts = mutableListOf<String>()
         item.jlptLevel?.takeIf { it.isNotBlank() }?.let {
-            parts += "JLPT $it"
+            parts += activity.getString(R.string.jlpt_format, it)
         }
         item.lastStudiedAt?.let {
             val nowZone = ZoneId.systemDefault()
@@ -194,7 +204,7 @@ class StudyStatsBottomSheet(
                 relativeText
             )
         }
-        return parts.joinToString(" • ").ifBlank {
+        return parts.joinToString(activity.getString(R.string.bullet_separator)).ifBlank {
             activity.getString(R.string.ranking_secondary_fallback)
         }
     }
@@ -220,5 +230,9 @@ class StudyStatsBottomSheet(
         val idle = R.drawable.bg_chart_range_idle
         btnRankingAll.setBackgroundResource(if (scope == RankingScope.ALL_TIME) selected else idle)
         btnRanking30.setBackgroundResource(if (scope == RankingScope.LAST_30_DAYS) selected else idle)
+    }
+
+    private fun currentLocale(): Locale {
+        return activity.resources.configuration.locales[0]
     }
 }
