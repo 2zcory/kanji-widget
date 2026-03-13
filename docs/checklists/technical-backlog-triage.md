@@ -18,6 +18,21 @@ This checklist is intentionally narrow. It does not try to replace product plann
 - Priority 2: choose the next widget UX slice with the best value-to-complexity ratio
 - Priority 3: review longer-term data-retention and ranking extensions after the current behavior gaps are closed
 
+## Triage Flow
+
+```mermaid
+flowchart TD
+    A[Start from durable docs and tests] --> B[Capture explicit gaps and stale notes]
+    B --> C{Immediate shipped behavior gap exists?}
+    C -- Yes --> D[Promote to current top priority]
+    C -- No --> E{Widget UX decision needed?}
+    E -- Yes --> F[Choose next approved widget slice]
+    E -- No --> G[Keep longer-term storage and ranking work deferred]
+    D --> H[Create focused implementation task]
+    F --> H
+    G --> I[Revisit after higher-priority work lands]
+```
+
 ## Phase 1: Evidence Capture
 
 - [x] Review current durable project context and repository docs for explicit future-work notes
