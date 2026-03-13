@@ -23,6 +23,7 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 ## Current Status
 
 - Main app, widget flow, review-hub main screen, recent Kanji history, and study statistics are implemented
+- `master` now includes the main-screen first-slice refresh with a stronger hero-first hierarchy, one dominant study CTA, lighter supporting actions, and clearer recent-history emphasis
 - The lightweight stats-improvement slice is complete, including active-day insight, current-streak feedback, clearer range-aware summary copy, and a supportive no-data summary state in the existing stats bottom sheet
 - The Kanji Detail screen now includes a lightweight compounds section with up to five filtered examples, each showing written form, reading, meaning, and a derived usage hint backed by local cache
 - The Kanji Detail screen on `master` now includes on-device pronunciation playback for the main reading target and eligible compound rows using Android `TextToSpeech`
