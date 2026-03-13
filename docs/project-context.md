@@ -34,6 +34,44 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 - The phased Kanji Detail screen update is complete, including layout, metadata, study stats, next-random navigation, and related design docs
 - `master` now also includes direct unit coverage for widget selection, widget meta formatting, and widget-scoped preference cleanup through PR `#3`
 
+## Runtime Diagram
+
+```mermaid
+flowchart LR
+    Widget[Home screen widget]
+    Main[MainActivity]
+    Detail[KanjiDetailActivity]
+    Stats[Stats bottom sheet]
+    Prefs[SharedPreferences]
+    Api[kanjiapi.dev]
+    Svg[KanjiVG SVG source]
+
+    Widget -->|tap card| Detail
+    Widget -->|refresh worker| Api
+    Widget --> Prefs
+    Main --> Prefs
+    Main --> Stats
+    Detail --> Prefs
+    Detail --> Api
+    Detail --> Svg
+    Stats --> Prefs
+    Api --> Prefs
+```
+
+## Release Flow Diagram
+
+```mermaid
+flowchart TD
+    A[Reviewed work merged to master] --> B[Prepare docs/releases/vX.Y.Z.md]
+    B --> C[Update versionCode and versionName]
+    C --> D[Create and push tag vX.Y.Z]
+    D --> E[GitHub Actions release workflow]
+    E --> F[Validate tag and curated notes]
+    F --> G[Run unit tests]
+    G --> H[Build signed release APK]
+    H --> I[Publish GitHub release with APK]
+```
+
 ## Working Notes
 
 - Use this file as the first stop for durable project context inside the repo

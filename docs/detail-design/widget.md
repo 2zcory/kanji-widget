@@ -70,6 +70,37 @@ Possible fields:
 - footer meta line
 - action button
 
+## Main Interaction Diagram
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Widget as App Widget
+    participant Provider as KanjiAppWidgetProvider
+    participant Worker as KanjiRefreshWorker
+    participant Prefs as SharedPreferences
+    participant API as kanjiapi.dev
+    participant Detail as KanjiDetailActivity
+
+    User->>Widget: Tap action button
+    Widget->>Provider: ACTION_NEXT_KANJI
+    alt Answer hidden and current entry exists
+        Provider->>Prefs: Set reveal state = true
+        Provider->>Widget: Re-render revealed state
+    else Answer already visible
+        Provider->>Prefs: Set reveal state = false
+        Provider->>Worker: Enqueue unique refresh work
+        Worker->>Prefs: Read catalog/current state
+        Worker->>API: Fetch next kanji detail if needed
+        Worker->>Prefs: Cache result and selected kanji
+        Worker->>Widget: Re-render with next entry
+    else No entry loaded yet
+        Provider->>Worker: Enqueue initial refresh
+    end
+    User->>Widget: Tap widget card
+    Widget->>Detail: Open detail screen with cached fields
+```
+
 ## Widget Lifecycle
 
 ### Initial placement or update

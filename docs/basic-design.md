@@ -130,6 +130,25 @@ Key behavior:
 5. The app records local study-time metrics while the detail screen is visible.
 6. The user later opens the launcher screen to review today’s summary and short-term trends.
 
+### Flow Diagram
+
+```mermaid
+flowchart TD
+    A[Launch app] --> B[Read launcher summary]
+    B --> C{Widget already added?}
+    C -- No --> D[Open widget help]
+    D --> E[Add widget from system picker]
+    C -- Yes --> F[Review from home screen widget]
+    E --> F
+    F --> G[Reveal answer]
+    G --> H[Advance to next kanji]
+    F --> I[Open Kanji detail]
+    I --> J[Watch stroke order]
+    I --> K[Record study time]
+    B --> L[Open stats bottom sheet]
+    B --> M[Change widget opacity or language]
+```
+
 ## UX Principles
 
 The UX should emphasize:

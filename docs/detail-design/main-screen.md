@@ -164,6 +164,27 @@ Behavior:
 2. Main screen detects that no widget instance is currently active
 3. Widget help is emphasized over stats
 
+## Main Interaction Diagram
+
+```mermaid
+flowchart TD
+    A[Open MainActivity] --> B[Load summary from local stores]
+    B --> C{Widget installed?}
+    C -- Yes --> D[Show normal widget controls copy]
+    C -- No --> E[Emphasize widget help]
+    B --> F{Recent kanji exists?}
+    F -- Yes --> G[Enable continue latest action]
+    F -- No --> H[Disable latest action]
+    A --> I[User opens stats]
+    I --> J[Show stats bottom sheet]
+    A --> K[User changes widget opacity]
+    K --> L[Persist global opacity]
+    L --> M[Refresh active widgets]
+    A --> N[User changes app language]
+    N --> O[Update AppCompat locale]
+    O --> P[Refresh main screen and widgets]
+```
+
 ## Behavior Rules
 
 ### Current version
