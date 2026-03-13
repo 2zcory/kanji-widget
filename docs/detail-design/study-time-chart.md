@@ -182,6 +182,35 @@ Main-screen action rule for v1:
 3. The app shows an empty-state chart and supportive text
 4. Range switching remains available so the user can still inspect `7 ngày` and `30 ngày`
 
+## Main Interaction Diagram
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Main as Main Screen
+    participant Sheet as Study Stats Bottom Sheet
+    participant Repo as StudyStatsRepository
+    participant Tracker as StudyTimeTracker
+
+    User->>Main: Tap stats action
+    Main->>Sheet: Open bottom sheet
+    Sheet->>Repo: getDailyChart(7)
+    loop For each day in range
+        Repo->>Tracker: getTotalMs(date)
+        Repo->>Tracker: getOpenCount(date)
+    end
+    Repo->>Repo: Zero-fill missing dates and compute summary
+    Repo-->>Sheet: StudyChartSummary
+    Sheet->>Sheet: Render chart and summary copy
+
+    opt User changes range
+        User->>Sheet: Select 30-day range
+        Sheet->>Repo: getDailyChart(30)
+        Repo-->>Sheet: Updated summary and points
+        Sheet->>Sheet: Re-render chart and insights
+    end
+```
+
 ## Data Flow
 
 1. UI requests chart data for a selected range

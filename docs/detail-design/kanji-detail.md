@@ -201,6 +201,48 @@ Reason:
 - keeps the detail-screen contract stable across multiple launch surfaces
 - avoids duplicating detail-intent assembly logic in each caller
 
+## Main Interaction Diagram
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Entry as Widget/Main Screen/Stats
+    participant Navigator as KanjiDetailNavigator
+    participant Prefs as KanjiWidgetPrefs
+    participant Detail as KanjiDetailActivity
+    participant Stroke as KanjiStrokeOrderClient
+    participant Audio as TextToSpeech
+    participant Stats as StudyTimeTracker
+    participant Recent as RecentKanjiStore
+
+    User->>Entry: Open kanji detail
+    Entry->>Navigator: buildDetailIntent(...)
+    Navigator->>Prefs: Read cached detail if available
+    Navigator-->>Entry: Intent with resolved extras
+    Entry->>Detail: startActivity(intent)
+    Detail->>Recent: Record viewed kanji
+    Detail->>Stats: Start study session
+    Detail->>Stroke: fetchSvg(kanji)
+    Stroke-->>Detail: Animated HTML payload
+    Detail->>Detail: Render hero, readings, note, today stats
+
+    opt Play pronunciation
+        User->>Detail: Tap play
+        Detail->>Audio: Stop current playback
+        Detail->>Audio: Speak reading target
+    end
+
+    opt Continue studying
+        User->>Detail: Tap Next random
+        Detail->>Prefs: Read cached catalog and detail
+        Detail->>Navigator: buildDetailIntent(next kanji)
+        Detail->>Detail: start next detail activity
+        Detail->>Detail: finish current activity
+    end
+
+    Detail->>Stats: Stop study session on onStop
+```
+
 ### Stroke-order loading
 
 Current behavior:

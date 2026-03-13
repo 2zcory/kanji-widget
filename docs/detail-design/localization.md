@@ -29,6 +29,24 @@ Last updated: 2026-03-13
 - Use AppCompat per-app language APIs where supported and fall back to system locale otherwise.
 - When language changes, refresh widget content and key app surfaces.
 
+## Locale Selection Flow
+
+```mermaid
+flowchart TD
+    A[App or widget starts] --> B{User selected app language?}
+    B -- No --> C[Use system locale]
+    B -- Yes --> D[Use AppCompat stored locale]
+    C --> E[Load Android string resources]
+    D --> E
+    E --> F[Render app screens]
+    E --> G[Render widget views]
+    H[User changes language in app] --> I[AppCompat setApplicationLocales]
+    I --> J[Recreate active activity]
+    I --> K[Request widget update]
+    J --> E
+    K --> G
+```
+
 Implementation notes:
 - Activities should use AppCompat so per-app language updates apply consistently.
 - Maintain `res/xml/locales_config.xml` with supported locale tags.
