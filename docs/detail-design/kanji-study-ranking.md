@@ -138,6 +138,33 @@ Interaction:
    - top 10 most studied
    - top 10 least studied among already studied kanji
 
+## Main Interaction Diagram
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Sheet as Study Stats Bottom Sheet
+    participant Repo as KanjiRankingRepository
+    participant Store as Study tracking storage
+    participant Prefs as KanjiWidgetPrefs
+    participant Detail as KanjiDetailActivity
+
+    User->>Sheet: Open stats and select ranking scope
+    Sheet->>Repo: getRanking(scope, 10)
+    Repo->>Store: Read per-kanji study totals in scope
+    Repo->>Repo: Filter zero-study kanji
+    Repo->>Repo: Aggregate totalStudyMs and lastStudiedAt
+    Repo->>Prefs: Join cached meaning/JLPT if available
+    Repo->>Repo: Sort most-studied and least-studied lists
+    Repo-->>Sheet: KanjiStudyRanking
+    Sheet->>Sheet: Render both ranking sections
+
+    opt User opens a ranked kanji
+        User->>Sheet: Tap ranking row
+        Sheet->>Detail: Open kanji detail for selected kanji
+    end
+```
+
 ## Storage Design
 
 ### Current source data

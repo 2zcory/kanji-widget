@@ -88,6 +88,32 @@ Possible future views:
    - daily time for the current kanji
    - daily open count
 
+## Main Interaction Diagram
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Detail as KanjiDetailActivity
+    participant Tracker as StudyTimeTracker
+    participant Prefs as SharedPreferences
+
+    User->>Detail: Open kanji detail
+    Detail->>Tracker: startSession(context, kanji)
+    Tracker->>Prefs: Store active session timestamp and kanji
+    User->>Detail: Keep screen in foreground
+    Detail->>Tracker: stopSession(context) on onStop
+    Tracker->>Prefs: Read active session
+    Tracker->>Tracker: Normalize elapsed duration
+    alt Duration < 1 second
+        Tracker->>Tracker: Discard session
+    else Valid duration
+        Tracker->>Tracker: Clamp to 10 minutes if needed
+        Tracker->>Prefs: Add daily total
+        Tracker->>Prefs: Add per-kanji total
+        Tracker->>Prefs: Increment daily open count
+    end
+```
+
 ## Storage Design
 
 Storage mechanism:
