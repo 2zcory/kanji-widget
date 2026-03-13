@@ -17,6 +17,9 @@ import com.example.kanjiwidget.KanjiDetailNavigator
 import com.example.kanjiwidget.MainActivity
 import com.example.kanjiwidget.R
 import com.example.kanjiwidget.home.HomeSummary
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 class StudyStatsBottomSheet(
@@ -174,13 +177,21 @@ class StudyStatsBottomSheet(
             parts += "JLPT $it"
         }
         item.lastStudiedAt?.let {
-            parts += activity.getString(
-                R.string.ranking_secondary_last_studied,
+            val nowZone = ZoneId.systemDefault()
+            val lastDate = Instant.ofEpochMilli(it).atZone(nowZone).toLocalDate()
+            val today = LocalDate.now(nowZone)
+            val relativeText = if (lastDate == today) {
+                activity.getString(R.string.ranking_last_studied_today)
+            } else {
                 DateUtils.getRelativeTimeSpanString(
                     it,
                     System.currentTimeMillis(),
                     DateUtils.MINUTE_IN_MILLIS
-                )
+                ).toString()
+            }
+            parts += activity.getString(
+                R.string.ranking_secondary_last_studied,
+                relativeText
             )
         }
         return parts.joinToString(" • ").ifBlank {
