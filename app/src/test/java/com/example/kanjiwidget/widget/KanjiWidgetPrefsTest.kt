@@ -81,6 +81,33 @@ class KanjiWidgetPrefsTest {
     }
 
     @Test
+    fun dailyRotationBaseline_backfillsMissingDayWithoutForcingImmediateAdvance() {
+        KanjiWidgetPrefs.setCurrentKanji(context, widgetId = 21, value = "日")
+
+        assertNull(KanjiWidgetPrefs.getLastKanjiLocalDay(context, 21))
+        assertFalse(KanjiWidgetPrefs.shouldRotateForNewDay(context, 21, localDay = "2026-03-13"))
+
+        KanjiWidgetPrefs.ensureCurrentKanjiRotationBaseline(context, 21, localDay = "2026-03-13")
+
+        assertEquals("2026-03-13", KanjiWidgetPrefs.getLastKanjiLocalDay(context, 21))
+        assertFalse(KanjiWidgetPrefs.shouldRotateForNewDay(context, 21, localDay = "2026-03-13"))
+        assertTrue(KanjiWidgetPrefs.shouldRotateForNewDay(context, 21, localDay = "2026-03-14"))
+    }
+
+    @Test
+    fun clearWidgetState_removesDailyRotationStateForDeletedWidget() {
+        KanjiWidgetPrefs.setCurrentKanji(context, widgetId = 33, value = "月")
+        KanjiWidgetPrefs.markCurrentKanjiShownOnLocalDay(context, widgetId = 33, localDay = "2026-03-13")
+
+        assertEquals("2026-03-13", KanjiWidgetPrefs.getLastKanjiLocalDay(context, 33))
+
+        KanjiWidgetPrefs.clearWidgetState(context, 33)
+
+        assertNull(KanjiWidgetPrefs.getCurrentKanji(context, 33))
+        assertNull(KanjiWidgetPrefs.getLastKanjiLocalDay(context, 33))
+    }
+
+    @Test
     fun cachedCompounds_keepEntriesWithBlankReadingWhenWrittenAndMeaningExist() {
         val entries = filterCachedCompoundEntries(
             listOf(

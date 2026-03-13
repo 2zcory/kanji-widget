@@ -27,6 +27,11 @@ Out of scope for the first version:
 - offline bundled Kanji dataset
 - autonomous rotation to a different Kanji without either a widget update event or explicit user interaction
 
+Out of scope for the daily-rotation first slice:
+- exact alarms or aggressive periodic scheduling to force a midnight widget refresh
+- another widget-placement setting just to enable or disable daily rotation
+- a separate streak or progress surface inside the widget
+
 ## User Value
 
 The widget provides:
@@ -156,6 +161,21 @@ Reason:
 - Android widget configuration is the standard host-compatible entry point for per-widget setup
 - the flow keeps the initial scope small while enabling future widget-specific controls
 
+### Daily rotation first slice
+
+Trigger:
+- any widget render or refresh that happens after the local calendar day changes for a widget instance that already has a current Kanji
+
+Behavior:
+- the first slice is always on for all widget instances
+- if the widget is revisited on a new local day, the next refresh should advance to a fresh Kanji before rendering the normal hidden-answer state
+- if the widget is still on the same local day, the existing Kanji should remain until the normal reveal-and-next interaction advances it
+- the first slice should reuse the existing host-driven update paths instead of introducing exact alarms, aggressive periodic work, or a persistent background service
+
+Reason:
+- daily freshness adds recurring study value without requiring the user to manage another option first
+- the host-driven approach keeps the implementation compatible with Android widget limits and avoids a heavier scheduling contract in the first slice
+
 ### Resize
 
 Trigger:
@@ -189,6 +209,9 @@ Behavior:
 - decide whether to reveal or advance
 - rerender immediately
 - enqueue worker when a new Kanji must be loaded
+
+Daily-rotation interaction note:
+- if the local day has changed since the widget last loaded a Kanji, the widget may already have refreshed to a new hidden-answer entry before the next explicit button interaction
 
 ## Interaction Model
 
@@ -480,6 +503,13 @@ If the catalog cannot be loaded:
 - worker retries
 - widget remains in a loading state
 
+### New local day reached
+
+If the widget is rendered after the local day changes:
+- a widget with an existing current Kanji should refresh to a different Kanji when possible
+- the refreshed widget should return to the hidden-answer state
+- the first slice may wait for the next normal render or refresh opportunity instead of forcing a midnight alarm
+
 ### Single-item catalog
 
 If the catalog has only one item:
@@ -530,6 +560,8 @@ Suggested unit or integration tests:
 - preference read/write for per-widget state
 - preference fallback from shared opacity to per-widget opacity
 - cleanup removes per-widget state when a widget instance is deleted
+- daily-rotation detection only advances after the local day changes
+- daily rotation resets revealed state back to hidden when a fresh Kanji is loaded
 
 ## Future Extensions
 

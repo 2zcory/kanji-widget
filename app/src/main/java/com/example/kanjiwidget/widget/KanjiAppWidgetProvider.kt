@@ -25,8 +25,11 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         appWidgetIds.forEach { id ->
+            val shouldRotateForNewDay = KanjiWidgetPrefs.shouldRotateForNewDay(context, id)
             renderWidget(context, appWidgetManager, id)
-            enqueueRefresh(context, id)
+            if (!shouldRotateForNewDay) {
+                enqueueRefresh(context, id)
+            }
         }
     }
 
@@ -40,6 +43,12 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             val component = ComponentName(context, KanjiAppWidgetProvider::class.java)
             val ids = manager.getAppWidgetIds(component)
             if (!ids.contains(widgetId)) return
+
+            if (KanjiWidgetPrefs.shouldRotateForNewDay(context, widgetId)) {
+                KanjiWidgetPrefs.setRevealAnswer(context, widgetId, false)
+                renderWidget(context, manager, widgetId)
+                return
+            }
 
             val revealNow = KanjiWidgetPrefs.getRevealAnswer(context, widgetId)
             if (!revealNow) {
@@ -77,33 +86,40 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
         }
     }
 
-    private fun enqueueRefresh(context: Context, widgetId: Int, advance: Boolean = false) {
-        val data = Data.Builder()
-            .putInt(KanjiRefreshWorker.KEY_WIDGET_ID, widgetId)
-            .putBoolean(KanjiRefreshWorker.KEY_ADVANCE, advance)
-            .build()
-
-        val request = OneTimeWorkRequestBuilder<KanjiRefreshWorker>()
-            .setInputData(data)
-            .setConstraints(
-                Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .build()
-            )
-            .build()
-
-        WorkManager.getInstance(context).enqueueUniqueWork(
-            "refresh_widget_$widgetId",
-            ExistingWorkPolicy.REPLACE,
-            request
-        )
-    }
-
     companion object {
         const val ACTION_NEXT_KANJI = "com.example.kanjiwidget.ACTION_NEXT_KANJI"
 
+        fun enqueueRefresh(context: Context, widgetId: Int, advance: Boolean = false) {
+            val data = Data.Builder()
+                .putInt(KanjiRefreshWorker.KEY_WIDGET_ID, widgetId)
+                .putBoolean(KanjiRefreshWorker.KEY_ADVANCE, advance)
+                .build()
+
+            val request = OneTimeWorkRequestBuilder<KanjiRefreshWorker>()
+                .setInputData(data)
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build()
+                )
+                .build()
+
+            WorkManager.getInstance(context).enqueueUniqueWork(
+                "refresh_widget_$widgetId",
+                ExistingWorkPolicy.REPLACE,
+                request
+            )
+        }
+
         fun renderWidget(context: Context, manager: AppWidgetManager, widgetId: Int) {
             val localizedContext = ContextCompat.getContextForLanguage(context)
+            val shouldRotateForNewDay = KanjiWidgetPrefs.shouldRotateForNewDay(context, widgetId)
+            if (shouldRotateForNewDay) {
+                KanjiWidgetPrefs.setRevealAnswer(context, widgetId, false)
+                enqueueRefresh(context, widgetId, advance = true)
+            } else {
+                KanjiWidgetPrefs.ensureCurrentKanjiRotationBaseline(context, widgetId)
+            }
             val currentKanji = KanjiWidgetPrefs.getCurrentKanji(context, widgetId)
             val item = currentKanji?.let { KanjiWidgetPrefs.getRemoteEntry(context, it) }
             val revealAnswer = KanjiWidgetPrefs.getRevealAnswer(context, widgetId)

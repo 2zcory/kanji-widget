@@ -4,14 +4,16 @@ import android.content.Context
 import com.example.kanjiwidget.detail.CachedKanjiCompounds
 import com.example.kanjiwidget.detail.KanjiCompoundEntry
 import com.example.kanjiwidget.detail.UsageHintKey
-import org.json.JSONObject
 import org.json.JSONArray
+import org.json.JSONObject
+import java.time.LocalDate
 
 object KanjiWidgetPrefs {
     private const val PREF = "kanji_widget_pref"
     private const val LEGACY_DELIMITER = "\u001F"
     private const val KEY_WIDGET_SURFACE_ALPHA = "widget_surface_alpha"
     private const val KEY_WIDGET_SURFACE_ALPHA_PREFIX = "widget_surface_alpha_"
+    private const val KEY_WIDGET_LAST_KANJI_DAY_PREFIX = "widget_last_kanji_day_"
 
     fun getKanjiCatalog(context: Context): List<String> {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
@@ -67,6 +69,45 @@ object KanjiWidgetPrefs {
         sp.edit().putString("current_kanji_$widgetId", value).apply()
     }
 
+    fun getLastKanjiLocalDay(context: Context, widgetId: Int): String? {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        return sp.getString("$KEY_WIDGET_LAST_KANJI_DAY_PREFIX$widgetId", null)
+            ?.takeIf { it.isNotBlank() }
+    }
+
+    fun markCurrentKanjiShownOnLocalDay(
+        context: Context,
+        widgetId: Int,
+        localDay: String = currentLocalDay(),
+    ) {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        sp.edit()
+            .putString("$KEY_WIDGET_LAST_KANJI_DAY_PREFIX$widgetId", localDay)
+            .apply()
+    }
+
+    fun ensureCurrentKanjiRotationBaseline(
+        context: Context,
+        widgetId: Int,
+        localDay: String = currentLocalDay(),
+    ) {
+        if (getCurrentKanji(context, widgetId).isNullOrBlank()) return
+        if (getLastKanjiLocalDay(context, widgetId) != null) return
+        markCurrentKanjiShownOnLocalDay(context, widgetId, localDay)
+    }
+
+    fun shouldRotateForNewDay(
+        context: Context,
+        widgetId: Int,
+        localDay: String = currentLocalDay(),
+    ): Boolean {
+        return shouldRotateWidgetForNewDay(
+            hasCurrentKanji = !getCurrentKanji(context, widgetId).isNullOrBlank(),
+            lastShownLocalDay = getLastKanjiLocalDay(context, widgetId),
+            currentLocalDay = localDay,
+        )
+    }
+
     fun getRevealAnswer(context: Context, widgetId: Int): Boolean {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
         return sp.getBoolean("reveal_$widgetId", false)
@@ -86,6 +127,7 @@ object KanjiWidgetPrefs {
             .remove("current_kanji_$widgetId")
             .remove("reveal_$widgetId")
             .remove("$KEY_WIDGET_SURFACE_ALPHA_PREFIX$widgetId")
+            .remove("$KEY_WIDGET_LAST_KANJI_DAY_PREFIX$widgetId")
             .apply()
     }
 
@@ -264,6 +306,8 @@ object KanjiWidgetPrefs {
             }
         }
     }
+
+    private fun currentLocalDay(): String = LocalDate.now().toString()
 }
 
 internal fun filterCachedCompoundEntries(entries: List<KanjiCompoundEntry>): List<KanjiCompoundEntry> {
