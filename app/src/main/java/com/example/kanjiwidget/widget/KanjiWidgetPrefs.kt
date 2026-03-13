@@ -3,6 +3,7 @@ package com.example.kanjiwidget.widget
 import android.content.Context
 import com.example.kanjiwidget.detail.CachedKanjiCompounds
 import com.example.kanjiwidget.detail.KanjiCompoundEntry
+import com.example.kanjiwidget.detail.UsageHintKey
 import org.json.JSONObject
 import org.json.JSONArray
 
@@ -105,6 +106,7 @@ object KanjiWidgetPrefs {
             put("meaningVi", entry.meaningVi)
             put("example", entry.example)
             put("jlptLevel", entry.jlptLevel)
+            put("unicode", entry.unicode)
             put("strokeCount", entry.strokeCount)
             put("grade", entry.grade)
             put("frequency", entry.frequency)
@@ -143,7 +145,7 @@ object KanjiWidgetPrefs {
                                 put("written", entry.written)
                                 put("reading", entry.reading)
                                 put("meaning", entry.meaning)
-                                put("usageHint", entry.usageHint)
+                                put("usageHintKey", entry.usageHintKey.storageKey)
                                 put("priorities", JSONArray(entry.priorities))
                             }
                         )
@@ -168,7 +170,9 @@ object KanjiWidgetPrefs {
                             written = item.optString("written"),
                             reading = item.optString("reading"),
                             meaning = item.optString("meaning"),
-                            usageHint = item.optString("usageHint"),
+                            usageHintKey = UsageHintKey.fromStorageKey(item.optString("usageHintKey"))
+                                ?: UsageHintKey.fromLegacyText(item.optString("usageHint"))
+                                ?: UsageHintKey.STUDY_WORD,
                             priorities = item.optJSONArray("priorities").toStringList(),
                         )
                     )
@@ -193,6 +197,7 @@ object KanjiWidgetPrefs {
             val meaningVi = json.optString("meaningVi")
             val example = json.optString("example")
             val jlptLevel = json.optString("jlptLevel")
+            val unicode = json.optString("unicode").ifBlank { null }
             if (kanji.isBlank() || jlptLevel.isBlank()) return null
             KanjiEntry(
                 kanji = kanji,
@@ -201,6 +206,7 @@ object KanjiWidgetPrefs {
                 meaningVi = meaningVi,
                 example = example,
                 jlptLevel = jlptLevel,
+                unicode = unicode,
                 strokeCount = json.optInt("strokeCount", 0).takeIf { it > 0 },
                 grade = json.optInt("grade", 0).takeIf { it > 0 },
                 frequency = json.optInt("frequency", 0).takeIf { it > 0 },
@@ -222,6 +228,7 @@ object KanjiWidgetPrefs {
             meaningVi = parts[3],
             example = parts[4],
             jlptLevel = parts[5],
+            unicode = null,
             strokeCount = null,
             grade = null,
             frequency = null,

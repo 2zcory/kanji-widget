@@ -1,0 +1,38 @@
+<resources>
+    <plurals name="stroke_count">
+        <item quantity="one">%d stroke</item>
+        <item quantity="other">%d strokes</item>
+    </plurals>
+    <plurals name="open_count">
+        <item quantity="one">%d valid open</item>
+        <item quantity="other">%d valid opens</item>
+    </plurals>
+    <plurals name="duration_minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+    <plurals name="duration_seconds">
+        <item quantity="one">%d second</item>
+        <item quantity="other">%d seconds</item>
+    </plurals>
+    <plurals name="day_count">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="widget_catalog_count">
+        <item quantity="one">Catalog: %d kanji</item>
+        <item quantity="other">Catalog: %d kanji</item>
+    </plurals>
+    <plurals name="widget_freshness_minutes">
+        <item quantity="one">%d min ago</item>
+        <item quantity="other">%d mins ago</item>
+    </plurals>
+    <plurals name="widget_freshness_hours">
+        <item quantity="one">%d hr ago</item>
+        <item quantity="other">%d hrs ago</item>
+    </plurals>
+    <plurals name="widget_freshness_days">
+        <item quantity="one">%d day ago</item>
+        <item quantity="other">%d days ago</item>
+    </plurals>
+</resources>

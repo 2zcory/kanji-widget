@@ -8,6 +8,7 @@ import android.util.TypedValue
 import android.util.AttributeSet
 import android.view.View
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import kotlin.math.max
 
 class StudyTimeChartView @JvmOverloads constructor(
@@ -25,8 +26,6 @@ class StudyTimeChartView @JvmOverloads constructor(
     private val faintColor = 0x332F5D50
     private val axisColor = 0x55A1482E
     private val textColor = 0xFF6D6050.toInt()
-    private val labelFormatter = DateTimeFormatter.ofPattern("d/M")
-
     private val barPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = accentColor
         style = Paint.Style.FILL
@@ -68,6 +67,8 @@ class StudyTimeChartView @JvmOverloads constructor(
         val slotWidth = (chartRight - chartLeft) / points.size.toFloat()
         val barWidth = slotWidth * 0.58f
         val zeroBarHeight = dp(3f)
+        val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+            .withLocale(resources.configuration.locales[0])
 
         points.forEachIndexed { index, point ->
             val left = chartLeft + slotWidth * index + (slotWidth - barWidth) / 2f
@@ -84,7 +85,7 @@ class StudyTimeChartView @JvmOverloads constructor(
 
             if (shouldDrawLabel(index, points.size)) {
                 canvas.drawText(
-                    point.date.format(labelFormatter),
+                    point.date.format(formatter),
                     left + barWidth / 2f,
                     height - paddingBottom - dp(6f),
                     textPaint

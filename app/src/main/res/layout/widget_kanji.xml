@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widgetContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -34,10 +35,11 @@
             android:paddingTop="5dp"
             android:paddingRight="10dp"
             android:paddingBottom="5dp"
-            android:text="JLPT N5"
+            android:text="@string/jlpt_placeholder"
             android:textColor="#6F3E00"
             android:textSize="13sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="JLPT N5" />
 
         <TextView
             android:id="@+id/tvState"
@@ -52,10 +54,11 @@
             android:paddingTop="5dp"
             android:paddingRight="10dp"
             android:paddingBottom="5dp"
-            android:text="Ẩn đáp án"
+            android:text="@string/widget_state_hidden"
             android:textColor="#4F5B66"
             android:textSize="13sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Hidden" />
     </RelativeLayout>
 
     <LinearLayout
@@ -80,10 +83,11 @@
             android:paddingTop="12dp"
             android:paddingRight="12dp"
             android:paddingBottom="12dp"
-            android:text="日"
+            android:text="@string/widget_placeholder_kanji"
             android:textColor="#17191C"
             android:textSize="72sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="日" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -103,10 +107,11 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="3"
-                android:text="On: ニチ / Kun: ひ"
+                android:text="@string/widget_placeholder_reading"
                 android:textColor="#30363C"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="On: ニチ / Kun: ひ" />
 
             <TextView
                 android:id="@+id/tvMeaning"
@@ -115,9 +120,10 @@
                 android:layout_marginTop="8dp"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="Mặt trời, ngày"
+                android:text="@string/widget_placeholder_meaning"
                 android:textColor="#4D555E"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                tools:text="Sun, day" />
 
             <TextView
                 android:id="@+id/tvExample"
@@ -131,10 +137,11 @@
                 android:paddingTop="8dp"
                 android:paddingRight="10dp"
                 android:paddingBottom="8dp"
-                android:text="日本（にほん）"
+                android:text="@string/widget_placeholder_example"
                 android:textColor="#59616A"
                 android:textSize="14sp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:text="日本（にほん）" />
         </LinearLayout>
     </LinearLayout>
 
@@ -145,9 +152,10 @@
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="Nguồn: built-in"
+        android:text="@string/widget_meta_catalog_loading"
         android:textColor="#59616A"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        tools:text="Source: built-in" />
 
         <Button
             android:id="@+id/btnNext"
@@ -157,11 +165,12 @@
             android:background="@drawable/bg_widget_action"
             android:maxLines="1"
             android:minHeight="42dp"
-            android:text="Đổi chữ"
+            android:text="@string/widget_action_reveal"
             android:textAllCaps="false"
             android:textColor="#FFF8F1"
             android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Reveal answer" />
 
     </LinearLayout>
 

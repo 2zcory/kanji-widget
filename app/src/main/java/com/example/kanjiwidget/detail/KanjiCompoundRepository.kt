@@ -65,20 +65,20 @@ internal fun selectDisplayCompounds(
                 written = raw.written,
                 reading = raw.reading,
                 meaning = raw.meaning,
-                usageHint = deriveUsageHint(raw.priorities, raw.meaning),
+                usageHintKey = deriveUsageHintKey(raw.priorities, raw.meaning),
                 priorities = raw.priorities,
             )
         }
 }
 
-internal fun deriveUsageHint(priorities: List<String>, meaning: String): String {
+internal fun deriveUsageHintKey(priorities: List<String>, meaning: String): UsageHintKey {
     val lowerMeaning = meaning.lowercase()
     return when {
-        priorities.any { it.startsWith("news") } -> "News-heavy"
-        priorities.any { it.startsWith("ichi") || it.startsWith("nf") } -> "Common word"
+        priorities.any { it.startsWith("news") } -> UsageHintKey.NEWS_HEAVY
+        priorities.any { it.startsWith("ichi") || it.startsWith("nf") } -> UsageHintKey.COMMON_WORD
         lowerMeaning.contains("abbr") || lowerMeaning.contains("former") || lowerMeaning.contains("historical") ->
-            "Reference term"
-        else -> "Study word"
+            UsageHintKey.REFERENCE_TERM
+        else -> UsageHintKey.STUDY_WORD
     }
 }
 

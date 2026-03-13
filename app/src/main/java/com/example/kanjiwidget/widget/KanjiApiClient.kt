@@ -34,10 +34,11 @@ object KanjiApiClient {
             val json = JSONObject(body)
             val onyomi = join(json.optJSONArray("on_readings"))
             val kunyomi = join(json.optJSONArray("kun_readings"))
-            val meaning = join(json.optJSONArray("meanings"), maxItems = 2).ifBlank { "(no meaning)" }
+            val meaning = join(json.optJSONArray("meanings"), maxItems = 2)
+                .ifBlank { KanjiEntry.MEANING_UNKNOWN }
 
             val jlptNum = if (json.isNull("jlpt")) null else json.optInt("jlpt", 0)
-            val jlpt = if (jlptNum == null || jlptNum <= 0) "N/A" else "N$jlptNum"
+            val jlpt = if (jlptNum == null || jlptNum <= 0) KanjiEntry.JLPT_UNKNOWN else "N$jlptNum"
 
             val strokeCount = json.optInt("stroke_count", -1).takeIf { it > 0 }
             val grade = if (json.isNull("grade")) null else json.optInt("grade", 0).takeIf { it > 0 }
@@ -47,18 +48,15 @@ object KanjiApiClient {
                 json.optInt("freq_mainichi_shinbun", 0).takeIf { it > 0 }
             }
             val unicode = json.optString("unicode", "").takeIf { it.isNotBlank() }
-            val note = buildList {
-                unicode?.let { add("U+$it") }
-                if (sourceNoteNeeded(strokeCount, grade, frequency)) add("Nguồn: kanjiapi.dev")
-            }.joinToString(" • ")
 
             KanjiEntry(
                 kanji = kanji,
                 onyomi = onyomi.ifBlank { "-" },
                 kunyomi = kunyomi.ifBlank { "-" },
                 meaningVi = meaning,
-                example = note,
+                example = "",
                 jlptLevel = jlpt,
+                unicode = unicode,
                 strokeCount = strokeCount,
                 grade = grade,
                 frequency = frequency,
@@ -147,11 +145,5 @@ object KanjiApiClient {
         }
     }
 
-    private fun sourceNoteNeeded(
-        strokeCount: Int?,
-        grade: Int?,
-        frequency: Int?,
-    ): Boolean {
-        return strokeCount == null && grade == null && frequency == null
-    }
+    // Intentionally left without additional helpers to keep fetch logic slim.
 }

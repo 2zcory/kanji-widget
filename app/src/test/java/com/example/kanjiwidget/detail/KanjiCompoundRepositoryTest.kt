@@ -31,8 +31,8 @@ class KanjiCompoundRepositoryTest {
         )
 
         assertEquals(listOf("大学", "学位", "国際情報大学"), selected.map { it.written })
-        assertEquals("News-heavy", selected.first().usageHint)
-        assertEquals("Common word", selected[1].usageHint)
+        assertEquals(UsageHintKey.NEWS_HEAVY, selected.first().usageHintKey)
+        assertEquals(UsageHintKey.COMMON_WORD, selected[1].usageHintKey)
     }
 
     @Test
@@ -50,15 +50,15 @@ class KanjiCompoundRepositoryTest {
         assertEquals(2, selected.size)
         assertEquals(listOf("日本", "日記"), selected.map { it.written })
         assertEquals("", selected.first().reading)
-        assertEquals("News-heavy", selected.first().usageHint)
-        assertEquals("Study word", selected[1].usageHint)
+        assertEquals(UsageHintKey.NEWS_HEAVY, selected.first().usageHintKey)
+        assertEquals(UsageHintKey.STUDY_WORD, selected[1].usageHintKey)
     }
 
     @Test
     fun deriveUsageHint_marksReferenceTermsFromMeaningShape() {
         assertEquals(
-            "Reference term",
-            deriveUsageHint(emptyList(), "(abbr) Japan Federation of Bar Associations")
+            UsageHintKey.REFERENCE_TERM,
+            deriveUsageHintKey(emptyList(), "(abbr) Japan Federation of Bar Associations")
         )
     }
 }

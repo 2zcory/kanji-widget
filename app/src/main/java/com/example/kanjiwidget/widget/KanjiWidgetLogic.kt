@@ -1,5 +1,8 @@
 package com.example.kanjiwidget.widget
 
+import android.content.Context
+import com.example.kanjiwidget.R
+
 internal enum class WidgetSizeClass {
     COMPACT,
     MEDIUM,
@@ -18,29 +21,70 @@ internal fun resolveWidgetSizeClass(
 }
 
 internal fun formatWidgetMeta(
+    context: Context,
     totalKanji: Int,
     source: String?,
     lastUpdatedEpochMs: Long?,
     nowEpochMs: Long = System.currentTimeMillis(),
 ): String {
-    val progress = if (totalKanji > 0) {
-        "Danh sách: $totalKanji chữ"
-    } else {
-        "Danh sách: đang tải"
-    }
-    val resolvedSource = source ?: "kanjiapi.dev"
+    val resources = context.resources
+    return formatWidgetMeta(
+        totalKanji = totalKanji,
+        source = source,
+        lastUpdatedEpochMs = lastUpdatedEpochMs,
+        nowEpochMs = nowEpochMs,
+        separator = resources.getString(R.string.bullet_separator),
+        catalogLoadingText = resources.getString(R.string.widget_meta_catalog_loading),
+        catalogCountText = { count ->
+            resources.getQuantityString(R.plurals.widget_catalog_count, count, count)
+        },
+        defaultSource = resources.getString(R.string.stroke_order_source_default),
+        sourceText = { value ->
+            resources.getString(R.string.widget_meta_source_value, value)
+        },
+        freshnessJustNowText = resources.getString(R.string.widget_meta_freshness_just_now),
+        freshnessMinutesText = { value ->
+            resources.getQuantityString(R.plurals.widget_freshness_minutes, value, value)
+        },
+        freshnessHoursText = { value ->
+            resources.getQuantityString(R.plurals.widget_freshness_hours, value, value)
+        },
+        freshnessDaysText = { value ->
+            resources.getQuantityString(R.plurals.widget_freshness_days, value, value)
+        },
+    )
+}
+
+internal fun formatWidgetMeta(
+    totalKanji: Int,
+    source: String?,
+    lastUpdatedEpochMs: Long?,
+    nowEpochMs: Long = System.currentTimeMillis(),
+    separator: String,
+    catalogLoadingText: String,
+    catalogCountText: (Int) -> String,
+    defaultSource: String,
+    sourceText: (String) -> String,
+    freshnessJustNowText: String,
+    freshnessMinutesText: (Int) -> String,
+    freshnessHoursText: (Int) -> String,
+    freshnessDaysText: (Int) -> String,
+): String {
+    val progress = if (totalKanji > 0) catalogCountText(totalKanji) else catalogLoadingText
+    val resolvedSource = source?.takeIf { it.isNotBlank() } ?: defaultSource
+    val resolvedSourceText = sourceText(resolvedSource)
     if (lastUpdatedEpochMs == null || lastUpdatedEpochMs <= 0L) {
-        return "$progress • Nguồn: $resolvedSource"
+        return listOf(progress, resolvedSourceText).joinToString(separator)
     }
 
     val ageMs = (nowEpochMs - lastUpdatedEpochMs).coerceAtLeast(0L)
     val freshness = when {
-        ageMs < 60_000L -> "Mới cập nhật"
-        ageMs < 3_600_000L -> "${ageMs / 60_000L} phút trước"
-        ageMs < 86_400_000L -> "${ageMs / 3_600_000L} giờ trước"
-        else -> "${ageMs / 86_400_000L} ngày trước"
+        ageMs < 60_000L -> freshnessJustNowText
+        ageMs < 3_600_000L -> freshnessMinutesText((ageMs / 60_000L).toInt().coerceAtLeast(1))
+        ageMs < 86_400_000L -> freshnessHoursText((ageMs / 3_600_000L).toInt().coerceAtLeast(1))
+        else -> freshnessDaysText((ageMs / 86_400_000L).toInt().coerceAtLeast(1))
     }
-    return "$progress • Nguồn: $resolvedSource • $freshness"
+    return listOf(progress, resolvedSourceText, freshness).joinToString(separator)
 }
 
 internal fun selectNextKanjiIndex(

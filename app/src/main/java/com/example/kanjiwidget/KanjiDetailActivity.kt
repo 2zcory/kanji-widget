@@ -1,7 +1,6 @@
 package com.example.kanjiwidget
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -13,15 +12,19 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.example.kanjiwidget.detail.KanjiCompoundEntry
 import com.example.kanjiwidget.detail.KanjiCompoundRepository
 import com.example.kanjiwidget.detail.KanjiSpeechController
+import com.example.kanjiwidget.detail.UsageHintKey
 import com.example.kanjiwidget.history.RecentKanjiStore
 import com.example.kanjiwidget.stats.StudyTimeTracker
 import com.example.kanjiwidget.widget.KanjiStrokeOrderClient
+import com.example.kanjiwidget.widget.formatJlptLabel
+import com.example.kanjiwidget.widget.normalizeMeaning
 import kotlin.concurrent.thread
 
-class KanjiDetailActivity : Activity() {
+class KanjiDetailActivity : AppCompatActivity() {
 
     private lateinit var titleView: TextView
     private lateinit var subtitleView: TextView
@@ -110,9 +113,10 @@ class KanjiDetailActivity : Activity() {
         }
 
         titleView.text = kanji
-        subtitleView.text = meaning.ifBlank { getString(R.string.stroke_order_meaning_placeholder) }
+        subtitleView.text = normalizeMeaning(meaning)
+            ?: getString(R.string.stroke_order_meaning_placeholder)
         bindHeroMetadata(strokeCount, grade, frequency)
-        jlptBadgeView.text = if (jlpt.isNotBlank()) "JLPT $jlpt" else getString(R.string.stroke_order_badge_placeholder)
+        jlptBadgeView.text = formatJlptLabel(this, jlpt, R.string.stroke_order_badge_placeholder)
         bindStudyInfo(
             onyomi = onyomi,
             kunyomi = kunyomi,
@@ -266,7 +270,9 @@ class KanjiDetailActivity : Activity() {
         frequency: Int?,
     ) {
         val parts = buildList {
-            strokeCount?.let { add(getString(R.string.stroke_order_meta_stroke_count, it)) }
+            strokeCount?.let {
+                add(resources.getQuantityString(R.plurals.stroke_count, it, it))
+            }
             grade?.let { add(getString(R.string.stroke_order_meta_grade, it)) }
             frequency?.let { add(getString(R.string.stroke_order_meta_frequency, it)) }
         }
@@ -275,7 +281,7 @@ class KanjiDetailActivity : Activity() {
             heroMetaView.text = ""
         } else {
             heroMetaView.visibility = View.VISIBLE
-            heroMetaView.text = parts.joinToString(" • ")
+            heroMetaView.text = parts.joinToString(getString(R.string.bullet_separator))
         }
     }
 
@@ -288,7 +294,8 @@ class KanjiDetailActivity : Activity() {
     ) {
         onyomiView.text = onyomi.ifBlank { getString(R.string.stroke_order_info_placeholder) }
         kunyomiView.text = kunyomi.ifBlank { getString(R.string.stroke_order_info_placeholder) }
-        meaningView.text = meaning.ifBlank { getString(R.string.stroke_order_meaning_placeholder) }
+        meaningView.text = normalizeMeaning(meaning)
+            ?: getString(R.string.stroke_order_meaning_placeholder)
         noteView.text = note.ifBlank { getString(R.string.stroke_order_note_placeholder) }
         sourceView.text = if (source.isNotBlank()) {
             getString(R.string.stroke_order_source_value, source)
@@ -346,8 +353,9 @@ class KanjiDetailActivity : Activity() {
                 getString(R.string.stroke_order_info_placeholder)
             }
             row.findViewById<TextView>(R.id.tvCompoundMeaning).text = entry.meaning
+            val usageHint = formatUsageHint(entry.usageHintKey)
             row.findViewById<TextView>(R.id.tvCompoundUsage).text =
-                getString(R.string.detail_compound_usage_value, entry.usageHint)
+                getString(R.string.detail_compound_usage_value, usageHint)
             val playButton = row.findViewById<ImageButton>(R.id.btnPlayCompoundReading)
             val canPlay = isPlayableReading(entry.reading)
             val isReady = speechController.isReady()
@@ -388,7 +396,11 @@ class KanjiDetailActivity : Activity() {
         val openCount = StudyTimeTracker.getTodayOpenCount(this)
         val kanjiMs = StudyTimeTracker.getTodayKanjiMs(this, currentKanji)
         todayTotalView.text = formatDuration(totalMs)
-        todayOpenCountView.text = getString(R.string.today_study_open_count_value, openCount)
+        todayOpenCountView.text = resources.getQuantityString(
+            R.plurals.open_count,
+            openCount,
+            openCount
+        )
         todayKanjiView.text = formatDuration(kanjiMs)
     }
 
@@ -396,10 +408,29 @@ class KanjiDetailActivity : Activity() {
         val totalSeconds = durationMs / 1000L
         val minutes = totalSeconds / 60L
         val seconds = totalSeconds % 60L
+        val minutesText = resources.getQuantityString(
+            R.plurals.duration_minutes,
+            minutes.toInt(),
+            minutes
+        )
+        val secondsText = resources.getQuantityString(
+            R.plurals.duration_seconds,
+            seconds.toInt(),
+            seconds
+        )
         return if (minutes > 0L) {
-            getString(R.string.study_duration_minutes_seconds, minutes, seconds)
+            getString(R.string.duration_minutes_seconds, minutesText, secondsText)
         } else {
-            getString(R.string.study_duration_seconds, seconds)
+            secondsText
+        }
+    }
+
+    private fun formatUsageHint(key: UsageHintKey): String {
+        return when (key) {
+            UsageHintKey.NEWS_HEAVY -> getString(R.string.compound_usage_news_heavy)
+            UsageHintKey.COMMON_WORD -> getString(R.string.compound_usage_common_word)
+            UsageHintKey.REFERENCE_TERM -> getString(R.string.compound_usage_reference_term)
+            UsageHintKey.STUDY_WORD -> getString(R.string.compound_usage_study_word)
         }
     }
 }

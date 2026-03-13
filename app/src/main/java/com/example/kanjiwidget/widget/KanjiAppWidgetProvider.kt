@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.View
 import android.util.TypedValue
 import android.widget.RemoteViews
+import androidx.core.content.ContextCompat
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
@@ -102,6 +103,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
         const val ACTION_NEXT_KANJI = "com.example.kanjiwidget.ACTION_NEXT_KANJI"
 
         fun renderWidget(context: Context, manager: AppWidgetManager, widgetId: Int) {
+            val localizedContext = ContextCompat.getContextForLanguage(context)
             val currentKanji = KanjiWidgetPrefs.getCurrentKanji(context, widgetId)
             val item = currentKanji?.let { KanjiWidgetPrefs.getRemoteEntry(context, it) }
             val revealAnswer = KanjiWidgetPrefs.getRevealAnswer(context, widgetId)
@@ -120,42 +122,48 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
                 "setImageAlpha",
                 (KanjiWidgetPrefs.getWidgetSurfaceAlpha(context) * 255).toInt()
             )
-            views.setTextViewText(R.id.tvKanji, item?.kanji ?: currentKanji ?: "...")
-            views.setTextViewText(R.id.tvJlpt, "JLPT ${item?.jlptLevel ?: "..."}")
+            views.setTextViewText(
+                R.id.tvKanji,
+                item?.kanji ?: currentKanji ?: localizedContext.getString(R.string.widget_placeholder_kanji)
+            )
+            views.setTextViewText(
+                R.id.tvJlpt,
+                formatJlptLabel(localizedContext, item?.jlptLevel, R.string.jlpt_placeholder)
+            )
             applyStateStyling(views, revealAnswer, hasLoadedEntry)
             views.setTextViewText(
                 R.id.tvState,
                 when {
-                    !hasLoadedEntry -> "Đang tải"
-                    revealAnswer -> "Đã mở"
-                    else -> "Ẩn đáp án"
+                    !hasLoadedEntry -> localizedContext.getString(R.string.widget_state_loading)
+                    revealAnswer -> localizedContext.getString(R.string.widget_state_revealed)
+                    else -> localizedContext.getString(R.string.widget_state_hidden)
                 }
             )
             views.setTextViewText(
                 R.id.tvReading,
                 when {
-                    !hasLoadedEntry -> "Đợi tải Kanji đầu tiên"
-                    revealAnswer -> formatReading(item!!, sizeClass)
-                    else -> "Thử nhớ cách đọc trước khi mở"
+                    !hasLoadedEntry -> localizedContext.getString(R.string.widget_reading_loading)
+                    revealAnswer -> formatReading(localizedContext, item!!, sizeClass)
+                    else -> localizedContext.getString(R.string.widget_reading_hint)
                 }
             )
             views.setTextViewText(
                 R.id.tvMeaning,
                 when {
-                    !hasLoadedEntry -> "Cần mạng cho lần đồng bộ đầu tiên."
-                    revealAnswer -> item!!.meaningVi
-                    else -> "Đoán nghĩa của chữ này trước khi bấm mở."
+                    !hasLoadedEntry -> localizedContext.getString(R.string.widget_meaning_loading)
+                    revealAnswer -> resolveMeaning(localizedContext, item!!)
+                    else -> localizedContext.getString(R.string.widget_meaning_hint)
                 }
             )
             views.setTextViewText(
                 R.id.tvExample,
                 when {
-                    !hasLoadedEntry -> "Widget sẽ sẵn sàng ngay sau khi tải xong."
-                    revealAnswer -> item!!.example
-                    else -> "Chạm nút bên dưới để mở reading và nghĩa."
+                    !hasLoadedEntry -> localizedContext.getString(R.string.widget_example_loading)
+                    revealAnswer -> buildExampleText(localizedContext, item!!)
+                    else -> localizedContext.getString(R.string.widget_example_hint)
                 }
             )
-            views.setTextViewText(R.id.tvMeta, formatMeta(context, item))
+            views.setTextViewText(R.id.tvMeta, formatMeta(localizedContext, context, item))
             applyContentVisibility(views, sizeClass, revealAnswer, hasLoadedEntry)
 
             val nextIntent = Intent(context, KanjiAppWidgetProvider::class.java).apply {
@@ -171,7 +179,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             views.setOnClickPendingIntent(R.id.btnNext, pi)
 
             val detailIntent = KanjiDetailNavigator.buildDetailIntent(
-                context = context,
+                context = localizedContext,
                 kanji = item?.kanji ?: currentKanji.orEmpty(),
                 meaningFallback = item?.meaningVi,
                 jlptFallback = item?.jlptLevel,
@@ -187,9 +195,9 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             views.setTextViewText(
                 R.id.btnNext,
                 when {
-                    !hasLoadedEntry -> "Tải kanji"
-                    revealAnswer -> "Chữ tiếp theo"
-                    else -> "Hiện đáp án"
+                    !hasLoadedEntry -> localizedContext.getString(R.string.widget_action_load)
+                    revealAnswer -> localizedContext.getString(R.string.widget_action_next)
+                    else -> localizedContext.getString(R.string.widget_action_reveal)
                 }
             )
 
@@ -327,20 +335,48 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             return resolveWidgetSizeClass(minWidth, minHeight)
         }
 
-        private fun formatReading(item: KanjiEntry, sizeClass: WidgetSizeClass): String {
+        private fun formatReading(context: Context, item: KanjiEntry, sizeClass: WidgetSizeClass): String {
             return when (sizeClass) {
-                WidgetSizeClass.EXPANDED -> "On: ${item.onyomi}\nKun: ${item.kunyomi}"
-                WidgetSizeClass.MEDIUM -> "On: ${item.onyomi}\nKun: ${item.kunyomi}"
-                WidgetSizeClass.COMPACT -> "On: ${item.onyomi} • Kun: ${item.kunyomi}"
+                WidgetSizeClass.EXPANDED -> context.getString(
+                    R.string.widget_reading_multiline,
+                    item.onyomi,
+                    item.kunyomi
+                )
+                WidgetSizeClass.MEDIUM -> context.getString(
+                    R.string.widget_reading_multiline,
+                    item.onyomi,
+                    item.kunyomi
+                )
+                WidgetSizeClass.COMPACT -> context.getString(
+                    R.string.widget_reading_inline,
+                    item.onyomi,
+                    item.kunyomi
+                )
             }
         }
 
-        private fun formatMeta(context: Context, item: KanjiEntry?): String {
+        private fun formatMeta(
+            localizedContext: Context,
+            storageContext: Context,
+            item: KanjiEntry?,
+        ): String {
             return formatWidgetMeta(
-                totalKanji = KanjiWidgetPrefs.getKanjiCatalog(context).size,
+                context = localizedContext,
+                totalKanji = KanjiWidgetPrefs.getKanjiCatalog(storageContext).size,
                 source = item?.source,
                 lastUpdatedEpochMs = item?.lastUpdatedEpochMs,
             )
+        }
+
+        private fun resolveMeaning(context: Context, item: KanjiEntry): String {
+            return normalizeMeaning(item.meaningVi)
+                ?: context.getString(R.string.widget_meaning_missing)
+        }
+
+        private fun buildExampleText(context: Context, item: KanjiEntry): String {
+            return buildNoteText(context, item).ifBlank {
+                context.getString(R.string.widget_example_missing)
+            }
         }
 
         fun refreshAllWidgets(context: Context) {

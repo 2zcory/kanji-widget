@@ -32,6 +32,7 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 - GitHub Actions workflows now cover debug APK builds and signed release builds
 - The phased Kanji Detail screen update is complete, including layout, metadata, study stats, next-random navigation, and related design docs
 - `master` now also includes direct unit coverage for widget selection, widget meta formatting, and widget-scoped preference cleanup through PR `#3`
+- Multilanguage support (EN + VI) with an in-app language picker is in progress on `feature/multilanguage` and not yet merged
 
 ## Working Notes
 
