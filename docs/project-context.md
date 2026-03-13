@@ -30,6 +30,7 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 - Detailed design documents now exist for the major shipped features, including the Kanji Detail screen
 - The repository has published tags through `v1.4.0`, including multilanguage support for EN + VI plus an in-app language picker
 - GitHub Actions workflows now cover debug APK builds and signed release builds
+- The debug APK workflow now runs on pull requests and manual dispatch only, instead of every push to `master`
 - The phased Kanji Detail screen update is complete, including layout, metadata, study stats, next-random navigation, and related design docs
 - `master` now also includes direct unit coverage for widget selection, widget meta formatting, and widget-scoped preference cleanup through PR `#3`
 
@@ -39,6 +40,7 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 - Add or update detailed design docs in `docs/detail-design/` when a feature changes materially
 - Release signing remains secret-backed and must not be committed into the repository
 - The release workflow expects `RELEASE_KEYSTORE_BASE64`, `RELEASE_STORE_PASSWORD`, `RELEASE_KEY_ALIAS`, and `RELEASE_KEY_PASSWORD` in GitHub Secrets
+- Curated release notes live in `docs/releases/`, and the release workflow now expects a matching `docs/releases/<tag>.md` file when publishing a tagged release
 - Any machine-specific `android.aapt2FromMavenOverride` configuration should stay outside the repository so CI can use the default toolchain
 - The Kanji Detail checklist remains useful as the implementation record for the completed phased update
 - New complex tasks should start from `docs/checklists/TEMPLATE-complex-task-checklist.md`, while completed task checklists should be moved into `docs/checklists/archieved/`
