@@ -18,9 +18,9 @@ This backlog is intentionally narrow. It does not try to replace product plannin
 
 ## Current Priority Order
 
-- Priority 1: implement the proposed widget daily-rotation first slice on `feature/widget-daily-rotation-first-slice` once the scope is approved
-- Priority 2: review longer-term data-retention policy for local study storage
-- Priority 3: review ranking extensions only after the higher-value widget and storage decisions are clearer
+- Priority 1: review longer-term data-retention policy for local study storage
+- Priority 2: review ranking extensions only after the storage decision is clearer
+- Priority 3: choose the next widget UX slice after daily rotation only when the stats and storage backlog is better understood
 
 ## Triage Flow
 
@@ -76,18 +76,29 @@ Evidence:
 Evidence:
 - `docs/detail-design/main-screen.md` previously listed expanding latest history to a bounded recent list as future work, but the feature is already shipped and the stale note has now been removed
 
-## Current Priority: Widget Daily Rotation First Slice
+## Completed: Widget Daily Rotation First Slice
 
 - [x] Choose the next approved widget UX slice after the shipped configuration first slice
 - [x] Decide whether the best next slice is `theme selection`, `scheduled daily rotation`, `local bundled fallback dataset`, or `widget streak/progress badge`
 - [x] Create a dedicated complex-task checklist from `docs/checklists/TEMPLATE-complex-task-checklist.md`
-- [ ] Update the relevant widget design doc before implementation starts
+- [x] Update the relevant widget design doc before implementation starts
 
 Evidence:
 - `docs/detail-design/widget.md` now includes the shipped configuration activity and per-widget opacity flow
-- `docs/detail-design/widget.md` still lists future extensions for theme selection, scheduled rotation, local fallback data, and progress or streak surfacing
-- `docs/project-context.md` records the widget configuration first slice as shipped on `master`
-- Proposed implementation checklist: `docs/checklists/widget-daily-rotation-first-slice.md`
+- `docs/detail-design/widget.md` now also documents the shipped host-driven daily-rotation first slice on `master`
+- `docs/project-context.md` now records both the widget configuration first slice and the daily-rotation first slice on `master`
+- Archived implementation checklist: `docs/checklists/archieved/widget-daily-rotation-first-slice.md`
+
+## Current Priority: Study Storage Retention Review
+
+- [ ] Review the current `StudyTimeTracker` storage shape and estimate when the key count could become uncomfortable for a local-only app
+- [ ] Decide whether the next slice needs active compaction, a retention window, or only a documented decision to defer
+- [ ] If implementation is approved, create a dedicated complex-task checklist from `docs/checklists/TEMPLATE-complex-task-checklist.md`
+- [ ] Update the relevant study-tracking design doc before implementation starts
+
+Evidence:
+- `docs/detail-design/daily-study-time-tracking.md` still calls out a future retention or compaction policy for very old daily keys
+- The new widget daily-rotation slice is merged, so storage policy is now the highest remaining backlog item with direct durability impact
 
 ## Deferred Backlog
 
@@ -120,3 +131,4 @@ Evidence:
 - 2026-03-13: Removed the stale widget decision item about `configuration activity` versus `per-widget opacity` because that first slice is already shipped in `v1.5.0`.
 - 2026-03-13: Chose `scheduled daily rotation` as the next widget UX slice because it appears to add more recurring study value than `theme selection`, stays lighter than a local fallback dataset, and has a narrower first-slice scope than a streak or progress badge.
 - 2026-03-13: Created proposed checklist `docs/checklists/widget-daily-rotation-first-slice.md` on branch `feature/widget-daily-rotation-first-slice` so the task can move through approval before implementation starts.
+- 2026-03-13: PR `#7` merged the widget daily-rotation first slice into `master`, so the backlog now promotes study-storage retention review to the top remaining priority.

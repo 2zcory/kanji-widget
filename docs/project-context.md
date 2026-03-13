@@ -36,6 +36,7 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 - The phased Kanji Detail screen update is complete, including layout, metadata, study stats, next-random navigation, and related design docs
 - `master` now also includes direct unit coverage for widget selection, widget meta formatting, and widget-scoped preference cleanup through PR `#3`
 - `master` now includes a widget configuration first slice: adding a widget opens a lightweight setup activity, new widgets can store per-widget opacity presets, and legacy widgets fall back safely to the shared default opacity
+- `master` now also includes a host-driven widget daily-rotation first slice from PR `#7`, so widgets can advance to a fresh hidden-answer Kanji after the local day changes without introducing exact alarms or a persistent background service
 
 ## Runtime Diagram
 
@@ -90,4 +91,4 @@ flowchart TD
 - New complex tasks should start from `docs/checklists/TEMPLATE-complex-task-checklist.md`, while merged task checklists should be moved into `docs/checklists/archieved/` and later backfilled with `First released in` after the first tagged release ships
 - `docs/checklists/technical-backlog.md` is the active short-list backlog for cross-session technical prioritization and should not be treated as a feature checklist to archive
 - `docs/checklists/technical-backlog.md` should be updated whenever a backlog item is completed, superseded, or invalidated by newly shipped work so the next session inherits current priorities
-- The current highest-priority technical backlog item is the next approved widget UX slice after the cached-compound behavior gap was closed on `2026-03-13`
+- The current highest-priority technical backlog item is reviewing retention or compaction policy for long-lived local study-time storage after the widget daily-rotation first slice merged on `2026-03-13`
