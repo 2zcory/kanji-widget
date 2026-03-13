@@ -5,6 +5,11 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: Release tag to publish, for example `v1.4.0`
+        required: true
+        type: string
 
 jobs:
   release:
@@ -15,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag_name || github.ref }}
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
@@ -62,8 +69,26 @@ jobs:
           path: app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
 
+      - name: Resolve release metadata
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            RELEASE_TAG="${{ inputs.tag_name }}"
+          else
+            RELEASE_TAG="${GITHUB_REF_NAME}"
+          fi
+
+          test -n "$RELEASE_TAG"
+          git rev-parse "refs/tags/${RELEASE_TAG}" >/dev/null 2>&1
+
+          RELEASE_NOTES_FILE="docs/releases/${RELEASE_TAG}.md"
+          test -f "$RELEASE_NOTES_FILE"
+
+          echo "RELEASE_TAG=$RELEASE_TAG" >> "$GITHUB_ENV"
+          echo "RELEASE_NOTES_FILE=$RELEASE_NOTES_FILE" >> "$GITHUB_ENV"
+
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          body_path: ${{ env.RELEASE_NOTES_FILE }}
           files: app/build/outputs/apk/release/app-release.apk
-          generate_release_notes: true
