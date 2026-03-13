@@ -22,12 +22,12 @@ Refresh the launcher main screen so it feels more intentional and actionable whi
 
 - [x] Confirm `master` is clean and up to date with `origin/master` before creating the working branch
 - [x] Confirm the working branch name for this task
-- [ ] Confirm the initial acceptance criteria and manual verification expectations before implementation starts
+- [x] Confirm the initial acceptance criteria and manual verification expectations before implementation starts
 
 ## Phase 1: Scope And Design Alignment
 
 - [x] Review the relevant current UX or behavior
-- [ ] Update or create the necessary design or product docs before implementation when behavior changes materially
+- [x] Update or create the necessary design or product docs before implementation when behavior changes materially
 - [x] Record key constraints, assumptions, or external dependencies in the progress log
 
 ## Phase 2: Implementation
@@ -76,3 +76,5 @@ Refresh the launcher main screen so it feels more intentional and actionable whi
 ## Progress Log
 
 - 2026-03-13: Confirmed `master` was clean and in sync with `origin/master`, created branch `feature/main-screen-v2-first-slice`, reviewed the existing main-screen design and implementation, and scoped the first slice around hierarchy, CTA clarity, and lighter utility sections.
+- 2026-03-13: User approved the first-slice scope and acceptance criteria. Updated `docs/detail-design/main-screen.md` to reflect the hero-first hierarchy, a single dominant study CTA, reduced action duplication, and lighter utility emphasis before implementation.
+- 2026-03-13: Implemented the first-slice main-screen refresh across layout, copy, and activity binding. Verified the change with `./gradlew :app:compileDebugKotlin` and `./gradlew :app:assembleDebug`, then delivered review APK `/sdcard/Download/kanji_widget_main_screen_v2_review.apk`.
