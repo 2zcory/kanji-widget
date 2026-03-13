@@ -98,3 +98,13 @@ internal fun selectNextKanjiIndex(
     val available = (0 until catalogSize).filter { it != currentIndex }
     return available[nextRandomInt(available.size)]
 }
+
+internal fun shouldRotateWidgetForNewDay(
+    hasCurrentKanji: Boolean,
+    lastShownLocalDay: String?,
+    currentLocalDay: String,
+): Boolean {
+    if (!hasCurrentKanji) return false
+    val recordedDay = lastShownLocalDay?.takeIf { it.isNotBlank() } ?: return false
+    return recordedDay != currentLocalDay
+}

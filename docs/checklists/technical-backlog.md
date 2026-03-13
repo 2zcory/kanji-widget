@@ -18,7 +18,7 @@ This backlog is intentionally narrow. It does not try to replace product plannin
 
 ## Current Priority Order
 
-- Priority 1: choose the next widget UX slice after the shipped configuration first slice
+- Priority 1: implement the proposed widget daily-rotation first slice on `feature/widget-daily-rotation-first-slice` once the scope is approved
 - Priority 2: review longer-term data-retention policy for local study storage
 - Priority 3: review ranking extensions only after the higher-value widget and storage decisions are clearer
 
@@ -76,17 +76,18 @@ Evidence:
 Evidence:
 - `docs/detail-design/main-screen.md` previously listed expanding latest history to a bounded recent list as future work, but the feature is already shipped and the stale note has now been removed
 
-## Current Priority: Next Widget UX Slice
+## Current Priority: Widget Daily Rotation First Slice
 
-- [ ] Choose the next approved widget UX slice after the shipped configuration first slice
-- [ ] Decide whether the best next slice is `theme selection`, `scheduled daily rotation`, `local bundled fallback dataset`, or `widget streak/progress badge`
-- [ ] If approved, create a dedicated complex-task checklist from `docs/checklists/TEMPLATE-complex-task-checklist.md`
+- [x] Choose the next approved widget UX slice after the shipped configuration first slice
+- [x] Decide whether the best next slice is `theme selection`, `scheduled daily rotation`, `local bundled fallback dataset`, or `widget streak/progress badge`
+- [x] Create a dedicated complex-task checklist from `docs/checklists/TEMPLATE-complex-task-checklist.md`
 - [ ] Update the relevant widget design doc before implementation starts
 
 Evidence:
 - `docs/detail-design/widget.md` now includes the shipped configuration activity and per-widget opacity flow
 - `docs/detail-design/widget.md` still lists future extensions for theme selection, scheduled rotation, local fallback data, and progress or streak surfacing
 - `docs/project-context.md` records the widget configuration first slice as shipped on `master`
+- Proposed implementation checklist: `docs/checklists/widget-daily-rotation-first-slice.md`
 
 ## Deferred Backlog
 
@@ -117,3 +118,5 @@ Evidence:
 - 2026-03-13: Added narrow unit coverage for the cached compound normalization path to keep the blank-reading fallback behavior from regressing.
 - 2026-03-13: Renamed this file from a triage checklist to `technical-backlog.md` so it clearly acts as an active backlog document instead of a feature checklist.
 - 2026-03-13: Removed the stale widget decision item about `configuration activity` versus `per-widget opacity` because that first slice is already shipped in `v1.5.0`.
+- 2026-03-13: Chose `scheduled daily rotation` as the next widget UX slice because it appears to add more recurring study value than `theme selection`, stays lighter than a local fallback dataset, and has a narrower first-slice scope than a streak or progress badge.
+- 2026-03-13: Created proposed checklist `docs/checklists/widget-daily-rotation-first-slice.md` on branch `feature/widget-daily-rotation-first-slice` so the task can move through approval before implementation starts.

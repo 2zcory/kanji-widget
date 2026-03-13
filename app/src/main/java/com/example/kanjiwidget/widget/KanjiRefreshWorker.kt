@@ -27,6 +27,8 @@ class KanjiRefreshWorker(
         }
 
         KanjiWidgetPrefs.setCurrentKanji(applicationContext, widgetId, targetKanji)
+        KanjiWidgetPrefs.setRevealAnswer(applicationContext, widgetId, false)
+        KanjiWidgetPrefs.markCurrentKanjiShownOnLocalDay(applicationContext, widgetId)
 
         val remote = KanjiApiClient.fetchKanji(targetKanji)
             ?: KanjiWidgetPrefs.getRemoteEntry(applicationContext, targetKanji)

@@ -82,4 +82,44 @@ class KanjiWidgetLogicTest {
     fun selectNextKanjiIndex_returnsOnlyEntryForSingleItemCatalog() {
         assertEquals(0, selectNextKanjiIndex(catalogSize = 1, currentIndex = 0, nextRandomInt = { 0 }))
     }
+
+    @Test
+    fun shouldRotateWidgetForNewDay_returnsTrueWhenRecordedDayDiffers() {
+        assertEquals(
+            true,
+            shouldRotateWidgetForNewDay(
+                hasCurrentKanji = true,
+                lastShownLocalDay = "2026-03-12",
+                currentLocalDay = "2026-03-13",
+            ),
+        )
+    }
+
+    @Test
+    fun shouldRotateWidgetForNewDay_returnsFalseWithoutCurrentKanjiOrRecordedDay() {
+        assertEquals(
+            false,
+            shouldRotateWidgetForNewDay(
+                hasCurrentKanji = false,
+                lastShownLocalDay = "2026-03-12",
+                currentLocalDay = "2026-03-13",
+            ),
+        )
+        assertEquals(
+            false,
+            shouldRotateWidgetForNewDay(
+                hasCurrentKanji = true,
+                lastShownLocalDay = null,
+                currentLocalDay = "2026-03-13",
+            ),
+        )
+        assertEquals(
+            false,
+            shouldRotateWidgetForNewDay(
+                hasCurrentKanji = true,
+                lastShownLocalDay = "2026-03-13",
+                currentLocalDay = "2026-03-13",
+            ),
+        )
+    }
 }
