@@ -79,3 +79,4 @@ Implement multilanguage support for the app and widget, starting with EN + VI us
 - 2026-03-13: Added main-screen language section, locales config, and AppCompat locale switching flow (pending verification).
 - 2026-03-13: Self-review found and fixed Android string escaping plus locale persistence/widget-context issues for pre-Android 13 devices.
 - 2026-03-13: `./gradlew testDebugUnitTest` and `./gradlew assembleDebug` passed; review APK copied to `/sdcard/Download/kanji-widget-multilanguage-review.apk`.
+- 2026-03-13: Pushed `feature/multilanguage` and opened PR `#4` into `master`.
