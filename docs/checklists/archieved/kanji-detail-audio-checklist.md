@@ -1,7 +1,8 @@
 # Kanji Detail Audio Checklist
 
 Last updated: 2026-03-12
-Status: Merged, release notes prepared
+Status: Merged
+First released in: `v1.3.0`
 Working branch: `feature/kanji-detail-audio`
 
 ## Purpose
@@ -85,5 +86,6 @@ This feature should stay lightweight, fit the current local-first app model, and
 - 2026-03-12: Built and sent the review APK `kanji-widget-debug-v1.2.0-audio-review.apk` to the user, and the user confirmed the review passed.
 - 2026-03-12: Opened Pull Request #1 for `feature/kanji-detail-audio` after the review APK had already been sent and approved.
 - 2026-03-12: Pull Request #1 was merged into `master` after the reviewed work passed user verification.
+- 2026-03-12: The pronunciation playback feature first shipped in release `v1.3.0`.
 - 2026-03-12: Prepared the follow-up `v1.3.1` release notes on `master` for the shipped Kanji Detail reading-availability fix.
 - 2026-03-12: Confirmed `docs/project-context.md` reflects the shipped pronunciation playback behavior and the follow-up reading-availability fix on `master`.

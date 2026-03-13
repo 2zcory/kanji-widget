@@ -2,6 +2,7 @@
 
 Last updated: YYYY-MM-DD
 Status: Proposed
+First released in: `-`
 Working branch: `feature/example-task`
 Base branch: `master`
 Expected merge target: `master`
@@ -11,6 +12,8 @@ Expected merge target: `master`
 Describe the task in one short paragraph.
 
 Keep this checklist focused on one complex task or initiative that may span multiple sessions.
+
+Use `First released in: \`n/a\`` if this task does not affect shipped app behavior and should not be tracked to a release tag.
 
 ## Scope
 
@@ -50,12 +53,10 @@ Keep this checklist focused on one complex task or initiative that may span mult
 - [ ] Ask for user review only after the review artifact has been sent and the Pull Request is open
 - [ ] Merge into the expected merge target only after user review passes
 
-## Phase 5: Post-Merge And Release
+## Phase 5: Post-Merge
 
 - [ ] Sync local `master` or the expected merge target only from a clean worktree after the Pull Request merge
 - [ ] Update durable project context or status docs if the shipped feature set changed materially
-- [ ] Prepare release notes only after the reviewed work has been merged
-- [ ] Complete the release steps required by the repository workflow
 
 ## Android Review Artifact
 
@@ -72,3 +73,4 @@ Keep this checklist focused on one complex task or initiative that may span mult
 ## Progress Log
 
 - YYYY-MM-DD: Created the proposed checklist and confirmed the working branch for this task.
+- YYYY-MM-DD: Update `First released in` after the first tagged release that includes this merged work.

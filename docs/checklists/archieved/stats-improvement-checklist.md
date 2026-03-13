@@ -2,6 +2,7 @@
 
 Last updated: 2026-03-11
 Status: Complete
+First released in: `v1.1.1`
 
 ## Purpose
 
@@ -56,3 +57,4 @@ This checklist focuses on a lightweight but more useful stats surface by adding 
 - 2026-03-11: Updated the stats bottom sheet summary area to show active study days, current streak, clearer range-aware copy, and a supportive no-data summary state while keeping the existing chart and ranking flow intact.
 - 2026-03-11: Verified the current implementation with `./gradlew :app:testDebugUnitTest`; manual user verification for no data, sparse data, mixed recent data, and range switching is still pending before checklist items can be marked complete.
 - 2026-03-11: The user verified the updated stats experience against the expected scenarios, so the checklist can now be treated as complete.
+- 2026-03-11: The stats improvements first shipped in release `v1.1.1`.

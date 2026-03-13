@@ -30,7 +30,7 @@ Build and maintain an Android app and home screen widget for lightweight Kanji r
 - `master` includes the Kanji Detail reading-availability fix from commit `69ca85e`, which keeps compound rows visible when readings are missing, treats placeholder-style readings as unavailable for playback, and has passing local unit coverage
 - `master` now also keeps cached compound rows visible when readings are blank, so cached and freshly fetched detail behavior stay aligned
 - Detailed design documents now exist for the major shipped features, including the Kanji Detail screen
-- The repository has published tags through `v1.4.0`, including multilanguage support for EN + VI plus an in-app language picker
+- The repository has published tags through `v1.5.0`, including multilanguage support for EN + VI plus an in-app language picker plus the main-screen refresh and widget configuration first slice
 - GitHub Actions workflows now cover debug APK builds and signed release builds
 - The debug APK workflow now runs on pull requests and manual dispatch only, instead of every push to `master`
 - The phased Kanji Detail screen update is complete, including layout, metadata, study stats, next-random navigation, and related design docs
@@ -83,7 +83,9 @@ flowchart TD
 - Release signing remains secret-backed and must not be committed into the repository
 - The release workflow expects `RELEASE_KEYSTORE_BASE64`, `RELEASE_STORE_PASSWORD`, `RELEASE_KEY_ALIAS`, and `RELEASE_KEY_PASSWORD` in GitHub Secrets
 - Curated release notes live in `docs/releases/`, and the release workflow now expects a matching `docs/releases/<tag>.md` file when publishing a tagged release
+- `docs/releases/<tag>.md` is the source of truth for what shipped in a tagged release, while release-tracked feature checklists only record `First released in` as a back-reference
+- Internal tasks that do not affect shipped app behavior may use `First released in: \`n/a\`` instead of linking to a release tag
 - Any machine-specific `android.aapt2FromMavenOverride` configuration should stay outside the repository so CI can use the default toolchain
 - The Kanji Detail checklist remains useful as the implementation record for the completed phased update
-- New complex tasks should start from `docs/checklists/TEMPLATE-complex-task-checklist.md`, while completed task checklists should be moved into `docs/checklists/archieved/`
+- New complex tasks should start from `docs/checklists/TEMPLATE-complex-task-checklist.md`, while merged task checklists should be moved into `docs/checklists/archieved/` and later backfilled with `First released in` after the first tagged release ships
 - The current highest-priority backlog item is the next approved widget UX slice after the cached-compound behavior gap was closed on `2026-03-13`

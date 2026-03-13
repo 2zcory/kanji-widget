@@ -2,6 +2,7 @@
 
 Last updated: 2026-03-13
 Status: Merged
+First released in: `v1.5.0`
 Working branch: `feature/widget-configuration-first-slice`
 Base branch: `master`
 Expected merge target: `master`
@@ -52,12 +53,10 @@ Add a lightweight widget configuration activity that appears during widget place
 - [x] Ask for user review only after the review artifact has been sent and the Pull Request is open
 - [x] Merge into the expected merge target only after user review passes
 
-## Phase 5: Post-Merge And Release
+## Phase 5: Post-Merge
 
 - [x] Sync local `master` or the expected merge target only from a clean worktree after the Pull Request merge
 - [x] Update durable project context or status docs if the shipped feature set changed materially
-- [ ] Prepare release notes only after the reviewed work has been merged
-- [ ] Complete the release steps required by the repository workflow
 
 ## Android Review Artifact
 
@@ -82,3 +81,4 @@ Add a lightweight widget configuration activity that appears during widget place
 - 2026-03-13: Verified the slice with `./gradlew :app:testDebugUnitTest --tests com.example.kanjiwidget.widget.KanjiWidgetPrefsTest`, `./gradlew :app:compileDebugKotlin`, and `./gradlew :app:assembleDebug`, then delivered review APK `/sdcard/Download/kanji_widget_widget_configuration_review.apk`.
 - 2026-03-13: Pushed branch `feature/widget-configuration-first-slice` to `origin` and opened PR `#6` for review: `https://github.com/2zcory/kanji-widget/pull/6`.
 - 2026-03-13: User confirmed the review passed. PR `#6` was merged into `master`, local `master` was fast-forwarded to the merge commit, and the checklist was archived.
+- 2026-03-13: The merged work was first shipped in release `v1.5.0`, which also included the main-screen first slice and the matching curated release notes.

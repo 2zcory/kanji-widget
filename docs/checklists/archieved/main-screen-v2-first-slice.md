@@ -2,6 +2,7 @@
 
 Last updated: 2026-03-13
 Status: Merged
+First released in: `v1.5.0`
 Working branch: `feature/main-screen-v2-first-slice`
 Base branch: `master`
 Expected merge target: `master`
@@ -52,12 +53,10 @@ Refresh the launcher main screen so it feels more intentional and actionable whi
 - [x] Ask for user review only after the review artifact has been sent and the Pull Request is open
 - [x] Merge into the expected merge target only after user review passes
 
-## Phase 5: Post-Merge And Release
+## Phase 5: Post-Merge
 
 - [x] Sync local `master` or the expected merge target only from a clean worktree after the Pull Request merge
 - [x] Update durable project context or status docs if the shipped feature set changed materially
-- [ ] Prepare release notes only after the reviewed work has been merged
-- [ ] Complete the release steps required by the repository workflow
 
 ## Android Review Artifact
 
@@ -80,3 +79,4 @@ Refresh the launcher main screen so it feels more intentional and actionable whi
 - 2026-03-13: Implemented the first-slice main-screen refresh across layout, copy, and activity binding. Verified the change with `./gradlew :app:compileDebugKotlin` and `./gradlew :app:assembleDebug`, then delivered review APK `/sdcard/Download/kanji_widget_main_screen_v2_review.apk`.
 - 2026-03-13: Pushed branch `feature/main-screen-v2-first-slice` to `origin` and opened PR `#5` for review: `https://github.com/2zcory/kanji-widget/pull/5`.
 - 2026-03-13: User confirmed the review passed. PR `#5` was merged into `master`, local `master` was fast-forwarded to the merge commit, and the checklist was archived.
+- 2026-03-13: The merged work was first shipped in release `v1.5.0`, which also included the widget configuration first slice and the matching curated release notes.

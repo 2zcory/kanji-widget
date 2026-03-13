@@ -2,6 +2,7 @@
 
 Last updated: 2026-03-12
 Status: Merged
+First released in: `n/a`
 Working branch: `chore/checklist-template`
 Base branch: `master`
 Expected merge target: `master`

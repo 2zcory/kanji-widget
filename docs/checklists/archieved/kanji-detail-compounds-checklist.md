@@ -2,6 +2,7 @@
 
 Last updated: 2026-03-11
 Status: Complete
+First released in: `v1.2.0`
 
 ## Purpose
 
@@ -94,3 +95,4 @@ This feature should stay lightweight and fit the current Kanji Detail flow while
 - 2026-03-11: Added a compact compounds section to `KanjiDetailActivity` that renders cached compounds immediately, refreshes stale data in the background, and keeps the section hidden when no suitable rows exist.
 - 2026-03-11: Verified the current implementation with `./gradlew :app:testDebugUnitTest --tests com.example.kanjiwidget.detail.KanjiCompoundRepositoryTest --tests com.example.kanjiwidget.stats.StudyStatsRepositoryTest`; manual user verification is still pending.
 - 2026-03-12: The user verified the compounds feature from a test APK build, so the checklist can now be treated as complete.
+- 2026-03-12: The compounds feature first shipped in release `v1.2.0`.

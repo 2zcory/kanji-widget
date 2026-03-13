@@ -2,6 +2,7 @@
 
 Last updated: 2026-03-12
 Status: Merged
+First released in: `n/a`
 Working branch: `feature/widget-test-coverage`
 Base branch: `master`
 Expected merge target: `master`
@@ -50,12 +51,10 @@ Keep this slice narrow. The goal is confidence around the existing widget flow, 
 - [x] Ask for user review only after the work is ready and the Pull Request is open
 - [x] Merge into `master` only after user review passes
 
-## Phase 5: Post-Merge And Release
+## Phase 5: Post-Merge
 
 - [x] Sync local `master` only from a clean worktree after the Pull Request merge
 - [x] Update durable project context or status docs if the shipped behavior or testing posture changed materially
-- [x] Prepare release notes only after the reviewed work has been merged
-- [x] Complete any release steps required by the repository workflow if this task materially changes shipped behavior
 
 ## Acceptance Criteria For User Verification
 
@@ -77,4 +76,4 @@ Keep this slice narrow. The goal is confidence around the existing widget flow, 
 - 2026-03-12: Re-ran the full local unit test suite with `./gradlew testDebugUnitTest` and it passed on branch `feature/widget-test-coverage`.
 - 2026-03-12: Opened PR #3 from `feature/widget-test-coverage` into `master` after the test work and verification were ready for review.
 - 2026-03-12: The user confirmed PR #3 passed review, so the branch was merged into `master` and local `master` was synced cleanly afterward.
-- 2026-03-12: No release notes or extra release steps were needed because this task only adds automated coverage and does not change shipped user-facing behavior.
+- 2026-03-12: `First released in` stays `n/a` because this task only adds automated coverage and does not change shipped user-facing behavior.

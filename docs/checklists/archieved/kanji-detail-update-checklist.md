@@ -2,6 +2,7 @@
 
 Last updated: 2026-03-11
 Status: Completed
+First released in: `v1.1.0`
 
 ## Purpose
 
@@ -56,3 +57,4 @@ Update this checklist whenever a task is completed so the current implementation
 - 2026-03-11: Phase 3 verification was confirmed by the user and the full phase is now marked complete.
 - 2026-03-11: Implemented the Phase 4 documentation updates, including a dedicated Kanji Detail design document and aligned overview docs.
 - 2026-03-11: Phase 4 documentation updates are complete and the full phase is now marked complete.
+- 2026-03-11: The phased Kanji Detail update first shipped in release `v1.1.0`.

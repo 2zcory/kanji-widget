@@ -1,7 +1,8 @@
 # Multilanguage Support Checklist
 
 Last updated: 2026-03-13
-Status: Released
+Status: Merged
+First released in: `v1.4.0`
 Working branch: `feature/multilanguage`
 Base branch: `master`
 Expected merge target: `master`
@@ -51,12 +52,10 @@ Implement multilanguage support for the app and widget, starting with EN + VI us
 - [x] Ask for user review only after the review artifact has been sent and the Pull Request is open
 - [x] Merge into the expected merge target only after user review passes
 
-## Phase 5: Post-Merge And Release
+## Phase 5: Post-Merge
 
 - [x] Sync local `master` or the expected merge target only from a clean worktree after the Pull Request merge
 - [x] Update durable project context or status docs if the shipped feature set changed materially
-- [x] Prepare release notes only after the reviewed work has been merged
-- [x] Complete the release steps required by the repository workflow
 
 ## Android Review Artifact
 
@@ -81,4 +80,4 @@ Implement multilanguage support for the app and widget, starting with EN + VI us
 - 2026-03-13: `./gradlew testDebugUnitTest` and `./gradlew assembleDebug` passed; review APK copied to `/sdcard/Download/kanji-widget-multilanguage-review.apk`.
 - 2026-03-13: Pushed `feature/multilanguage` and opened PR `#4` into `master`.
 - 2026-03-13: After PR `#4` was reviewed and merged, prepared draft release notes in `docs/releases/v1.4.0.md`.
-- 2026-03-13: User review passed, PR `#4` was merged, local `master` was synced, and release `v1.4.0` was published from tag `v1.4.0`.
+- 2026-03-13: User review passed, PR `#4` was merged, local `master` was synced, and the multilanguage feature first shipped in release `v1.4.0`.
