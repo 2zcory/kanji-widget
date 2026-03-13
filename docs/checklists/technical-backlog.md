@@ -1,22 +1,19 @@
-# Technical Backlog Triage Checklist
+# Technical Backlog
 
-Last updated: 2026-03-12
-Status: Proposed
-Working branch: `master`
-Base branch: `master`
-Expected merge target: `master`
+Last updated: 2026-03-13
+Status: Active backlog
 
 ## Purpose
 
 Capture the current short-list technical backlog for `kanji-widget` so later sessions can start from the highest-value follow-up work instead of re-triaging the same signals from code and docs.
 
-This checklist is intentionally narrow. It does not try to replace product planning or act as a full roadmap.
+This backlog is intentionally narrow. It does not try to replace product planning or act as a full roadmap.
 
 ## Current Priority Order
 
-- Priority 1: align cached compound loading with the shipped Kanji Detail behavior for blank readings
-- Priority 2: choose the next widget UX slice with the best value-to-complexity ratio
-- Priority 3: review longer-term data-retention and ranking extensions after the current behavior gaps are closed
+- Priority 1: choose the next widget UX slice after the shipped configuration first slice
+- Priority 2: review longer-term data-retention policy for local study storage
+- Priority 3: review ranking extensions only after the higher-value widget and storage decisions are clearer
 
 ## Triage Flow
 
@@ -33,13 +30,13 @@ flowchart TD
     G --> I[Revisit after higher-priority work lands]
 ```
 
-## Phase 1: Evidence Capture
+## Evidence Capture
 
 - [x] Review current durable project context and repository docs for explicit future-work notes
 - [x] Check the current test surface to identify obvious coverage gaps
 - [x] Record the short-list backlog items with direct source references
 
-## Priority 1: Test Coverage Expansion
+## Completed: Test Coverage Expansion
 
 - [x] Add focused tests for widget random selection avoiding immediate repeats
 - [x] Add focused tests for widget size-class resolution and footer meta formatting
@@ -54,7 +51,7 @@ Evidence:
 - `docs/detail-design/widget.md:445`
 - Widget logic coverage was added on `2026-03-12` in PR `#3`
 
-## Priority 1: Compound Cache Behavior Gap
+## Completed: Compound Cache Behavior Gap
 
 - [x] Stop dropping cached compound rows only because the reading is blank
 - [x] Add or update narrow tests for the cached-compounds read path so it matches the shipped Kanji Detail fallback behavior
@@ -64,7 +61,7 @@ Evidence:
 - `app/src/main/java/com/example/kanjiwidget/widget/KanjiWidgetPrefs.kt:157`
 - Shipped Kanji Detail behavior now keeps supported compound rows visible when readings are missing
 
-## Priority 2: Docs Consistency Cleanup
+## Completed: Docs Consistency Cleanup
 
 - [x] Remove or rewrite stale main-screen future-work notes that no longer match shipped behavior
 - [x] Re-scan the main design docs after that cleanup to ensure backlog notes still represent real open work
@@ -72,16 +69,17 @@ Evidence:
 Evidence:
 - `docs/detail-design/main-screen.md` previously listed expanding latest history to a bounded recent list as future work, but the feature is already shipped and the stale note has now been removed
 
-## Priority 3: Next Widget UX Slice
+## Current Priority: Next Widget UX Slice
 
-- [ ] Decide whether the next widget slice should be `configuration activity` or `per-widget opacity`
+- [ ] Choose the next approved widget UX slice after the shipped configuration first slice
+- [ ] Decide whether the best next slice is `theme selection`, `scheduled daily rotation`, `local bundled fallback dataset`, or `widget streak/progress badge`
 - [ ] If approved, create a dedicated complex-task checklist from `docs/checklists/TEMPLATE-complex-task-checklist.md`
 - [ ] Update the relevant widget design doc before implementation starts
 
 Evidence:
-- `docs/detail-design/widget.md:450`
-- `docs/detail-design/widget.md:451`
-- `docs/detail-design/widget.md:454`
+- `docs/detail-design/widget.md` now includes the shipped configuration activity and per-widget opacity flow
+- `docs/detail-design/widget.md` still lists future extensions for theme selection, scheduled rotation, local fallback data, and progress or streak surfacing
+- `docs/project-context.md` records the widget configuration first slice as shipped on `master`
 
 ## Deferred Backlog
 
@@ -94,7 +92,7 @@ Evidence:
 - `docs/detail-design/kanji-study-ranking.md:310`
 - `docs/detail-design/kanji-study-ranking.md:311`
 
-## Acceptance Criteria
+## Backlog Goals
 
 - [ ] Later sessions can identify the next highest-value technical task without redoing the same repository scan
 - [ ] The backlog distinguishes immediate engineering debt from lower-priority future extensions
@@ -110,3 +108,5 @@ Evidence:
 - 2026-03-12: Recorded a remaining behavior gap in cached compound loading: blank readings are still filtered out by `KanjiWidgetPrefs.getCachedCompounds(...)`, which can diverge from the shipped Kanji Detail behavior after cache reuse.
 - 2026-03-13: Aligned cached compound filtering with shipped Kanji Detail behavior so rows with blank readings remain visible when written and meaning are present.
 - 2026-03-13: Added narrow unit coverage for the cached compound normalization path to keep the blank-reading fallback behavior from regressing.
+- 2026-03-13: Renamed this file from a triage checklist to `technical-backlog.md` so it clearly acts as an active backlog document instead of a feature checklist.
+- 2026-03-13: Removed the stale widget decision item about `configuration activity` versus `per-widget opacity` because that first slice is already shipped in `v1.5.0`.

@@ -10,6 +10,7 @@ This file defines how an AI coding agent should operate in this repository.
 2. Read `docs/basic-design.md` when the task may affect product behavior or UX.
 3. Read the relevant file in `docs/detail-design/` before changing an implemented feature.
 4. Read any relevant in-progress checklist in `docs/checklists/` when continuing multi-session implementation work.
+5. Read `docs/checklists/technical-backlog.md` when the user asks for backlog direction or the next technical priority.
 
 ## Repository Rules
 
