@@ -50,8 +50,8 @@ Use `First released in: \`n/a\`` if this task does not affect shipped app behavi
 ## Phase 4: Review Flow
 
 - [x] Build the review artifact required for this repository before asking for final review
-- [ ] Push the working branch to `origin`
-- [ ] Open a Pull Request from the working branch into the expected merge target
+- [x] Push the working branch to `origin`
+- [x] Open a Pull Request from the working branch into the expected merge target
 - [ ] Ask for user review only after the review artifact has been sent and the Pull Request is open
 - [ ] Merge into the expected merge target only after user review passes
 
@@ -85,4 +85,5 @@ Use `First released in: \`n/a\`` if this task does not affect shipped app behavi
 - 2026-03-13: Built `./gradlew :app:assembleDebug` successfully and copied the review APK to `/sdcard/Download/kanji_widget_daily_rotation_review.apk` for manual verification on-device.
 - 2026-03-13: Found and fixed one scheduling bug in `KanjiAppWidgetProvider.onUpdate()`: a same-cycle default refresh could overwrite the intended `advance = true` request for a new-day rotation. Re-ran the widget unit tests and `./gradlew :app:assembleDebug` after the fix, then refreshed `/sdcard/Download/kanji_widget_daily_rotation_review.apk`.
 - 2026-03-13: The user verified the review APK against the first-slice expectations, so the implementation, verification, review-artifact, and acceptance-criteria items can now be treated as complete before the PR is opened.
+- 2026-03-13: Pushed `feature/widget-daily-rotation-first-slice` to `origin` and opened PR `#7` for review: `https://github.com/2zcory/kanji-widget/pull/7`.
 - 2026-03-13: Update `First released in` after the first tagged release that includes this merged work.
