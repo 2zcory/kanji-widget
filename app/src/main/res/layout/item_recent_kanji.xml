@@ -3,10 +3,14 @@
     android:id="@+id/recentKanjiItemRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="#FFF9F0"
     android:gravity="center_vertical"
-    android:minHeight="64dp"
+    android:minHeight="72dp"
     android:orientation="horizontal"
+    android:paddingLeft="12dp"
     android:paddingTop="10dp"
+    android:paddingRight="12dp"
     android:paddingBottom="10dp">
 
     <TextView
@@ -25,9 +29,25 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tvRecentLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_detail_badge"
+            android:paddingLeft="8dp"
+            android:paddingTop="4dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="4dp"
+            android:text="@string/home_recent_latest_label"
+            android:textColor="#FFF9F0"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/tvRecentMeaning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
             android:textColor="#3F3529"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -40,5 +60,15 @@
             android:textColor="#6D6050"
             android:textSize="13sp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvRecentChevron"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="@string/home_recent_chevron"
+        android:textColor="#A1482E"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

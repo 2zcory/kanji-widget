@@ -24,12 +24,14 @@ class MainActivity : AppCompatActivity() {
     private val widgetOpacityLevels = listOf(1.0f, 0.85f, 0.70f, 0.55f, 0.40f)
     private lateinit var repository: HomeSummaryRepository
     private lateinit var studyStatsRepository: StudyStatsRepository
+    private lateinit var homeTitle: TextView
     private lateinit var summaryCardTitle: TextView
     private lateinit var summaryCardSubtitle: TextView
     private lateinit var summaryMeta: TextView
+    private lateinit var heroBody: TextView
     private lateinit var widgetStatus: TextView
     private lateinit var continueLearningBody: TextView
-    private lateinit var openLatestButton: Button
+    private lateinit var primaryStudyActionButton: Button
     private lateinit var openRandomButton: Button
     private lateinit var statsButton: Button
     private lateinit var recentKanjiSection: View
@@ -46,12 +48,14 @@ class MainActivity : AppCompatActivity() {
 
         repository = HomeSummaryRepository(this)
         studyStatsRepository = StudyStatsRepository(this)
+        homeTitle = findViewById(R.id.tvHomeTitle)
         summaryCardTitle = findViewById(R.id.tvHomeSummaryTitle)
         summaryCardSubtitle = findViewById(R.id.tvHomeSummarySubtitle)
         summaryMeta = findViewById(R.id.tvHomeSummaryMeta)
+        heroBody = findViewById(R.id.tvHomeHeroBody)
         widgetStatus = findViewById(R.id.tvWidgetStatus)
         continueLearningBody = findViewById(R.id.tvContinueLearningBody)
-        openLatestButton = findViewById(R.id.btnOpenLatestKanji)
+        primaryStudyActionButton = findViewById(R.id.btnPrimaryStudyAction)
         openRandomButton = findViewById(R.id.btnOpenRandomKanji)
         statsButton = findViewById(R.id.btnTodayStats)
         recentKanjiSection = findViewById(R.id.sectionRecentKanji)
@@ -76,6 +80,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun bindSummary(summary: HomeSummary) {
+        homeTitle.text = getString(R.string.home_title)
         summaryCardTitle.text = getString(R.string.home_today_summary_title)
         val openCountText = resources.getQuantityString(
             R.plurals.open_count,
@@ -99,20 +104,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         val hasLatest = !summary.latestKanji.isNullOrBlank()
+        heroBody.text = when {
+            !summary.isWidgetInstalled -> getString(R.string.home_hero_body_no_widget)
+            hasLatest -> getString(R.string.home_hero_body_with_latest)
+            else -> getString(R.string.home_hero_body_no_latest)
+        }
         continueLearningBody.text = if (hasLatest) {
             getString(R.string.home_continue_body_with_latest)
         } else {
             getString(R.string.home_continue_body_empty)
         }
-        openLatestButton.isEnabled = hasLatest
-        openLatestButton.alpha = if (hasLatest) 1f else 0.5f
-        if (hasLatest) {
-            val latestIntent = buildLatestDetailIntent(summary)
-            openLatestButton.setOnClickListener { startActivity(latestIntent) }
-        } else {
-            openLatestButton.setOnClickListener(null)
-        }
 
+        bindPrimaryStudyAction(summary)
         bindRandomAction(summary)
         bindRecentKanji(summary.recentKanji)
         statsButton.setOnClickListener { showStudyStatsBottomSheet(summary) }
@@ -125,6 +128,43 @@ class MainActivity : AppCompatActivity() {
             R.string.home_widget_opacity_value,
             (KanjiWidgetPrefs.getWidgetSurfaceAlpha(this) * 100).toInt()
         )
+    }
+
+    private fun bindPrimaryStudyAction(summary: HomeSummary) {
+        val catalog = KanjiWidgetPrefs.getKanjiCatalog(this)
+        val hasLatest = !summary.latestKanji.isNullOrBlank()
+        when {
+            hasLatest -> {
+                val latestIntent = buildLatestDetailIntent(summary)
+                primaryStudyActionButton.text = getString(R.string.home_action_open_latest)
+                primaryStudyActionButton.isEnabled = true
+                primaryStudyActionButton.alpha = 1f
+                primaryStudyActionButton.setOnClickListener { startActivity(latestIntent) }
+            }
+
+            summary.showWidgetHelp -> {
+                primaryStudyActionButton.text = getString(R.string.home_action_widget_help)
+                primaryStudyActionButton.isEnabled = true
+                primaryStudyActionButton.alpha = 1f
+                primaryStudyActionButton.setOnClickListener { showWidgetHelpDialog() }
+            }
+
+            catalog.isNotEmpty() -> {
+                primaryStudyActionButton.text = getString(R.string.home_action_open_random)
+                primaryStudyActionButton.isEnabled = true
+                primaryStudyActionButton.alpha = 1f
+                primaryStudyActionButton.setOnClickListener {
+                    startActivity(buildRandomDetailIntent(catalog, summary.latestKanji))
+                }
+            }
+
+            else -> {
+                primaryStudyActionButton.text = getString(R.string.home_action_open_random_disabled)
+                primaryStudyActionButton.isEnabled = false
+                primaryStudyActionButton.alpha = 0.5f
+                primaryStudyActionButton.setOnClickListener(null)
+            }
+        }
     }
 
     private fun buildLatestDetailIntent(summary: HomeSummary): Intent {
@@ -212,8 +252,10 @@ class MainActivity : AppCompatActivity() {
         if (items.isEmpty()) return
 
         val inflater = LayoutInflater.from(this)
-        items.forEach { item ->
+        items.forEachIndexed { index, item ->
             val row = inflater.inflate(R.layout.item_recent_kanji, recentKanjiContainer, false)
+            row.findViewById<TextView>(R.id.tvRecentLabel).visibility =
+                if (index == 0) View.VISIBLE else View.GONE
             row.findViewById<TextView>(R.id.tvRecentKanji).text = item.kanji
             row.findViewById<TextView>(R.id.tvRecentMeaning).text =
                 item.meaning ?: getString(R.string.home_latest_meaning_placeholder)

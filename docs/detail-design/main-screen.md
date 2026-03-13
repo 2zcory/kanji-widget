@@ -6,7 +6,7 @@ Define the detailed design for the app main screen launched from the app icon.
 
 This document covers:
 - current behavior
-- the first implemented launcher experience and its extension points
+- the current launcher design direction and its extension points
 
 ## Current State
 
@@ -51,47 +51,43 @@ The main screen should act as:
 
 ## Proposed UI Structure
 
-### 1. Header
+### 1. Hero Summary
+
+The first slice of the refreshed main screen should merge the old header and today-summary areas into one stronger hero block.
 
 Contents:
 - app title
 - short one-line description
-- optional subtitle such as `Kanji widget học nhanh mỗi ngày`
+- widget-installed status badge
+- today summary with study time and open count
+- one dominant primary CTA
 
 Purpose:
 - immediately explain that this is a widget-centered learning app
-
-### 2. Today Summary Card
-
-Contents:
-- total study time today
-- valid detail-screen opens today
-- last kanji opened today
-
-Purpose:
-- make the app launch feel meaningful even before deeper navigation exists
-
-Data source:
-- local stats from `StudyTimeTracker`
-- latest opened kanji from a dedicated local history store
-
-### 3. Continue Learning Section
-
-Contents:
-- short body text that suggests the next step
-- `Tiếp tục chữ gần nhất`
-- `Mở kanji ngẫu nhiên`
-- `Xem thống kê`
-
-Purpose:
-- make the launcher feel like an active review hub
-- keep primary study actions above settings content
+- make the first visible action feel obvious
+- give today’s activity enough visual weight to justify opening the launcher
 
 Behavior:
-- latest-kanji action is enabled only when recent history exists
-- random-kanji action uses the cached catalog and avoids the latest kanji when possible
+- the dominant CTA should represent the best next learning step for the current state
+- if recent history exists, the primary CTA should continue the latest Kanji
+- if recent history is missing, the hero should fall back to setup or discovery guidance instead of showing a dead primary action
 
-### 4. Recent Kanji Section
+### 2. Supporting Actions Section
+
+Contents:
+- short supporting guidance text
+- `Open random Kanji`
+- `View stats`
+
+Purpose:
+- keep secondary study actions accessible without competing with the hero CTA
+
+Behavior:
+- this section should no longer duplicate the dominant latest-study CTA from the hero
+- random-kanji action uses the cached catalog and avoids the latest kanji when possible
+- the stats action remains available from this section because it is a secondary exploration path
+
+### 3. Recent Kanji Section
 
 Contents:
 - latest viewed kanji items
@@ -99,12 +95,14 @@ Contents:
 
 Purpose:
 - make the app usable as a lightweight review hub
+- support quick re-entry into recent study history without competing with the hero CTA
 
-Current behavior:
-- this section now shows the bounded recent list directly
-- the first recent item is no longer duplicated as a separate latest card
+First-slice direction:
+- keep the bounded recent list directly on the screen
+- improve row hierarchy so the Kanji and its metadata are easier to scan
+- avoid promoting the first recent item as a second primary action when the hero already owns that role
 
-### 5. Widget Controls Section
+### 4. Widget Controls Section
 
 Contents:
 - widget state summary text
@@ -116,11 +114,15 @@ Purpose:
 - keep widget controls near the learning hub without turning the main screen into a full settings page
 - support both installed-widget and missing-widget states in one place
 
+First-slice direction:
+- keep this section clearly secondary to study actions
+- use shorter copy and stronger state-specific emphasis when the widget is missing
+
 Current v1 behavior:
 - opacity is global across all active widget instances
 - the action cycles through preset levels rather than exposing a slider
 
-### 6. Language Section
+### 5. Language Section
 
 Contents:
 - short description that language can follow the system or be overridden
@@ -130,6 +132,10 @@ Contents:
 Purpose:
 - allow quick language switching without adding a full settings screen
 - keep the control lightweight and consistent with the widget-first launcher flow
+
+First-slice direction:
+- keep the section visually quieter than the learning-focused blocks above it
+- preserve simple one-tap access without expanding into a full settings surface
 
 Behavior:
 - default selection is system language
@@ -141,8 +147,8 @@ Behavior:
 ### Flow A: First app launch
 
 1. User taps app icon
-2. Main screen explains the widget-centric concept
-3. User sees how to add the home screen widget
+2. Hero explains the widget-centric concept and shows setup-oriented guidance
+3. Main screen emphasizes how to add the home screen widget
 4. User returns to the launcher and adds the widget
 
 ### Flow D: Adjust widget opacity
@@ -155,14 +161,14 @@ Behavior:
 ### Flow B: Returning user
 
 1. User taps app icon
-2. Main screen shows today summary
-3. User continues the latest kanji, opens a random kanji, or views the stats bottom sheet
+2. Hero shows today summary and the dominant next study action
+3. User continues the latest kanji from the hero, or uses supporting actions for random study or stats
 
 ### Flow C: User without widget
 
 1. User opens app
 2. Main screen detects that no widget instance is currently active
-3. Widget help is emphasized over stats
+3. Hero and widget-controls copy emphasize setup help over deeper exploration
 
 ## Main Interaction Diagram
 
@@ -173,8 +179,8 @@ flowchart TD
     C -- Yes --> D[Show normal widget controls copy]
     C -- No --> E[Emphasize widget help]
     B --> F{Recent kanji exists?}
-    F -- Yes --> G[Enable continue latest action]
-    F -- No --> H[Disable latest action]
+    F -- Yes --> G[Hero CTA continues latest kanji]
+    F -- No --> H[Hero falls back to setup or discovery guidance]
     A --> I[User opens stats]
     I --> J[Show stats bottom sheet]
     A --> K[User changes widget opacity]
@@ -193,18 +199,21 @@ The main screen should:
 - stay lightweight
 - avoid replacing the widget as the main learning surface
 - not duplicate all detail-screen functionality
+- present one clearly dominant study CTA instead of repeating the same action across multiple equal sections
 
 ### Empty state
 
 If there is no recorded study data:
-- show zero-value summary
+- keep the summary visible but supportive
 - show setup guidance for the widget
+- let the hero frame the next step as onboarding-lite instead of a dead continuation flow
 
 ### With data
 
 If study data exists:
-- show today summary first
-- prioritize quick access to recent kanji detail and one-tap continuation
+- show today summary inside the hero first
+- prioritize one-tap continuation through the hero CTA
+- keep recent-history and utility sections secondary in visual emphasis
 
 ### Widget opacity rule
 
@@ -383,7 +392,8 @@ If the user changes opacity while no widget is active:
 ### Latest kanji missing
 
 If recent-history data is unavailable:
-- hide the `Mở kanji gần nhất` action
+- the hero should not present a broken continuation CTA
+- supporting actions should still allow random study and stats access when valid
 - keep summary and widget help visible
 
 ### Widget not installed but study data exists
@@ -398,6 +408,7 @@ If the user has study data but no current widget instance:
 Manual test cases:
 - open app on a fresh install and verify the empty state
 - open app after using the detail screen and verify today summary is shown
+- verify the hero shows one clearly dominant study CTA
 - verify main-screen actions open the expected destinations
 - verify the stats bottom sheet updates when the chart range changes
 - verify the stats bottom sheet remains useful when there is no study data
