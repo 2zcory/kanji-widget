@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kanjiwidget.home.HomeSummary
 import com.example.kanjiwidget.home.RecentKanjiSummaryItem
 import com.example.kanjiwidget.home.HomeSummaryRepository
@@ -17,6 +18,21 @@ import com.example.kanjiwidget.theme.ThemeController
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 
 class MainActivity : ThemedActivity() {
+    private val detailLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        recreate()
+    }
+
+    private val settingsLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val changed = result.data?.getBooleanExtra(SettingsActivity.EXTRA_SETTINGS_CHANGED, false) == true
+        if (result.resultCode == RESULT_OK && changed) {
+            recreate()
+        }
+    }
+
     private lateinit var repository: HomeSummaryRepository
     private lateinit var studyStatsRepository: StudyStatsRepository
     private lateinit var homeTitle: TextView
@@ -56,7 +72,7 @@ class MainActivity : ThemedActivity() {
         applyDepthStyling()
 
         openSettingsButton.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
+            settingsLauncher.launch(Intent(this, SettingsActivity::class.java))
         }
     }
 
@@ -122,7 +138,7 @@ class MainActivity : ThemedActivity() {
                 primaryStudyActionButton.text = getString(R.string.home_action_open_latest)
                 primaryStudyActionButton.isEnabled = true
                 primaryStudyActionButton.alpha = 1f
-                primaryStudyActionButton.setOnClickListener { startActivity(latestIntent) }
+                primaryStudyActionButton.setOnClickListener { detailLauncher.launch(latestIntent) }
             }
 
             summary.showWidgetHelp -> {
@@ -137,7 +153,7 @@ class MainActivity : ThemedActivity() {
                 primaryStudyActionButton.isEnabled = true
                 primaryStudyActionButton.alpha = 1f
                 primaryStudyActionButton.setOnClickListener {
-                    startActivity(buildRandomDetailIntent(catalog, summary.latestKanji))
+                    detailLauncher.launch(buildRandomDetailIntent(catalog, summary.latestKanji))
                 }
             }
 
@@ -209,7 +225,7 @@ class MainActivity : ThemedActivity() {
                 null
             } else {
                 View.OnClickListener {
-                    startActivity(buildRandomDetailIntent(catalog, summary.latestKanji))
+                    detailLauncher.launch(buildRandomDetailIntent(catalog, summary.latestKanji))
                 }
             }
         )
@@ -229,7 +245,7 @@ class MainActivity : ThemedActivity() {
             row.findViewById<TextView>(R.id.tvRecentMeaning).text =
                 item.meaning ?: getString(R.string.home_latest_meaning_placeholder)
             row.findViewById<TextView>(R.id.tvRecentMeta).text = buildRecentMeta(item)
-            row.setOnClickListener { startActivity(buildDetailIntent(item)) }
+            row.setOnClickListener { detailLauncher.launch(buildDetailIntent(item)) }
             ThemeController.applyGlassDepth(row.findViewById(R.id.recentKanjiItemRoot), elevatedDp = 8f)
             row.alpha = 0f
             row.translationY = 20f

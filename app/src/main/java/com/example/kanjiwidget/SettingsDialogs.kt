@@ -27,7 +27,7 @@ object SettingsDialogs {
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.btnWidgetHelpClose), elevatedDp = 0f)
     }
 
-    fun showLanguageDialog(activity: AppCompatActivity) {
+    fun showLanguageDialog(activity: AppCompatActivity, onApplied: (() -> Unit)? = null) {
         val options = listOf(
             0 to activity.getString(R.string.language_option_system),
             1 to activity.getString(R.string.language_option_english),
@@ -61,8 +61,9 @@ object SettingsDialogs {
         applyButton.setOnClickListener {
             val selected = dialog.findViewById<RadioButton>(group.checkedRadioButtonId)
             val selectedIndex = selected?.tag as? Int ?: currentIndex
-            applyLanguageSelection(activity, selectedIndex)
+            val didChange = applyLanguageSelection(activity, selectedIndex)
             dialog.dismiss()
+            if (didChange) onApplied?.invoke()
         }
 
         dialog.show()
@@ -71,7 +72,7 @@ object SettingsDialogs {
         ThemeController.applyGlassDepth(cancelButton, elevatedDp = 0f)
     }
 
-    fun showThemeDialog(activity: AppCompatActivity) {
+    fun showThemeDialog(activity: AppCompatActivity, onApplied: (() -> Unit)? = null) {
         val modes = AppThemeMode.entries.toTypedArray()
         val currentMode = KanjiWidgetPrefs.getAppThemeMode(activity)
         val dialog = createOverlayDialog(activity, R.layout.dialog_theme_picker)
@@ -104,6 +105,7 @@ object SettingsDialogs {
             val didChange = ThemeController.updateThemeSelection(activity, selectedMode)
             dialog.dismiss()
             if (didChange) {
+                onApplied?.invoke()
                 activity.recreate()
             }
         }
@@ -146,15 +148,17 @@ object SettingsDialogs {
         }
     }
 
-    private fun applyLanguageSelection(activity: AppCompatActivity, optionIndex: Int) {
+    private fun applyLanguageSelection(activity: AppCompatActivity, optionIndex: Int): Boolean {
         val locales = when (optionIndex) {
             1 -> LocaleListCompat.forLanguageTags("en")
             2 -> LocaleListCompat.forLanguageTags("vi")
             else -> LocaleListCompat.getEmptyLocaleList()
         }
+        if (AppCompatDelegate.getApplicationLocales() == locales) return false
         AppCompatDelegate.setApplicationLocales(locales)
         KanjiAppWidgetProvider.refreshAllWidgets(activity)
         activity.recreate()
+        return true
     }
 
     private fun createOverlayDialog(activity: AppCompatActivity, layoutRes: Int): Dialog {

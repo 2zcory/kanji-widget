@@ -1,5 +1,6 @@
 package com.example.kanjiwidget
 
+import android.content.Intent
 import android.widget.Button
 import android.widget.TextView
 import com.example.kanjiwidget.home.HomeSummaryRepository
@@ -8,6 +9,7 @@ import com.example.kanjiwidget.widget.KanjiAppWidgetProvider
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 
 class SettingsActivity : ThemedActivity() {
+    private var hasAppliedChanges = false
     private val widgetOpacityLevels = listOf(1.0f, 0.85f, 0.70f, 0.55f, 0.40f)
     private lateinit var repository: HomeSummaryRepository
     private lateinit var widgetControlsBody: TextView
@@ -19,6 +21,7 @@ class SettingsActivity : ThemedActivity() {
         prepareTheme(savedInstanceState)
         setContentView(R.layout.activity_settings)
         runScreenEntranceAnimation()
+        hasAppliedChanges = savedInstanceState?.getBoolean(EXTRA_SETTINGS_CHANGED) ?: false
 
         repository = HomeSummaryRepository(this)
         widgetControlsBody = findViewById(R.id.tvSettingsWidgetControlsBody)
@@ -32,10 +35,10 @@ class SettingsActivity : ThemedActivity() {
             SettingsDialogs.showWidgetHelpDialog(this)
         }
         findViewById<Button>(R.id.btnSettingsTheme).setOnClickListener {
-            SettingsDialogs.showThemeDialog(this)
+            SettingsDialogs.showThemeDialog(this) { markSettingsChanged() }
         }
         findViewById<Button>(R.id.btnSettingsLanguage).setOnClickListener {
-            SettingsDialogs.showLanguageDialog(this)
+            SettingsDialogs.showLanguageDialog(this) { markSettingsChanged() }
         }
 
         applyDepthStyling()
@@ -67,6 +70,7 @@ class SettingsActivity : ThemedActivity() {
             .takeIf { it >= 0 } ?: 0
         val next = widgetOpacityLevels[(currentIndex + 1) % widgetOpacityLevels.size]
         KanjiWidgetPrefs.setWidgetSurfaceAlpha(this, next)
+        markSettingsChanged()
         widgetOpacityValue.text = getString(R.string.home_widget_opacity_value, (next * 100).toInt())
         KanjiAppWidgetProvider.refreshAllWidgets(this)
     }
@@ -81,5 +85,26 @@ class SettingsActivity : ThemedActivity() {
         ThemeController.applyGlassDepth(findViewById(R.id.btnSettingsWidgetHelp), elevatedDp = 0f)
         ThemeController.applyGlassDepth(findViewById(R.id.btnSettingsTheme), elevatedDp = 0f)
         ThemeController.applyGlassDepth(findViewById(R.id.btnSettingsLanguage), elevatedDp = 0f)
+    }
+
+    override fun onSaveInstanceState(outState: android.os.Bundle) {
+        outState.putBoolean(EXTRA_SETTINGS_CHANGED, hasAppliedChanges)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun finish() {
+        if (hasAppliedChanges) {
+            setResult(RESULT_OK, Intent().putExtra(EXTRA_SETTINGS_CHANGED, true))
+        }
+        super.finish()
+    }
+
+    private fun markSettingsChanged() {
+        hasAppliedChanges = true
+        setResult(RESULT_OK, Intent().putExtra(EXTRA_SETTINGS_CHANGED, true))
+    }
+
+    companion object {
+        const val EXTRA_SETTINGS_CHANGED = "extra_settings_changed"
     }
 }

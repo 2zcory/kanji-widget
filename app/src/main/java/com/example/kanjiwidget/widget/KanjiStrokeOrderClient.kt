@@ -32,7 +32,12 @@ object KanjiStrokeOrderClient {
         }
     }
 
-    fun buildAnimatedHtml(svg: String, kanji: String): String {
+    fun buildAnimatedHtml(
+        svg: String,
+        kanji: String,
+        strokeColorHex: String,
+        strokeNumberColorHex: String,
+    ): String {
         val cleanSvg = sanitizeSvg(svg)
 
         val escapedKanji = escapeHtml(kanji)
@@ -51,7 +56,7 @@ object KanjiStrokeOrderClient {
                   margin: 0;
                   padding: 0;
                   background: transparent;
-                  color: #1f1f1f;
+                  color: $strokeColorHex;
                   font-family: sans-serif;
                   overflow: hidden;
                 }
@@ -68,7 +73,7 @@ object KanjiStrokeOrderClient {
                   display: block;
                 }
                 #stroke-root path {
-                  stroke: #171717 !important;
+                  stroke: $strokeColorHex !important;
                   stroke-width: 4 !important;
                   fill: none !important;
                   stroke-linecap: round !important;
@@ -76,6 +81,8 @@ object KanjiStrokeOrderClient {
                 }
                 [id*="StrokeNumbers"] {
                   opacity: 0.9;
+                  color: $strokeNumberColorHex !important;
+                  fill: $strokeNumberColorHex !important;
                 }
               </style>
             </head>

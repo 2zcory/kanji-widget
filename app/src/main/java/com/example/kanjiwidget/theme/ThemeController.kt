@@ -12,6 +12,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import com.example.kanjiwidget.R
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 
@@ -48,6 +49,8 @@ object ThemeController {
 
     fun applyGlassDepth(view: View?, elevatedDp: Float, defaultDp: Float = 0f) {
         if (view == null) return
+        view.stateListAnimator = null
+        view.translationZ = 0f
         val targetDp = if (isGlassMode(view.context)) elevatedDp else defaultDp
         view.elevation = targetDp * view.resources.displayMetrics.density
     }
@@ -74,7 +77,11 @@ object ThemeController {
     fun resolveColor(activity: Activity, @AttrRes attr: Int): Int {
         val typedValue = android.util.TypedValue()
         activity.theme.resolveAttribute(attr, typedValue, true)
-        return typedValue.data
+        return if (typedValue.resourceId != 0) {
+            ContextCompat.getColor(activity, typedValue.resourceId)
+        } else {
+            typedValue.data
+        }
     }
 
     private fun AppThemeMode.toNightMode(): Int {

@@ -199,7 +199,14 @@ class KanjiDetailActivity : ThemedActivity() {
         showLoading()
         thread(name = "stroke-order-loader") {
             val svg = KanjiStrokeOrderClient.fetchSvg(kanji)
-            val html = svg?.let { KanjiStrokeOrderClient.buildAnimatedHtml(it, kanji) }
+            val html = svg?.let {
+                KanjiStrokeOrderClient.buildAnimatedHtml(
+                    svg = it,
+                    kanji = kanji,
+                    strokeColorHex = resolveCssColor(R.attr.colorTextPrimary),
+                    strokeNumberColorHex = resolveCssColor(R.attr.colorTextMuted),
+                )
+            }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 if (html == null) {
@@ -599,5 +606,10 @@ class KanjiDetailActivity : ThemedActivity() {
         ThemeController.applyGlassDepth(findViewById(R.id.sectionNote), elevatedDp = 12f)
         ThemeController.applyGlassDepth(nextRandomButton, elevatedDp = 0f)
         ThemeController.applyGlassDepth(replayButton, elevatedDp = 0f)
+    }
+
+    private fun resolveCssColor(attr: Int): String {
+        val color = ThemeController.resolveColor(this, attr) and 0xFFFFFF
+        return String.format("#%06X", color)
     }
 }
