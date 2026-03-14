@@ -15,9 +15,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_detail_hero"
-            android:gravity="center_vertical"
+            android:gravity="top"
             android:orientation="horizontal"
-            android:padding="18dp">
+            android:padding="20dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -30,34 +30,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#1A1510"
-                    android:textSize="48sp"
+                    android:textSize="52sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvDetailSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="8dp"
                     android:textColor="#6C5D49"
-                    android:textSize="22sp"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvDetailHeroMeta"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="10dp"
                     android:textColor="#7C6A54"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:visibility="gone" />
-
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tvDetailJlptBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
                 android:background="@drawable/bg_detail_badge"
                 android:paddingLeft="12dp"
                 android:paddingTop="7dp"
@@ -74,7 +74,7 @@
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
             android:orientation="vertical"
-            android:padding="14dp">
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="320dp"
+                android:layout_height="300dp"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/bg_detail_canvas"
                 android:padding="2dp">
@@ -141,30 +141,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/btnReplayStrokeOrder"
-                    android:layout_width="0dp"
+                    android:id="@+id/btnNextRandomKanji"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:layout_weight="1"
                     android:background="@drawable/bg_detail_button"
-                    android:text="@string/stroke_order_replay"
+                    android:text="@string/stroke_order_next_random"
                     android:textAllCaps="false"
                     android:textColor="#FFF9F0"
                     android:textSize="15sp" />
 
                 <Button
-                    android:id="@+id/btnNextRandomKanji"
-                    android:layout_width="0dp"
+                    android:id="@+id/btnReplayStrokeOrder"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_detail_button"
-                    android:text="@string/stroke_order_next_random"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_detail_button_secondary"
+                    android:text="@string/stroke_order_replay"
                     android:textAllCaps="false"
-                    android:textColor="#FFF9F0"
+                    android:textColor="#3F3529"
                     android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>
@@ -175,46 +172,27 @@
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
             android:orientation="vertical"
-            android:padding="14dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/stroke_order_reading_label"
-                android:textColor="#A1482E"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/stroke_order_onyomi_label"
-                android:textColor="#7A6B57"
-                android:textSize="13sp"
-                android:textStyle="bold" />
+            android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tvDetailOnyomi"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="#231D16"
-                    android:textSize="18sp"
+                    android:text="@string/stroke_order_reading_label"
+                    android:textColor="#A1482E"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <ImageButton
                     android:id="@+id/btnPlayMainReading"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginStart="10dp"
                     android:background="@drawable/bg_chart_range_idle"
                     android:contentDescription="@string/detail_audio_play_content_description"
                     android:padding="8dp"
@@ -222,23 +200,57 @@
                     android:tint="#231D16" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/stroke_order_kunyomi_label"
-                android:textColor="#7A6B57"
-                android:textSize="13sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvDetailKunyomi"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textColor="#231D16"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_detail_panel"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stroke_order_onyomi_label"
+                    android:textColor="#7A6B57"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDetailOnyomi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="#231D16"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_detail_panel"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stroke_order_kunyomi_label"
+                    android:textColor="#7A6B57"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDetailKunyomi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="#231D16"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -248,7 +260,7 @@
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
             android:orientation="vertical"
-            android:padding="14dp"
+            android:padding="16dp"
             android:visibility="gone">
 
             <TextView
@@ -271,6 +283,7 @@
                 android:id="@+id/containerCompoundExamples"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
                 android:orientation="vertical" />
         </LinearLayout>
 
@@ -280,7 +293,7 @@
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
             android:orientation="vertical"
-            android:padding="14dp">
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -293,61 +306,88 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="vertical">
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/today_study_total_label"
-                    android:textColor="#7A6B57"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_detail_panel"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                <TextView
-                    android:id="@+id/tvTodayStudyTotal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textColor="#231D16"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/today_study_total_label"
+                        android:textColor="#7A6B57"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="@string/today_study_open_count_label"
-                    android:textColor="#7A6B57"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tvTodayStudyTotal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="#231D16"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvTodayStudyOpenCount"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textColor="#231D16"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_detail_panel"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="@string/today_study_kanji_label"
-                    android:textColor="#7A6B57"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/today_study_open_count_label"
+                        android:textColor="#7A6B57"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tvTodayStudyKanji"
-                    android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/tvTodayStudyOpenCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="#231D16"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textColor="#231D16"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_detail_panel"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/today_study_kanji_label"
+                        android:textColor="#7A6B57"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvTodayStudyKanji"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="#231D16"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -357,7 +397,7 @@
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
             android:orientation="vertical"
-            android:padding="14dp">
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -383,7 +423,7 @@
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
             android:orientation="vertical"
-            android:padding="14dp">
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="wrap_content"

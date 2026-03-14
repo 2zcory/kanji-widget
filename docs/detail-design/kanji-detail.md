@@ -60,6 +60,25 @@ It should let the user:
 
 ## UI Behavior
 
+### V2 first-slice visual contract
+
+This first slice is a layout and hierarchy refresh, not a feature expansion.
+
+Approved first-slice direction:
+- keep the screen as one lightweight study surface
+- strengthen the hero so kanji and meaning remain dominant
+- make `Next random` the clearer continuation action while keeping `Replay` visible
+- make Onyomi, Kunyomi, and the main audio action read as one study block
+- keep compounds lightweight but easier to scan when multiple rows are visible
+- make today stats feel secondary and supportive instead of competing with the main study content
+- avoid abrupt empty gaps when metadata, readings, compounds, or stroke-order content are unavailable
+
+Out-of-scope for this slice:
+- adding a new remote data provider
+- turning the screen into a second dictionary-style browsing mode
+- adding favorites, editable notes, or account-backed study state
+- changing the underlying navigation or study-tracking contract
+
 ### Hero section
 
 Current contents:
@@ -76,6 +95,11 @@ Hero metadata currently includes:
 Behavior:
 - hide the hero metadata row when all three values are missing
 - show the JLPT placeholder badge when JLPT data is unavailable
+
+V2 first-slice direction:
+- the hero should read as a study card with stronger visual separation between dominant study content and supporting metadata
+- the JLPT badge should remain visible but secondary to the kanji and meaning
+- metadata should stay scannable without competing with the main study target
 
 ### Stroke-order card
 
@@ -95,6 +119,12 @@ Behavior:
 - if the stroke-order payload is not loaded yet, `Replay` triggers a load attempt instead
 - `Next random` opens another kanji detail screen and finishes the current detail activity
 
+V2 first-slice direction:
+- `Next random` should become the visually primary continuation action
+- `Replay` should stay immediately available as a secondary action
+- the action layout should remain comfortable on common phone widths without making the row feel crowded
+- loading and error states should still occupy the canvas area without leaving broken transitions around the action area
+
 ### Readings section
 
 Current contents:
@@ -108,6 +138,11 @@ Behavior:
 - for v1, the main playback target prefers `onyomi` and falls back to `kunyomi`
 - hide or disable the playback control when neither reading is usable
 - if a new playback starts, stop the previous playback first
+
+V2 first-slice direction:
+- the section should present Onyomi, Kunyomi, and the main playback control as one coherent study block
+- a missing reading should keep the section stable instead of making the layout feel broken or lopsided
+- the main playback control should remain easy to find without overpowering the text values
 
 ### Compound examples section
 
@@ -140,6 +175,11 @@ Compound audio rule for v1:
 - hide or disable the row playback control when the row reading is blank
 - starting compound playback should stop any current main-reading or compound playback first
 
+V2 first-slice direction:
+- each compound row should feel easier to scan when several rows are visible in sequence
+- written form, reading, meaning, and usage hint should keep a clear visual hierarchy
+- playback affordances should remain visible but lightweight
+
 ### Today section
 
 Current contents:
@@ -151,6 +191,10 @@ Behavior:
 - values are computed from local study tracking only
 - the section always renders, even when the values are zero
 
+V2 first-slice direction:
+- today stats should feel like supportive context rather than a second primary content block
+- the three values should be easy to compare at a glance without taking more visual weight than the hero, stroke-order, or readings sections
+
 ### Meaning and note sections
 
 Current contents:
@@ -161,6 +205,11 @@ Current contents:
 Behavior:
 - meaning and note each fall back to their own placeholder copy when no cached detail is available
 - the source line always renders and falls back to the default source label when a specific source is unavailable
+
+V2 first-slice direction:
+- meaning should remain easy to scan after the hero and readings sections without creating a jarring jump in emphasis
+- note and source should remain readable but secondary
+- fallback text should still look intentional when detail cache is partial
 
 ## Navigation Inputs
 
