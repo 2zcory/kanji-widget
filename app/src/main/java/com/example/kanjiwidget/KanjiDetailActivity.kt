@@ -19,7 +19,10 @@ import com.example.kanjiwidget.detail.KanjiSpeechController
 import com.example.kanjiwidget.detail.UsageHintKey
 import com.example.kanjiwidget.history.RecentKanjiStore
 import com.example.kanjiwidget.stats.StudyTimeTracker
+import com.example.kanjiwidget.widget.KanjiApiClient
 import com.example.kanjiwidget.widget.KanjiStrokeOrderClient
+import com.example.kanjiwidget.widget.KanjiWidgetPrefs
+import com.example.kanjiwidget.widget.buildNoteText
 import com.example.kanjiwidget.widget.formatJlptLabel
 import com.example.kanjiwidget.widget.normalizeMeaning
 import kotlin.concurrent.thread
@@ -127,6 +130,18 @@ class KanjiDetailActivity : AppCompatActivity() {
         bindMainReadingAudio(selectMainReading(onyomi, kunyomi))
         bindCompounds(kanji)
         refreshTodayStats()
+        ensureDetailEntryLoaded(
+            kanji = kanji,
+            initialSource = source,
+            initialJlpt = jlpt,
+            initialOnyomi = onyomi,
+            initialKunyomi = kunyomi,
+            initialMeaning = meaning,
+            initialNote = note,
+            initialStrokeCount = strokeCount,
+            initialGrade = grade,
+            initialFrequency = frequency,
+        )
 
         configureWebView()
 
@@ -230,7 +245,7 @@ class KanjiDetailActivity : AppCompatActivity() {
     }
 
     private fun bindNextRandomAction() {
-        val catalog = com.example.kanjiwidget.widget.KanjiWidgetPrefs.getKanjiCatalog(this)
+        val catalog = KanjiWidgetPrefs.getKanjiCatalog(this)
         val isAvailable = catalog.isNotEmpty()
         nextRandomButton.isEnabled = isAvailable
         nextRandomButton.alpha = if (isAvailable) 1f else 0.5f
@@ -239,13 +254,29 @@ class KanjiDetailActivity : AppCompatActivity() {
                 null
             } else {
                 View.OnClickListener {
-                    val nextIntent = KanjiDetailNavigator.buildRandomDetailIntent(
-                        context = this,
-                        catalog = catalog,
-                        currentKanji = currentKanji,
-                    ) ?: return@OnClickListener
-                    startActivity(nextIntent)
-                    finish()
+                    val selectedKanji = KanjiDetailNavigator.selectRandomKanji(catalog, currentKanji)
+                        ?: return@OnClickListener
+                    nextRandomButton.isEnabled = false
+                    nextRandomButton.alpha = 0.6f
+                    thread(name = "next-random-detail-loader") {
+                        val cachedEntry = KanjiWidgetPrefs.getRemoteEntry(this, selectedKanji)
+                        val resolvedEntry = cachedEntry ?: KanjiApiClient.fetchKanji(selectedKanji)?.also {
+                            KanjiWidgetPrefs.saveRemoteEntry(this, selectedKanji, it)
+                        }
+                        runOnUiThread {
+                            if (isFinishing || isDestroyed) return@runOnUiThread
+                            nextRandomButton.isEnabled = true
+                            nextRandomButton.alpha = 1f
+                            val nextIntent = KanjiDetailNavigator.buildDetailIntent(
+                                context = this,
+                                kanji = selectedKanji,
+                                meaningFallback = resolvedEntry?.meaningVi,
+                                jlptFallback = resolvedEntry?.jlptLevel,
+                            )
+                            startActivity(nextIntent)
+                            finish()
+                        }
+                    }
                 }
             }
         )
@@ -302,6 +333,65 @@ class KanjiDetailActivity : AppCompatActivity() {
         } else {
             getString(R.string.stroke_order_source_value, getString(R.string.stroke_order_source_default))
         }
+    }
+
+    private fun ensureDetailEntryLoaded(
+        kanji: String,
+        initialSource: String,
+        initialJlpt: String,
+        initialOnyomi: String,
+        initialKunyomi: String,
+        initialMeaning: String,
+        initialNote: String,
+        initialStrokeCount: Int?,
+        initialGrade: Int?,
+        initialFrequency: Int?,
+    ) {
+        val cachedEntry = KanjiWidgetPrefs.getRemoteEntry(this, kanji)
+        if (cachedEntry != null) return
+        thread(name = "detail-entry-loader") {
+            val fetched = KanjiApiClient.fetchKanji(kanji) ?: return@thread
+            KanjiWidgetPrefs.saveRemoteEntry(this, kanji, fetched)
+            runOnUiThread {
+                if (isFinishing || isDestroyed || currentKanji != kanji) return@runOnUiThread
+                applyResolvedDetailEntry(
+                    source = fetched.source ?: initialSource,
+                    jlpt = fetched.jlptLevel.ifBlank { initialJlpt },
+                    onyomi = fetched.onyomi.ifBlank { initialOnyomi },
+                    kunyomi = fetched.kunyomi.ifBlank { initialKunyomi },
+                    meaning = fetched.meaningVi.ifBlank { initialMeaning },
+                    note = buildNoteText(this, fetched).ifBlank { initialNote },
+                    strokeCount = fetched.strokeCount ?: initialStrokeCount,
+                    grade = fetched.grade ?: initialGrade,
+                    frequency = fetched.frequency ?: initialFrequency,
+                )
+            }
+        }
+    }
+
+    private fun applyResolvedDetailEntry(
+        source: String,
+        jlpt: String,
+        onyomi: String,
+        kunyomi: String,
+        meaning: String,
+        note: String,
+        strokeCount: Int?,
+        grade: Int?,
+        frequency: Int?,
+    ) {
+        subtitleView.text = normalizeMeaning(meaning)
+            ?: getString(R.string.stroke_order_meaning_placeholder)
+        bindHeroMetadata(strokeCount, grade, frequency)
+        jlptBadgeView.text = formatJlptLabel(this, jlpt, R.string.stroke_order_badge_placeholder)
+        bindStudyInfo(
+            onyomi = onyomi,
+            kunyomi = kunyomi,
+            meaning = meaning,
+            note = note,
+            source = source,
+        )
+        bindMainReadingAudio(selectMainReading(onyomi, kunyomi))
     }
 
     private fun bindMainReadingAudio(reading: String?) {
