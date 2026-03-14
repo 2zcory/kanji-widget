@@ -20,8 +20,8 @@ android {
         applicationId = "com.example.kanjiwidget"
         minSdk = 24
         targetSdk = 34
-        versionCode = 8
-        versionName = "1.5.1"
+        versionCode = 9
+        versionName = "1.5.2"
         manifestPlaceholders["appLabel"] = "Kanji Widget"
     }
 
