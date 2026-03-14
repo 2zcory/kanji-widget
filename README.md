@@ -96,11 +96,13 @@ Local machine note:
 
 ## Design Docs
 
-- `AGENTS.md`: repository-specific working instructions for AI coding agents
-- `docs/project-context.md`: durable project context, status, and constraints
+The source repository keeps code-facing documentation only.
+
 - [`docs/basic-design.md`](docs/basic-design.md)
 - [`docs/detail-design/daily-study-time-tracking.md`](docs/detail-design/daily-study-time-tracking.md)
 - [`docs/detail-design/kanji-study-ranking.md`](docs/detail-design/kanji-study-ranking.md)
 - [`docs/detail-design/main-screen.md`](docs/detail-design/main-screen.md)
 - [`docs/detail-design/study-time-chart.md`](docs/detail-design/study-time-chart.md)
 - [`docs/detail-design/widget.md`](docs/detail-design/widget.md)
+
+Durable AI workflow instructions, project context, and implementation checklists now live in the private context repository `kanji-widget-ctx`.

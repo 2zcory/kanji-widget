@@ -21,15 +21,6 @@ Minimum diagrams:
 
 Add more diagrams only when the product structure changes enough that prose becomes hard to follow.
 
-### `docs/project-context.md`
-
-Minimum diagrams:
-- one simple architecture `flowchart` or block diagram for major runtime pieces such as widget, app screens, local storage, and remote APIs
-- one short release or delivery `flowchart` when the release workflow changes materially
-
-Purpose:
-- help later sessions recover system boundaries and operational flow quickly
-
 ### `docs/detail-design/*.md`
 
 Minimum diagrams:
