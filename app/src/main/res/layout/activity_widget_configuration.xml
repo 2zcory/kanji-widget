@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F6F1E8"
+    android:background="@drawable/bg_screen_surface"
     android:fillViewport="true">
 
     <LinearLayout
@@ -22,7 +22,7 @@
                 android:id="@+id/tvWidgetConfigTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#1A1510"
+                android:textColor="?attr/colorTextPrimary"
                 android:textSize="28sp"
                 android:textStyle="bold" />
 
@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:textColor="#3F3529"
+                android:textColor="?attr/colorTextSecondary"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/widget_config_opacity_title"
-                android:textColor="#A1482E"
+                android:textColor="?attr/colorAccentWarm"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -56,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="#231D16"
+                android:textColor="?attr/colorTextPrimary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="@string/widget_config_opacity_body"
-                android:textColor="#6D6050"
+                android:textColor="?attr/colorTextMuted"
                 android:textSize="13sp" />
 
             <RadioGroup
@@ -84,17 +84,17 @@
             android:background="@drawable/bg_detail_button"
             android:text="@string/widget_config_action_add"
             android:textAllCaps="false"
-            android:textColor="#FFF9F0" />
+            android:textColor="?attr/colorPrimaryButtonText" />
 
         <Button
             android:id="@+id/btnWidgetConfigCancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@drawable/bg_detail_button"
+            android:background="@drawable/bg_detail_button_secondary"
             android:text="@string/widget_config_action_cancel"
             android:textAllCaps="false"
-            android:textColor="#FFF9F0" />
+            android:textColor="?attr/colorSecondaryButtonText" />
 
     </LinearLayout>
 </ScrollView>

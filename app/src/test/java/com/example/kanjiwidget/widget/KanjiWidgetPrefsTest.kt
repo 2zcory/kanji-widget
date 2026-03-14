@@ -5,6 +5,7 @@ import android.content.ContextWrapper
 import android.content.SharedPreferences
 import com.example.kanjiwidget.detail.KanjiCompoundEntry
 import com.example.kanjiwidget.detail.UsageHintKey
+import com.example.kanjiwidget.theme.AppThemeMode
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -78,6 +79,17 @@ class KanjiWidgetPrefsTest {
 
         assertEquals(0.7f, KanjiWidgetPrefs.getWidgetSurfaceAlpha(context, 11))
         assertEquals(1.0f, KanjiWidgetPrefs.getWidgetSurfaceAlpha(context, 12))
+    }
+
+    @Test
+    fun appThemeMode_defaultsToSystemAndRoundTripsKnownValues() {
+        assertEquals(AppThemeMode.SYSTEM, KanjiWidgetPrefs.getAppThemeMode(context))
+
+        KanjiWidgetPrefs.setAppThemeMode(context, AppThemeMode.GLASS)
+        assertEquals(AppThemeMode.GLASS, KanjiWidgetPrefs.getAppThemeMode(context))
+
+        KanjiWidgetPrefs.setAppThemeMode(context, AppThemeMode.DARK)
+        assertEquals(AppThemeMode.DARK, KanjiWidgetPrefs.getAppThemeMode(context))
     }
 
     @Test

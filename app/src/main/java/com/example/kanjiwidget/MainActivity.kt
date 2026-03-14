@@ -1,7 +1,6 @@
 package com.example.kanjiwidget
 
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -17,10 +16,12 @@ import com.example.kanjiwidget.home.RecentKanjiSummaryItem
 import com.example.kanjiwidget.home.HomeSummaryRepository
 import com.example.kanjiwidget.stats.StudyStatsBottomSheet
 import com.example.kanjiwidget.stats.StudyStatsRepository
+import com.example.kanjiwidget.theme.AppThemeMode
+import com.example.kanjiwidget.theme.ThemeController
 import com.example.kanjiwidget.widget.KanjiAppWidgetProvider
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ThemedActivity() {
     private val widgetOpacityLevels = listOf(1.0f, 0.85f, 0.70f, 0.55f, 0.40f)
     private lateinit var repository: HomeSummaryRepository
     private lateinit var studyStatsRepository: StudyStatsRepository
@@ -39,12 +40,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var widgetControlsBody: TextView
     private lateinit var widgetOpacityValue: TextView
     private lateinit var widgetOpacityButton: Button
+    private lateinit var themeValue: TextView
+    private lateinit var themeButton: Button
     private lateinit var languageValue: TextView
     private lateinit var languageButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        prepareTheme(savedInstanceState)
         setContentView(R.layout.activity_main)
+        runScreenEntranceAnimation()
 
         repository = HomeSummaryRepository(this)
         studyStatsRepository = StudyStatsRepository(this)
@@ -63,6 +67,8 @@ class MainActivity : AppCompatActivity() {
         widgetControlsBody = findViewById(R.id.tvWidgetControlsBody)
         widgetOpacityValue = findViewById(R.id.tvWidgetOpacityValue)
         widgetOpacityButton = findViewById(R.id.btnWidgetOpacity)
+        themeValue = findViewById(R.id.tvThemeValue)
+        themeButton = findViewById(R.id.btnTheme)
         languageValue = findViewById(R.id.tvLanguageValue)
         languageButton = findViewById(R.id.btnLanguage)
 
@@ -70,12 +76,14 @@ class MainActivity : AppCompatActivity() {
             showWidgetHelpDialog()
         }
         widgetOpacityButton.setOnClickListener { cycleWidgetOpacity() }
+        themeButton.setOnClickListener { showThemeDialog() }
         languageButton.setOnClickListener { showLanguageDialog() }
     }
 
     override fun onResume() {
         super.onResume()
         bindSummary(repository.loadSummary())
+        updateThemeSummary()
         updateLanguageSummary()
         repository.backfillVietnameseMeaningsIfNeeded {
             runOnUiThread {
@@ -267,7 +275,15 @@ class MainActivity : AppCompatActivity() {
                 item.meaning ?: getString(R.string.home_latest_meaning_placeholder)
             row.findViewById<TextView>(R.id.tvRecentMeta).text = buildRecentMeta(item)
             row.setOnClickListener { startActivity(buildDetailIntent(item)) }
+            row.alpha = 0f
+            row.translationY = 20f
             recentKanjiContainer.addView(row)
+            row.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setStartDelay(index * 45L)
+                .setDuration(220L)
+                .start()
         }
     }
 
@@ -317,6 +333,38 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
+    }
+
+    private fun showThemeDialog() {
+        val modes = AppThemeMode.entries.toTypedArray()
+        val options = arrayOf(
+            getString(R.string.theme_option_system),
+            getString(R.string.theme_option_light),
+            getString(R.string.theme_option_dark),
+            getString(R.string.theme_option_glass),
+        )
+        val currentIndex = modes.indexOf(KanjiWidgetPrefs.getAppThemeMode(this))
+        AlertDialog.Builder(this)
+            .setTitle(R.string.theme_dialog_title)
+            .setSingleChoiceItems(options, currentIndex) { dialog, which ->
+                val didChange = ThemeController.updateThemeSelection(this, modes[which])
+                dialog.dismiss()
+                if (didChange) {
+                    updateThemeSummary()
+                    recreate()
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun updateThemeSummary() {
+        themeValue.text = when (KanjiWidgetPrefs.getAppThemeMode(this)) {
+            AppThemeMode.LIGHT -> getString(R.string.theme_option_light)
+            AppThemeMode.DARK -> getString(R.string.theme_option_dark)
+            AppThemeMode.GLASS -> getString(R.string.theme_option_glass)
+            AppThemeMode.SYSTEM -> getString(R.string.theme_option_system)
+        }
     }
 
     private fun updateLanguageSummary() {

@@ -12,7 +12,6 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.example.kanjiwidget.detail.KanjiCompoundEntry
 import com.example.kanjiwidget.detail.KanjiCompoundRepository
 import com.example.kanjiwidget.detail.KanjiSpeechController
@@ -30,7 +29,7 @@ import com.example.kanjiwidget.widget.normalizeMeaning
 import com.example.kanjiwidget.widget.resolveDisplayMeaning
 import kotlin.concurrent.thread
 
-class KanjiDetailActivity : AppCompatActivity() {
+class KanjiDetailActivity : ThemedActivity() {
 
     private lateinit var titleView: TextView
     private lateinit var subtitleView: TextView
@@ -61,8 +60,9 @@ class KanjiDetailActivity : AppCompatActivity() {
     private var renderedCompounds: List<KanjiCompoundEntry> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        prepareTheme(savedInstanceState)
         setContentView(R.layout.activity_kanji_detail)
+        runScreenEntranceAnimation()
 
         compoundRepository = KanjiCompoundRepository(this)
         speechController = KanjiSpeechController(this) {
@@ -516,7 +516,14 @@ class KanjiDetailActivity : AppCompatActivity() {
                     }
                 }
             )
+            row.alpha = 0f
+            row.translationY = 18f
             compoundsContainer.addView(row)
+            row.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(200L)
+                .start()
         }
         compoundsSection.visibility = View.VISIBLE
     }

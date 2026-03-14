@@ -9,7 +9,7 @@
         android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/Theme.KanjiWidget">
 
         <activity
             android:name=".MainActivity"
@@ -24,12 +24,12 @@
             android:name=".KanjiDetailActivity"
             android:exported="false"
             android:label="@string/stroke_order_title"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.KanjiWidget" />
 
         <activity
             android:name=".widget.WidgetConfigurationActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.KanjiWidget" />
 
         <receiver
             android:name=".widget.KanjiAppWidgetProvider"

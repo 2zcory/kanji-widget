@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#231D16"
+            android:textColor="?attr/colorTextPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -31,7 +31,7 @@
             android:contentDescription="@string/detail_audio_play_content_description"
             android:padding="8dp"
             android:src="@android:drawable/ic_lock_silent_mode_off"
-            android:tint="#231D16" />
+            android:tint="?attr/colorTextPrimary" />
     </LinearLayout>
 
     <TextView
@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:textColor="#6D6050"
+        android:textColor="?attr/colorTextMuted"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:textColor="#A1482E"
+        android:textColor="?attr/colorAccentWarm"
         android:textSize="11sp"
         android:textStyle="bold" />
 
@@ -57,6 +57,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textColor="#3F3529"
+        android:textColor="?attr/colorTextSecondary"
         android:textSize="15sp" />
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.graphics.RectF
 import android.util.TypedValue
 import android.util.AttributeSet
 import android.view.View
+import com.example.kanjiwidget.R
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import kotlin.math.max
@@ -22,27 +23,23 @@ class StudyTimeChartView @JvmOverloads constructor(
             invalidate()
         }
 
-    private val accentColor = 0xFF2F5D50.toInt()
-    private val faintColor = 0x332F5D50
-    private val axisColor = 0x55A1482E
-    private val textColor = 0xFF6D6050.toInt()
     private val barPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = accentColor
         style = Paint.Style.FILL
     }
     private val zeroBarPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = faintColor
         style = Paint.Style.FILL
     }
     private val axisPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = axisColor
         style = Paint.Style.STROKE
         strokeWidth = dp(1f)
     }
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = textColor
         textSize = sp(11f)
         textAlign = Paint.Align.CENTER
+    }
+
+    init {
+        refreshThemeColors()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -106,4 +103,17 @@ class StudyTimeChartView @JvmOverloads constructor(
 
     private fun sp(value: Float): Float =
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, value, resources.displayMetrics)
+
+    private fun refreshThemeColors() {
+        barPaint.color = resolveColor(R.attr.colorChartBar)
+        zeroBarPaint.color = resolveColor(R.attr.colorChartBarFaint)
+        axisPaint.color = resolveColor(R.attr.colorChartAxis)
+        textPaint.color = resolveColor(R.attr.colorTextMuted)
+    }
+
+    private fun resolveColor(attr: Int): Int {
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(attr, typedValue, true)
+        return typedValue.data
+    }
 }
