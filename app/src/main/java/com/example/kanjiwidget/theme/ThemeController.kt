@@ -1,6 +1,7 @@
 package com.example.kanjiwidget.theme
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +48,15 @@ object ThemeController {
         if (view == null) return
         val targetDp = if (isGlassMode(view.context)) elevatedDp else defaultDp
         view.elevation = targetDp * view.resources.displayMetrics.density
+    }
+
+    fun styleDialog(dialog: Dialog) {
+        val window = dialog.window ?: return
+        if (!isGlassMode(dialog.context)) return
+        window.setBackgroundDrawableResource(R.drawable.bg_dialog_surface)
+        window.decorView.elevation = 28f * dialog.context.resources.displayMetrics.density
+        window.decorView.translationZ = 28f * dialog.context.resources.displayMetrics.density
+        window.setDimAmount(0f)
     }
 
     @ColorInt

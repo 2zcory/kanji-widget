@@ -58,9 +58,9 @@
     <color name="kw_glass_screen_start">#F3F8FF</color>
     <color name="kw_glass_screen_end">#CFE2F3</color>
     <color name="kw_glass_hero_start">#FFFFFFFF</color>
-    <color name="kw_glass_hero_end">#E9F4FFFF</color>
-    <color name="kw_glass_surface_card">#F6FCFFFF</color>
-    <color name="kw_glass_surface_panel">#EEF8FDFF</color>
+    <color name="kw_glass_hero_end">#DDEEFFFF</color>
+    <color name="kw_glass_surface_card">#F3FAFDFF</color>
+    <color name="kw_glass_surface_panel">#E8F5FBFF</color>
     <color name="kw_glass_surface_canvas">#CCF6FBFF</color>
     <color name="kw_glass_surface_elevated">#FFFFFFFF</color>
     <color name="kw_glass_surface_inline">#F0FFFFFF</color>
