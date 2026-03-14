@@ -15,7 +15,7 @@
         android:layout_width="56dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="#231D16"
+        android:textColor="?attr/colorTextPrimary"
         android:textSize="28sp"
         android:textStyle="bold"
         tools:text="日" />
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:textColor="#231D16"
+            android:textColor="?attr/colorTextPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
             tools:text="Sun" />
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:maxLines="2"
-            android:textColor="#6D6050"
+            android:textColor="?attr/colorTextMuted"
             android:textSize="12sp"
             tools:text="JLPT N5 • Today" />
     </LinearLayout>
@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:textColor="#A1482E"
+        android:textColor="?attr/colorAccentWarm"
         android:textSize="13sp"
         android:textStyle="bold"
         tools:text="2 min" />

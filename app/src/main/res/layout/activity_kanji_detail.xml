@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F6F1E8"
+    android:background="@drawable/bg_screen_surface"
     android:fillViewport="true">
 
     <LinearLayout
@@ -12,6 +12,7 @@
         android:padding="16dp">
 
         <LinearLayout
+            android:id="@+id/sectionDetailHero"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_detail_hero"
@@ -29,7 +30,7 @@
                     android:id="@+id/tvDetailKanji"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#1A1510"
+                    android:textColor="?attr/colorTextPrimary"
                     android:textSize="52sp"
                     android:textStyle="bold" />
 
@@ -38,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:textColor="#6C5D49"
+                    android:textColor="?attr/colorTextMuted"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -47,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:textColor="#7C6A54"
+                    android:textColor="?attr/colorTextMuted"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:visibility="gone" />
@@ -63,12 +64,13 @@
                 android:paddingTop="7dp"
                 android:paddingRight="12dp"
                 android:paddingBottom="7dp"
-                android:textColor="#FFF9F0"
+                android:textColor="?attr/colorBadgeText"
                 android:textSize="13sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/sectionStrokeCanvas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -80,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/stroke_order_canvas_title"
-                android:textColor="#231D16"
+                android:textColor="?attr/colorTextPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -90,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="@string/stroke_order_attribution"
-                android:textColor="#7A6B57"
+                android:textColor="?attr/colorTextMuted"
                 android:textSize="12sp" />
 
             <TextView
@@ -98,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/stroke_order_hero_hint"
-                android:textColor="#7C6A54"
+                android:textColor="?attr/colorTextMuted"
                 android:textSize="13sp" />
 
             <FrameLayout
@@ -132,7 +134,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:gravity="center_horizontal"
-                        android:textColor="#4A4032"
+                        android:textColor="?attr/colorTextSecondary"
                         android:textSize="15sp" />
                 </LinearLayout>
             </FrameLayout>
@@ -150,7 +152,7 @@
                     android:background="@drawable/bg_detail_button"
                     android:text="@string/stroke_order_next_random"
                     android:textAllCaps="false"
-                    android:textColor="#FFF9F0"
+                    android:textColor="?attr/colorPrimaryButtonText"
                     android:textSize="15sp" />
 
                 <Button
@@ -161,12 +163,13 @@
                     android:background="@drawable/bg_detail_button_secondary"
                     android:text="@string/stroke_order_replay"
                     android:textAllCaps="false"
-                    android:textColor="#3F3529"
+                    android:textColor="?attr/colorSecondaryButtonText"
                     android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/sectionReadings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -185,7 +188,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/stroke_order_reading_label"
-                    android:textColor="#A1482E"
+                    android:textColor="?attr/colorAccentWarm"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -197,7 +200,7 @@
                     android:contentDescription="@string/detail_audio_play_content_description"
                     android:padding="8dp"
                     android:src="@android:drawable/ic_lock_silent_mode_off"
-                    android:tint="#231D16" />
+                    android:tint="?attr/colorTextPrimary" />
             </LinearLayout>
 
             <LinearLayout
@@ -212,7 +215,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/stroke_order_onyomi_label"
-                    android:textColor="#7A6B57"
+                    android:textColor="?attr/colorTextMuted"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -221,7 +224,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:textColor="#231D16"
+                    android:textColor="?attr/colorTextPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -238,7 +241,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/stroke_order_kunyomi_label"
-                    android:textColor="#7A6B57"
+                    android:textColor="?attr/colorTextMuted"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -247,7 +250,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:textColor="#231D16"
+                    android:textColor="?attr/colorTextPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -267,7 +270,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/detail_compounds_label"
-                android:textColor="#A1482E"
+                android:textColor="?attr/colorAccentWarm"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -276,7 +279,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="@string/detail_compounds_body"
-                android:textColor="#7A6B57"
+                android:textColor="?attr/colorTextMuted"
                 android:textSize="13sp" />
 
             <LinearLayout
@@ -288,6 +291,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/sectionTodayStats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -299,7 +303,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/today_study_stats_label"
-                android:textColor="#A1482E"
+                android:textColor="?attr/colorAccentWarm"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -321,7 +325,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/today_study_total_label"
-                        android:textColor="#7A6B57"
+                        android:textColor="?attr/colorTextMuted"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -330,7 +334,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:textColor="#231D16"
+                        android:textColor="?attr/colorTextPrimary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -348,7 +352,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/today_study_open_count_label"
-                        android:textColor="#7A6B57"
+                        android:textColor="?attr/colorTextMuted"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -357,7 +361,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:textColor="#231D16"
+                        android:textColor="?attr/colorTextPrimary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -375,7 +379,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/today_study_kanji_label"
-                        android:textColor="#7A6B57"
+                        android:textColor="?attr/colorTextMuted"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -384,7 +388,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:textColor="#231D16"
+                        android:textColor="?attr/colorTextPrimary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -392,6 +396,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/sectionMeaning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -403,7 +408,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/stroke_order_meaning_label"
-                android:textColor="#A1482E"
+                android:textColor="?attr/colorAccentWarm"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -412,12 +417,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:textColor="#231D16"
+                android:textColor="?attr/colorTextPrimary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/sectionNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -429,7 +435,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/stroke_order_note_label"
-                android:textColor="#A1482E"
+                android:textColor="?attr/colorAccentWarm"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -438,7 +444,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:textColor="#3F3529"
+                android:textColor="?attr/colorTextSecondary"
                 android:textSize="16sp" />
 
             <TextView
@@ -446,7 +452,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:textColor="#7A6B57"
+                android:textColor="?attr/colorTextMuted"
                 android:textSize="12sp" />
         </LinearLayout>
 

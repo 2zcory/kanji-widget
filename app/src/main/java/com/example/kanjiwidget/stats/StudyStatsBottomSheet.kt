@@ -17,6 +17,7 @@ import com.example.kanjiwidget.KanjiDetailNavigator
 import com.example.kanjiwidget.MainActivity
 import com.example.kanjiwidget.R
 import com.example.kanjiwidget.home.HomeSummary
+import com.example.kanjiwidget.theme.ThemeController
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -88,6 +89,7 @@ class StudyStatsBottomSheet(
 
         bindRange(7)
         bindRanking(RankingScope.ALL_TIME)
+        applyDepthStyling(dialog)
         dialog.show()
     }
 
@@ -177,6 +179,7 @@ class StudyStatsBottomSheet(
             row.findViewById<TextView>(R.id.tvRankingDuration).text =
                 activity.formatDurationForUi(item.totalStudyMs)
             row.setOnClickListener { activity.startActivity(buildDetailIntent(item)) }
+            ThemeController.applyGlassDepth(row.findViewById(R.id.rankingItemRoot), elevatedDp = 8f)
             container.addView(row)
         }
     }
@@ -223,6 +226,8 @@ class StudyStatsBottomSheet(
         val idle = R.drawable.bg_chart_range_idle
         btnRange7.setBackgroundResource(if (days == 7) selected else idle)
         btnRange30.setBackgroundResource(if (days == 30) selected else idle)
+        applySegmentButtonTextColors(btnRange7, isSelected = days == 7)
+        applySegmentButtonTextColors(btnRange30, isSelected = days == 30)
     }
 
     private fun updateRankingButtons(scope: RankingScope) {
@@ -230,9 +235,26 @@ class StudyStatsBottomSheet(
         val idle = R.drawable.bg_chart_range_idle
         btnRankingAll.setBackgroundResource(if (scope == RankingScope.ALL_TIME) selected else idle)
         btnRanking30.setBackgroundResource(if (scope == RankingScope.LAST_30_DAYS) selected else idle)
+        applySegmentButtonTextColors(btnRankingAll, isSelected = scope == RankingScope.ALL_TIME)
+        applySegmentButtonTextColors(btnRanking30, isSelected = scope == RankingScope.LAST_30_DAYS)
+    }
+
+    private fun applySegmentButtonTextColors(button: Button, isSelected: Boolean) {
+        val attr = if (isSelected) R.attr.colorPrimaryButtonText else R.attr.colorSecondaryButtonText
+        button.setTextColor(ThemeController.resolveColor(activity, attr))
     }
 
     private fun currentLocale(): Locale {
         return activity.resources.configuration.locales[0]
+    }
+
+    private fun applyDepthStyling(dialog: Dialog) {
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsSheetRoot), elevatedDp = 20f)
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsSummaryCard), elevatedDp = 10f)
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsRankingCard), elevatedDp = 10f)
+        ThemeController.applyGlassDepth(btnRange7, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(btnRange30, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(btnRankingAll, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(btnRanking30, elevatedDp = 0f)
     }
 }

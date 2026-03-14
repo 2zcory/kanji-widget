@@ -12,13 +12,13 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.example.kanjiwidget.detail.KanjiCompoundEntry
 import com.example.kanjiwidget.detail.KanjiCompoundRepository
 import com.example.kanjiwidget.detail.KanjiSpeechController
 import com.example.kanjiwidget.detail.UsageHintKey
 import com.example.kanjiwidget.history.RecentKanjiStore
 import com.example.kanjiwidget.stats.StudyTimeTracker
+import com.example.kanjiwidget.theme.ThemeController
 import com.example.kanjiwidget.widget.KanjiApiClient
 import com.example.kanjiwidget.widget.KanjiStrokeOrderClient
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
@@ -30,7 +30,7 @@ import com.example.kanjiwidget.widget.normalizeMeaning
 import com.example.kanjiwidget.widget.resolveDisplayMeaning
 import kotlin.concurrent.thread
 
-class KanjiDetailActivity : AppCompatActivity() {
+class KanjiDetailActivity : ThemedActivity() {
 
     private lateinit var titleView: TextView
     private lateinit var subtitleView: TextView
@@ -61,8 +61,9 @@ class KanjiDetailActivity : AppCompatActivity() {
     private var renderedCompounds: List<KanjiCompoundEntry> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        prepareTheme(savedInstanceState)
         setContentView(R.layout.activity_kanji_detail)
+        runScreenEntranceAnimation()
 
         compoundRepository = KanjiCompoundRepository(this)
         speechController = KanjiSpeechController(this) {
@@ -92,6 +93,7 @@ class KanjiDetailActivity : AppCompatActivity() {
         todayKanjiView = findViewById(R.id.tvTodayStudyKanji)
         compoundsSection = findViewById(R.id.sectionCompoundExamples)
         compoundsContainer = findViewById(R.id.containerCompoundExamples)
+        applyDepthStyling()
 
         val kanji = intent.getStringExtra(EXTRA_KANJI)?.trim().orEmpty()
         currentKanji = kanji
@@ -516,7 +518,15 @@ class KanjiDetailActivity : AppCompatActivity() {
                     }
                 }
             )
+            ThemeController.applyGlassDepth(row.findViewById(R.id.compoundExampleRoot), elevatedDp = 8f)
+            row.alpha = 0f
+            row.translationY = 18f
             compoundsContainer.addView(row)
+            row.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(200L)
+                .start()
         }
         compoundsSection.visibility = View.VISIBLE
     }
@@ -577,5 +587,17 @@ class KanjiDetailActivity : AppCompatActivity() {
             UsageHintKey.REFERENCE_TERM -> getString(R.string.compound_usage_reference_term)
             UsageHintKey.STUDY_WORD -> getString(R.string.compound_usage_study_word)
         }
+    }
+
+    private fun applyDepthStyling() {
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionDetailHero), elevatedDp = 18f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionStrokeCanvas), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionReadings), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionCompoundExamples), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionTodayStats), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionMeaning), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionNote), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(nextRandomButton, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(replayButton, elevatedDp = 0f)
     }
 }

@@ -1,6 +1,7 @@
 package com.example.kanjiwidget.widget
 
 import android.content.Context
+import com.example.kanjiwidget.theme.AppThemeMode
 import com.example.kanjiwidget.detail.CachedKanjiCompounds
 import com.example.kanjiwidget.detail.KanjiCompoundEntry
 import com.example.kanjiwidget.detail.UsageHintKey
@@ -14,6 +15,7 @@ object KanjiWidgetPrefs {
     private const val KEY_WIDGET_SURFACE_ALPHA = "widget_surface_alpha"
     private const val KEY_WIDGET_SURFACE_ALPHA_PREFIX = "widget_surface_alpha_"
     private const val KEY_WIDGET_LAST_KANJI_DAY_PREFIX = "widget_last_kanji_day_"
+    private const val KEY_APP_THEME_MODE = "app_theme_mode"
 
     fun getKanjiCatalog(context: Context): List<String> {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
@@ -155,6 +157,16 @@ object KanjiWidgetPrefs {
         sp.edit()
             .putFloat("$KEY_WIDGET_SURFACE_ALPHA_PREFIX$widgetId", value.coerceIn(0.4f, 1f))
             .apply()
+    }
+
+    fun getAppThemeMode(context: Context): AppThemeMode {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        return AppThemeMode.fromStorageValue(sp.getString(KEY_APP_THEME_MODE, null))
+    }
+
+    fun setAppThemeMode(context: Context, mode: AppThemeMode) {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        sp.edit().putString(KEY_APP_THEME_MODE, mode.storageValue).apply()
     }
 
     fun saveRemoteEntry(context: Context, kanji: String, entry: KanjiEntry) {

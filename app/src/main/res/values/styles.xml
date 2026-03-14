@@ -1,0 +1,81 @@
+<resources>
+    <style name="Theme.KanjiWidget" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/bg_screen_surface</item>
+        <item name="android:windowAnimationStyle">@style/Animation_KanjiWidget_Window</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.KanjiWidget.AlertDialog</item>
+        <item name="colorAccent">@color/kw_light_accent_main</item>
+
+        <item name="colorScreenBackgroundStart">@color/kw_light_screen_start</item>
+        <item name="colorScreenBackgroundEnd">@color/kw_light_screen_end</item>
+        <item name="colorSurfaceHeroStart">@color/kw_light_hero_start</item>
+        <item name="colorSurfaceHeroEnd">@color/kw_light_hero_end</item>
+        <item name="colorSurfaceCard">@color/kw_light_surface_card</item>
+        <item name="colorSurfacePanel">@color/kw_light_surface_panel</item>
+        <item name="colorSurfaceCanvas">@color/kw_light_surface_canvas</item>
+        <item name="colorSurfaceElevated">@color/kw_light_surface_elevated</item>
+        <item name="colorSurfaceInline">@color/kw_light_surface_inline</item>
+        <item name="colorStrokeStrong">@color/kw_light_stroke_strong</item>
+        <item name="colorStrokeSoft">@color/kw_light_stroke_soft</item>
+        <item name="colorTextPrimary">@color/kw_light_text_primary</item>
+        <item name="colorTextSecondary">@color/kw_light_text_secondary</item>
+        <item name="colorTextMuted">@color/kw_light_text_muted</item>
+        <item name="colorTextInverse">@color/kw_light_text_inverse</item>
+        <item name="colorAccentWarm">@color/kw_light_accent_warm</item>
+        <item name="colorAccentMain">@color/kw_light_accent_main</item>
+        <item name="colorBadgeSurface">@color/kw_light_badge_surface</item>
+        <item name="colorBadgeText">@color/kw_light_badge_text</item>
+        <item name="colorPrimaryButton">@color/kw_light_primary_button</item>
+        <item name="colorPrimaryButtonText">@color/kw_light_primary_button_text</item>
+        <item name="colorSecondaryButton">@color/kw_light_secondary_button</item>
+        <item name="colorSecondaryButtonText">@color/kw_light_secondary_button_text</item>
+        <item name="colorChartAxis">@color/kw_light_chart_axis</item>
+        <item name="colorChartBar">@color/kw_light_chart_bar</item>
+        <item name="colorChartBarFaint">@color/kw_light_chart_bar_faint</item>
+        <item name="colorDragHandle">@color/kw_light_drag_handle</item>
+    </style>
+
+    <style name="Theme.KanjiWidget.Glass" parent="Theme.KanjiWidget">
+        <item name="colorAccent">@color/kw_glass_accent_main</item>
+        <item name="colorScreenBackgroundStart">@color/kw_glass_screen_start</item>
+        <item name="colorScreenBackgroundEnd">@color/kw_glass_screen_end</item>
+        <item name="colorSurfaceHeroStart">@color/kw_glass_hero_start</item>
+        <item name="colorSurfaceHeroEnd">@color/kw_glass_hero_end</item>
+        <item name="colorSurfaceCard">@color/kw_glass_surface_card</item>
+        <item name="colorSurfacePanel">@color/kw_glass_surface_panel</item>
+        <item name="colorSurfaceCanvas">@color/kw_glass_surface_canvas</item>
+        <item name="colorSurfaceElevated">@color/kw_glass_surface_elevated</item>
+        <item name="colorSurfaceInline">@color/kw_glass_surface_inline</item>
+        <item name="colorStrokeStrong">@color/kw_glass_stroke_strong</item>
+        <item name="colorStrokeSoft">@color/kw_glass_stroke_soft</item>
+        <item name="colorTextPrimary">@color/kw_glass_text_primary</item>
+        <item name="colorTextSecondary">@color/kw_glass_text_secondary</item>
+        <item name="colorTextMuted">@color/kw_glass_text_muted</item>
+        <item name="colorTextInverse">@color/kw_glass_text_inverse</item>
+        <item name="colorAccentWarm">@color/kw_glass_accent_warm</item>
+        <item name="colorAccentMain">@color/kw_glass_accent_main</item>
+        <item name="colorBadgeSurface">@color/kw_glass_badge_surface</item>
+        <item name="colorBadgeText">@color/kw_glass_badge_text</item>
+        <item name="colorPrimaryButton">@color/kw_glass_primary_button</item>
+        <item name="colorPrimaryButtonText">@color/kw_glass_primary_button_text</item>
+        <item name="colorSecondaryButton">@color/kw_glass_secondary_button</item>
+        <item name="colorSecondaryButtonText">@color/kw_glass_secondary_button_text</item>
+        <item name="colorChartAxis">@color/kw_glass_chart_axis</item>
+        <item name="colorChartBar">@color/kw_glass_chart_bar</item>
+        <item name="colorChartBarFaint">@color/kw_glass_chart_bar_faint</item>
+        <item name="colorDragHandle">@color/kw_glass_drag_handle</item>
+    </style>
+
+    <style name="ThemeOverlay.KanjiWidget.AlertDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/bg_dialog_surface</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimAmount">0</item>
+        <item name="android:windowElevation">24dp</item>
+    </style>
+
+    <style name="Animation_KanjiWidget_Window">
+        <item name="android:activityOpenEnterAnimation">@anim/theme_screen_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/theme_screen_hold</item>
+        <item name="android:activityCloseEnterAnimation">@anim/theme_screen_hold</item>
+        <item name="android:activityCloseExitAnimation">@anim/theme_screen_exit</item>
+    </style>
+</resources>

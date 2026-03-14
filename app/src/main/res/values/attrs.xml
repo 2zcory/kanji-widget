@@ -1,0 +1,29 @@
+<resources>
+    <attr name="colorScreenBackgroundStart" format="color" />
+    <attr name="colorScreenBackgroundEnd" format="color" />
+    <attr name="colorSurfaceHeroStart" format="color" />
+    <attr name="colorSurfaceHeroEnd" format="color" />
+    <attr name="colorSurfaceCard" format="color" />
+    <attr name="colorSurfacePanel" format="color" />
+    <attr name="colorSurfaceCanvas" format="color" />
+    <attr name="colorSurfaceElevated" format="color" />
+    <attr name="colorSurfaceInline" format="color" />
+    <attr name="colorStrokeStrong" format="color" />
+    <attr name="colorStrokeSoft" format="color" />
+    <attr name="colorTextPrimary" format="color" />
+    <attr name="colorTextSecondary" format="color" />
+    <attr name="colorTextMuted" format="color" />
+    <attr name="colorTextInverse" format="color" />
+    <attr name="colorAccentWarm" format="color" />
+    <attr name="colorAccentMain" format="color" />
+    <attr name="colorBadgeSurface" format="color" />
+    <attr name="colorBadgeText" format="color" />
+    <attr name="colorPrimaryButton" format="color" />
+    <attr name="colorPrimaryButtonText" format="color" />
+    <attr name="colorSecondaryButton" format="color" />
+    <attr name="colorSecondaryButtonText" format="color" />
+    <attr name="colorChartAxis" format="color" />
+    <attr name="colorChartBar" format="color" />
+    <attr name="colorChartBarFaint" format="color" />
+    <attr name="colorDragHandle" format="color" />
+</resources>

@@ -8,10 +8,11 @@ import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.example.kanjiwidget.R
+import com.example.kanjiwidget.ThemedActivity
+import com.example.kanjiwidget.theme.ThemeController
 
-class WidgetConfigurationActivity : AppCompatActivity() {
+class WidgetConfigurationActivity : ThemedActivity() {
     private lateinit var titleView: TextView
     private lateinit var bodyView: TextView
     private lateinit var selectionValueView: TextView
@@ -23,7 +24,7 @@ class WidgetConfigurationActivity : AppCompatActivity() {
     private val opacityLevels = listOf(1.0f, 0.85f, 0.70f, 0.55f, 0.40f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        prepareTheme(savedInstanceState)
         setResult(Activity.RESULT_CANCELED)
 
         appWidgetId = intent?.extras?.getInt(
@@ -36,6 +37,7 @@ class WidgetConfigurationActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_widget_configuration)
+        runScreenEntranceAnimation()
 
         titleView = findViewById(R.id.tvWidgetConfigTitle)
         bodyView = findViewById(R.id.tvWidgetConfigBody)
@@ -43,6 +45,7 @@ class WidgetConfigurationActivity : AppCompatActivity() {
         presetsGroup = findViewById(R.id.groupWidgetOpacityPresets)
         saveButton = findViewById(R.id.btnWidgetConfigSave)
         cancelButton = findViewById(R.id.btnWidgetConfigCancel)
+        applyDepthStyling()
 
         titleView.text = getString(R.string.widget_config_title)
         bodyView.text = getString(R.string.widget_config_body)
@@ -74,7 +77,7 @@ class WidgetConfigurationActivity : AppCompatActivity() {
                 text = getString(R.string.widget_config_opacity_option, (level * 100).toInt())
                 tag = level
                 textSize = 16f
-                setTextColor(0xFF231D16.toInt())
+                setTextColor(ThemeController.resolveColor(this@WidgetConfigurationActivity, R.attr.colorTextPrimary))
                 isChecked = index == selectedIndex
             }
             presetsGroup.addView(button)
@@ -96,5 +99,12 @@ class WidgetConfigurationActivity : AppCompatActivity() {
         val manager = AppWidgetManager.getInstance(this)
         KanjiAppWidgetProvider().onUpdate(this, manager, intArrayOf(appWidgetId))
         finish()
+    }
+
+    private fun applyDepthStyling() {
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionWidgetConfigHero), elevatedDp = 18f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionWidgetConfigOptions), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(saveButton, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(cancelButton, elevatedDp = 0f)
     }
 }

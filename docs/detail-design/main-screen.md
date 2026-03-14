@@ -28,6 +28,7 @@ The screen should help users:
 - continue learning from the latest kanji or a random kanji
 - review today’s learning activity
 - adjust a small set of widget appearance preferences
+- choose the in-app theme direction
 
 ## Scope
 
@@ -122,7 +123,27 @@ Current v1 behavior:
 - opacity is global across all active widget instances
 - the action cycles through preset levels rather than exposing a slider
 
-### 5. Language Section
+### 5. Appearance Section
+
+Contents:
+- short explanation of theme behavior
+- current selected app theme label
+- action to open the theme picker
+
+Purpose:
+- let users switch between `System`, `Light`, `Dark`, and `Glass` without introducing a separate settings screen
+- keep theme control near the existing launcher utility sections
+
+First-slice direction:
+- keep the section lightweight and consistent with the existing card stack
+- make `Glass` feel like a distinct style direction rather than a simple tint swap
+
+Behavior:
+- the selected theme persists locally
+- changing theme recreates the current screen so all in-app surfaces update together
+- the first slice applies to in-app screens only; the home screen widget visuals remain unchanged
+
+### 6. Language Section
 
 Contents:
 - short description that language can follow the system or be overridden
@@ -186,9 +207,12 @@ flowchart TD
     A --> K[User changes widget opacity]
     K --> L[Persist global opacity]
     L --> M[Refresh active widgets]
-    A --> N[User changes app language]
-    N --> O[Update AppCompat locale]
-    O --> P[Refresh main screen and widgets]
+    A --> N[User changes app theme]
+    N --> O[Persist theme and recreate current screen]
+    O --> P[Reinflate in-app surfaces with the selected theme]
+    A --> Q[User changes app language]
+    Q --> R[Update AppCompat locale]
+    R --> S[Refresh main screen and widgets]
 ```
 
 ## Behavior Rules

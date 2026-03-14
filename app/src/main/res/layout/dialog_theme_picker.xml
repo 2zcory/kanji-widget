@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialogThemeOverlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#140A1622"
+    android:foregroundGravity="center"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/dialogThemeRoot"
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_dialog_surface"
+        android:orientation="vertical"
+        android:padding="18dp">
+
+        <TextView
+            android:id="@+id/tvThemeDialogTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/theme_dialog_title"
+            android:textColor="?attr/colorTextPrimary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvThemeDialogBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/theme_section_body"
+            android:textColor="?attr/colorTextMuted"
+            android:textSize="13sp" />
+
+        <RadioGroup
+            android:id="@+id/groupThemeOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnThemeDialogCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_detail_button_secondary"
+                android:minWidth="0dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp"
+                android:text="@android:string/cancel"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorSecondaryButtonText" />
+
+            <Button
+                android:id="@+id/btnThemeDialogApply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_detail_button"
+                android:minWidth="0dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp"
+                android:text="@string/theme_action_apply"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorPrimaryButtonText" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

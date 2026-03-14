@@ -5,6 +5,7 @@
     android:fillViewport="true">
 
     <LinearLayout
+        android:id="@+id/statsSheetRoot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_study_stats_sheet"
@@ -22,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:text="@string/chart_title"
-        android:textColor="#231D16"
+        android:textColor="?attr/colorTextPrimary"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -31,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:textColor="#6D6050"
+        android:textColor="?attr/colorTextMuted"
         android:textSize="14sp" />
 
     <LinearLayout
@@ -48,7 +49,7 @@
             android:layout_weight="1"
             android:text="@string/chart_range_7"
             android:textAllCaps="false"
-            android:textColor="#231D16" />
+            android:textColor="?attr/colorSecondaryButtonText" />
 
         <Button
             android:id="@+id/btnChartRange30"
@@ -58,7 +59,7 @@
             android:layout_weight="1"
             android:text="@string/chart_range_30"
             android:textAllCaps="false"
-            android:textColor="#231D16" />
+            android:textColor="?attr/colorSecondaryButtonText" />
     </LinearLayout>
 
     <com.example.kanjiwidget.stats.StudyTimeChartView
@@ -70,6 +71,7 @@
         android:padding="12dp" />
 
         <LinearLayout
+            android:id="@+id/statsSummaryCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -81,7 +83,7 @@
             android:id="@+id/tvChartTotal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#231D16"
+            android:textColor="?attr/colorTextPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -90,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="#3F3529"
+            android:textColor="?attr/colorTextSecondary"
             android:textSize="15sp" />
 
         <TextView
@@ -98,7 +100,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="#3F3529"
+            android:textColor="?attr/colorTextSecondary"
             android:textSize="15sp" />
 
         <TextView
@@ -106,7 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="#3F3529"
+            android:textColor="?attr/colorTextSecondary"
             android:textSize="15sp" />
 
         <TextView
@@ -114,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="#3F3529"
+            android:textColor="?attr/colorTextSecondary"
             android:textSize="15sp" />
 
         <TextView
@@ -122,11 +124,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="#6D6050"
+            android:textColor="?attr/colorTextMuted"
             android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/statsRankingCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -138,7 +141,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ranking_title"
-                android:textColor="#231D16"
+                android:textColor="?attr/colorTextPrimary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -156,7 +159,7 @@
                     android:layout_weight="1"
                     android:text="@string/ranking_scope_all"
                     android:textAllCaps="false"
-                    android:textColor="#231D16" />
+                    android:textColor="?attr/colorSecondaryButtonText" />
 
                 <Button
                     android:id="@+id/btnRankingScope30"
@@ -166,7 +169,7 @@
                     android:layout_weight="1"
                     android:text="@string/ranking_scope_30"
                     android:textAllCaps="false"
-                    android:textColor="#231D16" />
+                    android:textColor="?attr/colorSecondaryButtonText" />
             </LinearLayout>
 
             <TextView
@@ -175,7 +178,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:text="@string/ranking_most_title"
-                android:textColor="#A1482E"
+                android:textColor="?attr/colorAccentWarm"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -191,7 +194,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:text="@string/ranking_least_title"
-                android:textColor="#A1482E"
+                android:textColor="?attr/colorAccentWarm"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -207,7 +210,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/ranking_empty"
-                android:textColor="#6D6050"
+                android:textColor="?attr/colorTextMuted"
                 android:textSize="13sp"
                 android:visibility="gone" />
         </LinearLayout>

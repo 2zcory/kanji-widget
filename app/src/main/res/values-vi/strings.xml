@@ -104,10 +104,20 @@
     <string name="language_section_title">NGÔN NGỮ</string>
     <string name="language_section_body">Chọn ngôn ngữ ứng dụng. Mặc định hệ thống sẽ theo cài đặt máy.</string>
     <string name="language_action_change">Đổi ngôn ngữ</string>
+    <string name="language_action_apply">Áp dụng</string>
     <string name="language_dialog_title">Ngôn ngữ ứng dụng</string>
     <string name="language_option_system">Mặc định hệ thống</string>
     <string name="language_option_english">Tiếng Anh</string>
     <string name="language_option_vietnamese">Tiếng Việt</string>
+    <string name="theme_section_title">GIAO DIỆN</string>
+    <string name="theme_section_body">Chọn cách hiển thị cho ứng dụng. Glass thêm các lớp nền trong mờ và chuyển động hiện đại trên toàn bộ màn hình trong app.</string>
+    <string name="theme_action_change">Đổi theme</string>
+    <string name="theme_action_apply">Áp dụng</string>
+    <string name="theme_dialog_title">Theme ứng dụng</string>
+    <string name="theme_option_system">Hệ thống</string>
+    <string name="theme_option_light">Sáng</string>
+    <string name="theme_option_dark">Tối</string>
+    <string name="theme_option_glass">Glass</string>
 
     <string name="bullet_separator"> • </string>
     <string name="jlpt_format">JLPT %1$s</string>
