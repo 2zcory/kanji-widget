@@ -104,7 +104,7 @@ class WidgetConfigurationActivity : ThemedActivity() {
     private fun applyDepthStyling() {
         ThemeController.applyGlassDepth(findViewById(R.id.sectionWidgetConfigHero), elevatedDp = 18f)
         ThemeController.applyGlassDepth(findViewById(R.id.sectionWidgetConfigOptions), elevatedDp = 12f)
-        ThemeController.applyGlassDepth(saveButton, elevatedDp = 10f)
-        ThemeController.applyGlassDepth(cancelButton, elevatedDp = 8f)
+        ThemeController.applyGlassDepth(saveButton, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(cancelButton, elevatedDp = 0f)
     }
 }

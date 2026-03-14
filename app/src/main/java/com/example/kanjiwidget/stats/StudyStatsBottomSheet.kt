@@ -252,9 +252,9 @@ class StudyStatsBottomSheet(
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsSheetRoot), elevatedDp = 20f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsSummaryCard), elevatedDp = 10f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsRankingCard), elevatedDp = 10f)
-        ThemeController.applyGlassDepth(btnRange7, elevatedDp = 8f)
-        ThemeController.applyGlassDepth(btnRange30, elevatedDp = 8f)
-        ThemeController.applyGlassDepth(btnRankingAll, elevatedDp = 8f)
-        ThemeController.applyGlassDepth(btnRanking30, elevatedDp = 8f)
+        ThemeController.applyGlassDepth(btnRange7, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(btnRange30, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(btnRankingAll, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(btnRanking30, elevatedDp = 0f)
     }
 }

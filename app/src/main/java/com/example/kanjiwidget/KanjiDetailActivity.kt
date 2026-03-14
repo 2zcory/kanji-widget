@@ -597,7 +597,7 @@ class KanjiDetailActivity : ThemedActivity() {
         ThemeController.applyGlassDepth(findViewById(R.id.sectionTodayStats), elevatedDp = 12f)
         ThemeController.applyGlassDepth(findViewById(R.id.sectionMeaning), elevatedDp = 12f)
         ThemeController.applyGlassDepth(findViewById(R.id.sectionNote), elevatedDp = 12f)
-        ThemeController.applyGlassDepth(nextRandomButton, elevatedDp = 10f)
-        ThemeController.applyGlassDepth(replayButton, elevatedDp = 8f)
+        ThemeController.applyGlassDepth(nextRandomButton, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(replayButton, elevatedDp = 0f)
     }
 }

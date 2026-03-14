@@ -211,7 +211,7 @@ class MainActivity : ThemedActivity() {
         dialog.findViewById<Button>(R.id.btnWidgetHelpClose).setOnClickListener { dialog.dismiss() }
         dialog.show()
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.dialogWidgetHelpRoot), elevatedDp = 30f)
-        ThemeController.applyGlassDepth(dialog.findViewById(R.id.btnWidgetHelpClose), elevatedDp = 8f)
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.btnWidgetHelpClose), elevatedDp = 0f)
     }
 
     private fun cycleWidgetOpacity() {
@@ -366,8 +366,8 @@ class MainActivity : ThemedActivity() {
 
         dialog.show()
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.dialogLanguageRoot), elevatedDp = 30f)
-        ThemeController.applyGlassDepth(applyButton, elevatedDp = 8f)
-        ThemeController.applyGlassDepth(cancelButton, elevatedDp = 6f)
+        ThemeController.applyGlassDepth(applyButton, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(cancelButton, elevatedDp = 0f)
     }
 
     private fun showThemeDialog() {
@@ -416,8 +416,8 @@ class MainActivity : ThemedActivity() {
 
         dialog.show()
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.dialogThemeRoot), elevatedDp = 30f)
-        ThemeController.applyGlassDepth(applyButton, elevatedDp = 8f)
-        ThemeController.applyGlassDepth(cancelButton, elevatedDp = 6f)
+        ThemeController.applyGlassDepth(applyButton, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(cancelButton, elevatedDp = 0f)
     }
 
     private fun updateThemeSummary() {
@@ -468,13 +468,13 @@ class MainActivity : ThemedActivity() {
         ThemeController.applyGlassDepth(findViewById(R.id.sectionWidgetControls), elevatedDp = 7f)
         ThemeController.applyGlassDepth(findViewById(R.id.sectionTheme), elevatedDp = 7f)
         ThemeController.applyGlassDepth(findViewById(R.id.sectionLanguage), elevatedDp = 7f)
-        ThemeController.applyGlassDepth(primaryStudyActionButton, elevatedDp = 10f)
-        ThemeController.applyGlassDepth(openRandomButton, elevatedDp = 6f)
-        ThemeController.applyGlassDepth(statsButton, elevatedDp = 6f)
-        ThemeController.applyGlassDepth(widgetOpacityButton, elevatedDp = 6f)
-        ThemeController.applyGlassDepth(themeButton, elevatedDp = 6f)
-        ThemeController.applyGlassDepth(languageButton, elevatedDp = 6f)
-        ThemeController.applyGlassDepth(findViewById(R.id.btnWidgetHelp), elevatedDp = 6f)
+        ThemeController.applyGlassDepth(primaryStudyActionButton, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(openRandomButton, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(statsButton, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(widgetOpacityButton, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(themeButton, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(languageButton, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(findViewById(R.id.btnWidgetHelp), elevatedDp = 0f)
     }
 
     private fun createOverlayDialog(layoutRes: Int): Dialog {
