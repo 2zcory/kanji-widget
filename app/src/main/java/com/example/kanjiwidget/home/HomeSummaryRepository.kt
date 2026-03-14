@@ -7,6 +7,9 @@ import com.example.kanjiwidget.history.RecentKanjiStore
 import com.example.kanjiwidget.stats.StudyTimeTracker
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 import com.example.kanjiwidget.widget.KanjiAppWidgetProvider
+import com.example.kanjiwidget.widget.localizeMeaningIfNeededAsync
+import com.example.kanjiwidget.widget.needsVietnameseMeaning
+import com.example.kanjiwidget.widget.resolveDisplayMeaning
 
 class HomeSummaryRepository(private val context: Context) {
 
@@ -16,7 +19,7 @@ class HomeSummaryRepository(private val context: Context) {
             RecentKanjiSummaryItem(
                 kanji = historyItem.kanji,
                 viewedAt = historyItem.viewedAt,
-                meaning = entry?.meaningVi,
+                meaning = resolveDisplayMeaning(context, entry),
                 jlpt = entry?.jlptLevel,
             )
         }
@@ -37,6 +40,20 @@ class HomeSummaryRepository(private val context: Context) {
             recentKanji = recentItems,
             showWidgetHelp = showWidgetHelp,
         )
+    }
+
+    fun backfillVietnameseMeaningsIfNeeded(onUpdated: () -> Unit) {
+        val recentKanji = RecentKanjiStore.getRecentKanji(context)
+            .map { it.kanji }
+            .distinct()
+
+        recentKanji.forEach { kanji ->
+            val entry = KanjiWidgetPrefs.getRemoteEntry(context, kanji) ?: return@forEach
+            if (!needsVietnameseMeaning(context, entry)) return@forEach
+            localizeMeaningIfNeededAsync(context, kanji, entry) {
+                onUpdated()
+            }
+        }
     }
 
     private fun hasInstalledWidget(): Boolean {

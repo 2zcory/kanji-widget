@@ -3,6 +3,7 @@ package com.example.kanjiwidget.detail
 import android.content.Context
 import com.example.kanjiwidget.widget.KanjiApiClient
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
+import com.example.kanjiwidget.widget.localizeCompoundMeaningsIfNeeded
 
 class KanjiCompoundRepository(
     private val context: Context,
@@ -19,13 +20,14 @@ class KanjiCompoundRepository(
 
     fun refreshCompounds(kanji: String): List<KanjiCompoundEntry>? {
         val fetched = KanjiApiClient.fetchKanjiCompounds(kanji) ?: return null
+        val localized = localizeCompoundMeaningsIfNeeded(context, fetched)
         KanjiWidgetPrefs.saveCompoundEntries(
             context = context,
             kanji = kanji,
-            entries = fetched,
+            entries = localized,
             savedAtEpochMs = nowProvider(),
         )
-        return fetched
+        return localized
     }
 
     companion object {
@@ -65,6 +67,7 @@ internal fun selectDisplayCompounds(
                 written = raw.written,
                 reading = raw.reading,
                 meaning = raw.meaning,
+                meaningVi = null,
                 usageHintKey = deriveUsageHintKey(raw.priorities, raw.meaning),
                 priorities = raw.priorities,
             )

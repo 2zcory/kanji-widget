@@ -9,10 +9,11 @@ Last updated: 2026-03-13
 - Provide an in-app language selector while still honoring system locale by default.
 - Keep widget-first UX readable and concise across locales.
 
-## Non-Goals (Initial Slice)
+## Non-Goals (Current Scope)
 
-- Translating external API content (kanji meanings, readings, examples) that is already language-specific.
-- Automatic translation of user-generated or cached content.
+- Translating readings or compound-example text into additional languages.
+- Automatic translation of user-generated note content.
+- Replacing the current kanji content provider with a multilingual dictionary source in the same slice.
 
 ## Locale Strategy
 
@@ -21,6 +22,16 @@ Last updated: 2026-03-13
 - Future locales added via `values-xx/` folders and the same string keys.
 - Use Android `plurals` for any quantity-sensitive strings.
 - Use locale-aware formatting for dates/times and numeric units.
+
+## External Content Localization
+
+- UI strings continue to come from Android resources.
+- Raw kanji meanings currently come from `kanjiapi.dev` and should be treated as source-language content, not pre-localized Vietnamese content.
+- The first Vietnamese-meaning slice should preserve the source meaning separately from any localized Vietnamese meaning stored on device.
+- When the app locale is Vietnamese, app surfaces should prefer the cached Vietnamese meaning when available.
+- When the Vietnamese localized meaning is missing or not ready yet, the app may render the source meaning as a fallback and backfill the localized cache asynchronously.
+- English mode should continue to render the source meaning directly.
+- For compact gloss lists, prefer translating the normalized whole meaning phrase instead of isolated fragments so the Vietnamese result reads more naturally.
 
 ## In-App Language Selector
 

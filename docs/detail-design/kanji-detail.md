@@ -179,6 +179,7 @@ V2 first-slice direction:
 - each compound row should feel easier to scan when several rows are visible in sequence
 - written form, reading, meaning, and usage hint should keep a clear visual hierarchy
 - playback affordances should remain visible but lightweight
+- when the app locale is Vietnamese, compound meanings should prefer a cached Vietnamese localized meaning and fall back gracefully to the source meaning until the localized cache is ready
 
 ### Today section
 
@@ -249,6 +250,13 @@ Current behavior:
 Reason:
 - keeps the detail-screen contract stable across multiple launch surfaces
 - avoids duplicating detail-intent assembly logic in each caller
+
+### Localized meaning behavior
+
+For the Vietnamese-meaning first slice:
+- keep the raw source meaning separate from the Vietnamese localized meaning cache
+- resolve display meaning through one locale-aware formatter instead of binding directly to the raw cache field
+- if a cached entry only has the source meaning, the detail screen may render fallback content first and then refresh after the Vietnamese localized cache is written
 
 ## Main Interaction Diagram
 

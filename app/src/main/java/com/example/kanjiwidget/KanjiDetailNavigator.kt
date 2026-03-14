@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.example.kanjiwidget.widget.buildNoteText
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
+import com.example.kanjiwidget.widget.resolveDisplayMeaning
 
 object KanjiDetailNavigator {
 
@@ -23,7 +24,10 @@ object KanjiDetailNavigator {
             putExtra(KanjiDetailActivity.EXTRA_JLPT, entry?.jlptLevel ?: jlptFallback)
             putExtra(KanjiDetailActivity.EXTRA_ONYOMI, entry?.onyomi)
             putExtra(KanjiDetailActivity.EXTRA_KUNYOMI, entry?.kunyomi)
-            putExtra(KanjiDetailActivity.EXTRA_MEANING, entry?.meaningVi ?: meaningFallback)
+            putExtra(
+                KanjiDetailActivity.EXTRA_MEANING,
+                resolveDisplayMeaning(context, entry) ?: meaningFallback
+            )
             putExtra(KanjiDetailActivity.EXTRA_NOTE, buildNoteText(context, entry))
             putExtra(KanjiDetailActivity.EXTRA_STROKE_COUNT, entry?.strokeCount ?: 0)
             putExtra(KanjiDetailActivity.EXTRA_GRADE, entry?.grade ?: 0)

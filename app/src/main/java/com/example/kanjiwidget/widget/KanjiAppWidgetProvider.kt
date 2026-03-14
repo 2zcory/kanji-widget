@@ -111,6 +111,27 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             )
         }
 
+        private fun enqueueMeaningLocalization(context: Context, kanji: String) {
+            val request = OneTimeWorkRequestBuilder<KanjiMeaningLocalizationWorker>()
+                .setInputData(
+                    Data.Builder()
+                        .putString(KanjiMeaningLocalizationWorker.KEY_KANJI, kanji)
+                        .build()
+                )
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build()
+                )
+                .build()
+
+            WorkManager.getInstance(context).enqueueUniqueWork(
+                "localize_meaning_$kanji",
+                ExistingWorkPolicy.KEEP,
+                request
+            )
+        }
+
         fun renderWidget(context: Context, manager: AppWidgetManager, widgetId: Int) {
             val localizedContext = ContextCompat.getContextForLanguage(context)
             val shouldRotateForNewDay = KanjiWidgetPrefs.shouldRotateForNewDay(context, widgetId)
@@ -124,6 +145,9 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             val item = currentKanji?.let { KanjiWidgetPrefs.getRemoteEntry(context, it) }
             val revealAnswer = KanjiWidgetPrefs.getRevealAnswer(context, widgetId)
             val hasLoadedEntry = item != null
+            if (item != null && needsVietnameseMeaning(localizedContext, item)) {
+                enqueueMeaningLocalization(context, item.kanji)
+            }
             val sizeClass = resolveSizeClass(manager, widgetId)
 
             val layoutId = when (sizeClass) {
@@ -197,7 +221,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             val detailIntent = KanjiDetailNavigator.buildDetailIntent(
                 context = localizedContext,
                 kanji = item?.kanji ?: currentKanji.orEmpty(),
-                meaningFallback = item?.meaningVi,
+                meaningFallback = resolveDisplayMeaning(localizedContext, item),
                 jlptFallback = item?.jlptLevel,
             )
             val detailPi = PendingIntent.getActivity(
@@ -385,7 +409,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
         }
 
         private fun resolveMeaning(context: Context, item: KanjiEntry): String {
-            return normalizeMeaning(item.meaningVi)
+            return resolveDisplayMeaning(context, item)
                 ?: context.getString(R.string.widget_meaning_missing)
         }
 
