@@ -1,6 +1,7 @@
 package com.example.kanjiwidget
 
 import androidx.appcompat.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -8,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
@@ -341,26 +344,58 @@ class MainActivity : ThemedActivity() {
 
     private fun showThemeDialog() {
         val modes = AppThemeMode.entries.toTypedArray()
-        val options = arrayOf(
-            getString(R.string.theme_option_system),
-            getString(R.string.theme_option_light),
-            getString(R.string.theme_option_dark),
-            getString(R.string.theme_option_glass),
+        val currentMode = KanjiWidgetPrefs.getAppThemeMode(this)
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_theme_picker)
+        dialog.setCanceledOnTouchOutside(true)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.92f).toInt(),
+            LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        val currentIndex = modes.indexOf(KanjiWidgetPrefs.getAppThemeMode(this))
-        val dialog = AlertDialog.Builder(this)
-            .setTitle(R.string.theme_dialog_title)
-            .setSingleChoiceItems(options, currentIndex) { dialog, which ->
-                val didChange = ThemeController.updateThemeSelection(this, modes[which])
-                dialog.dismiss()
-                if (didChange) {
-                    updateThemeSummary()
-                    recreate()
+
+        val group = dialog.findViewById<RadioGroup>(R.id.groupThemeOptions)
+        val cancelButton = dialog.findViewById<Button>(R.id.btnThemeDialogCancel)
+        val applyButton = dialog.findViewById<Button>(R.id.btnThemeDialogApply)
+
+        modes.forEach { mode ->
+            val option = RadioButton(this).apply {
+                id = View.generateViewId()
+                text = when (mode) {
+                    AppThemeMode.SYSTEM -> getString(R.string.theme_option_system)
+                    AppThemeMode.LIGHT -> getString(R.string.theme_option_light)
+                    AppThemeMode.DARK -> getString(R.string.theme_option_dark)
+                    AppThemeMode.GLASS -> getString(R.string.theme_option_glass)
                 }
+                tag = mode
+                textSize = 18f
+                setTextColor(ThemeController.resolveColor(this@MainActivity, R.attr.colorTextPrimary))
+                buttonTintList = android.content.res.ColorStateList.valueOf(
+                    ThemeController.resolveColor(this@MainActivity, R.attr.colorAccentMain)
+                )
+                setPadding(0, 18, 0, 18)
+                isChecked = mode == currentMode
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+            group.addView(option)
+        }
+
+        cancelButton.setOnClickListener { dialog.dismiss() }
+        applyButton.setOnClickListener {
+            val selected = dialog.findViewById<RadioButton>(group.checkedRadioButtonId)
+            val selectedMode = selected?.tag as? AppThemeMode ?: currentMode
+            val didChange = ThemeController.updateThemeSelection(this, selectedMode)
+            dialog.dismiss()
+            if (didChange) {
+                updateThemeSummary()
+                recreate()
+            }
+        }
+
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.dialogThemeRoot), elevatedDp = 30f)
+        ThemeController.applyGlassDepth(applyButton, elevatedDp = 8f)
+        ThemeController.applyGlassDepth(cancelButton, elevatedDp = 6f)
         ThemeController.styleDialog(dialog)
+        dialog.show()
     }
 
     private fun updateThemeSummary() {

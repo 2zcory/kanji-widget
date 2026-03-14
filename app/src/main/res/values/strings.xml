@@ -111,6 +111,7 @@
     <string name="theme_section_title">APPEARANCE</string>
     <string name="theme_section_body">Choose how the app should look. Glass adds translucent layered surfaces and modern motion across in-app screens.</string>
     <string name="theme_action_change">Change theme</string>
+    <string name="theme_action_apply">Apply</string>
     <string name="theme_dialog_title">App theme</string>
     <string name="theme_option_system">System</string>
     <string name="theme_option_light">Light</string>

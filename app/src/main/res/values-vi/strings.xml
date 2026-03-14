@@ -111,6 +111,7 @@
     <string name="theme_section_title">GIAO DIỆN</string>
     <string name="theme_section_body">Chọn cách hiển thị cho ứng dụng. Glass thêm các lớp nền trong mờ và chuyển động hiện đại trên toàn bộ màn hình trong app.</string>
     <string name="theme_action_change">Đổi theme</string>
+    <string name="theme_action_apply">Áp dụng</string>
     <string name="theme_dialog_title">Theme ứng dụng</string>
     <string name="theme_option_system">Hệ thống</string>
     <string name="theme_option_light">Sáng</string>
