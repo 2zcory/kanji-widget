@@ -5,8 +5,10 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.RadioButton
@@ -350,9 +352,10 @@ class MainActivity : ThemedActivity() {
         dialog.setCanceledOnTouchOutside(true)
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog.window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.92f).toInt(),
-            LinearLayout.LayoutParams.WRAP_CONTENT
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT
         )
+        dialog.window?.setGravity(Gravity.CENTER)
 
         val group = dialog.findViewById<RadioGroup>(R.id.groupThemeOptions)
         val cancelButton = dialog.findViewById<Button>(R.id.btnThemeDialogCancel)
@@ -373,7 +376,7 @@ class MainActivity : ThemedActivity() {
                 buttonTintList = android.content.res.ColorStateList.valueOf(
                     ThemeController.resolveColor(this@MainActivity, R.attr.colorAccentMain)
                 )
-                setPadding(0, 18, 0, 18)
+                setPadding(0, 10, 0, 10)
                 isChecked = mode == currentMode
             }
             group.addView(option)
