@@ -45,6 +45,7 @@ class WidgetConfigurationActivity : ThemedActivity() {
         presetsGroup = findViewById(R.id.groupWidgetOpacityPresets)
         saveButton = findViewById(R.id.btnWidgetConfigSave)
         cancelButton = findViewById(R.id.btnWidgetConfigCancel)
+        applyDepthStyling()
 
         titleView.text = getString(R.string.widget_config_title)
         bodyView.text = getString(R.string.widget_config_body)
@@ -98,5 +99,12 @@ class WidgetConfigurationActivity : ThemedActivity() {
         val manager = AppWidgetManager.getInstance(this)
         KanjiAppWidgetProvider().onUpdate(this, manager, intArrayOf(appWidgetId))
         finish()
+    }
+
+    private fun applyDepthStyling() {
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionWidgetConfigHero), elevatedDp = 18f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionWidgetConfigOptions), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(saveButton, elevatedDp = 10f)
+        ThemeController.applyGlassDepth(cancelButton, elevatedDp = 8f)
     }
 }

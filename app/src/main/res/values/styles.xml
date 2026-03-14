@@ -66,8 +66,9 @@
     </style>
 
     <style name="ThemeOverlay.KanjiWidget.AlertDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
-        <item name="android:windowBackground">@drawable/bg_detail_card</item>
-        <item name="android:backgroundDimAmount">0.12</item>
+        <item name="android:windowBackground">@drawable/bg_dialog_surface</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimAmount">0</item>
         <item name="android:windowElevation">24dp</item>
     </style>
 

@@ -1,6 +1,7 @@
 package com.example.kanjiwidget.theme
 
 import android.app.Activity
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -12,6 +13,10 @@ import com.example.kanjiwidget.R
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 
 object ThemeController {
+    fun isGlassMode(context: Context): Boolean {
+        return KanjiWidgetPrefs.getAppThemeMode(context) == AppThemeMode.GLASS
+    }
+
     fun applyTheme(activity: AppCompatActivity) {
         val mode = KanjiWidgetPrefs.getAppThemeMode(activity)
         AppCompatDelegate.setDefaultNightMode(mode.toNightMode())
@@ -36,6 +41,12 @@ object ThemeController {
         val content = activity.findViewById<ViewGroup>(android.R.id.content)
         val root = content.getChildAt(0) ?: return
         root.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.theme_screen_enter))
+    }
+
+    fun applyGlassDepth(view: View?, elevatedDp: Float, defaultDp: Float = 0f) {
+        if (view == null) return
+        val targetDp = if (isGlassMode(view.context)) elevatedDp else defaultDp
+        view.elevation = targetDp * view.resources.displayMetrics.density
     }
 
     @ColorInt

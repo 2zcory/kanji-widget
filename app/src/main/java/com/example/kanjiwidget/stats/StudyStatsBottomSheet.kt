@@ -89,6 +89,7 @@ class StudyStatsBottomSheet(
 
         bindRange(7)
         bindRanking(RankingScope.ALL_TIME)
+        applyDepthStyling(dialog)
         dialog.show()
     }
 
@@ -178,6 +179,7 @@ class StudyStatsBottomSheet(
             row.findViewById<TextView>(R.id.tvRankingDuration).text =
                 activity.formatDurationForUi(item.totalStudyMs)
             row.setOnClickListener { activity.startActivity(buildDetailIntent(item)) }
+            ThemeController.applyGlassDepth(row.findViewById(R.id.rankingItemRoot), elevatedDp = 8f)
             container.addView(row)
         }
     }
@@ -244,5 +246,15 @@ class StudyStatsBottomSheet(
 
     private fun currentLocale(): Locale {
         return activity.resources.configuration.locales[0]
+    }
+
+    private fun applyDepthStyling(dialog: Dialog) {
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsSheetRoot), elevatedDp = 20f)
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsSummaryCard), elevatedDp = 10f)
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsRankingCard), elevatedDp = 10f)
+        ThemeController.applyGlassDepth(btnRange7, elevatedDp = 8f)
+        ThemeController.applyGlassDepth(btnRange30, elevatedDp = 8f)
+        ThemeController.applyGlassDepth(btnRankingAll, elevatedDp = 8f)
+        ThemeController.applyGlassDepth(btnRanking30, elevatedDp = 8f)
     }
 }

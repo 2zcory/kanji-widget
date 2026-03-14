@@ -55,17 +55,17 @@
     <color name="kw_dark_chart_bar_faint">#337BC7B7</color>
     <color name="kw_dark_drag_handle">#53697A</color>
 
-    <color name="kw_glass_screen_start">#F6FBFF</color>
-    <color name="kw_glass_screen_end">#D8E9F6</color>
-    <color name="kw_glass_hero_start">#F2FFFFFF</color>
-    <color name="kw_glass_hero_end">#D9EAF7FF</color>
-    <color name="kw_glass_surface_card">#E8FFFFFF</color>
-    <color name="kw_glass_surface_panel">#DCF7FBFF</color>
+    <color name="kw_glass_screen_start">#F3F8FF</color>
+    <color name="kw_glass_screen_end">#CFE2F3</color>
+    <color name="kw_glass_hero_start">#FFFFFFFF</color>
+    <color name="kw_glass_hero_end">#E9F4FFFF</color>
+    <color name="kw_glass_surface_card">#F6FCFFFF</color>
+    <color name="kw_glass_surface_panel">#EEF8FDFF</color>
     <color name="kw_glass_surface_canvas">#CCF6FBFF</color>
-    <color name="kw_glass_surface_elevated">#FCFFFFFF</color>
+    <color name="kw_glass_surface_elevated">#FFFFFFFF</color>
     <color name="kw_glass_surface_inline">#F0FFFFFF</color>
-    <color name="kw_glass_stroke_strong">#C2FFFFFF</color>
-    <color name="kw_glass_stroke_soft">#94D8E6F2</color>
+    <color name="kw_glass_stroke_strong">#D8FFFFFF</color>
+    <color name="kw_glass_stroke_soft">#B5D6E7F3</color>
     <color name="kw_glass_text_primary">#10253A</color>
     <color name="kw_glass_text_secondary">#294257</color>
     <color name="kw_glass_text_muted">#53677A</color>

@@ -12,10 +12,10 @@
         android:padding="16dp">
 
         <LinearLayout
+            android:id="@+id/sectionDetailHero"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_detail_hero"
-            android:elevation="12dp"
             android:gravity="top"
             android:orientation="horizontal"
             android:padding="20dp">
@@ -70,6 +70,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/sectionStrokeCanvas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -149,7 +150,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_detail_button"
-                    android:elevation="10dp"
                     android:text="@string/stroke_order_next_random"
                     android:textAllCaps="false"
                     android:textColor="?attr/colorPrimaryButtonText"
@@ -161,7 +161,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_detail_button_secondary"
-                    android:elevation="8dp"
                     android:text="@string/stroke_order_replay"
                     android:textAllCaps="false"
                     android:textColor="?attr/colorSecondaryButtonText"
@@ -170,6 +169,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/sectionReadings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -262,7 +262,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
-            android:elevation="10dp"
             android:orientation="vertical"
             android:padding="16dp"
             android:visibility="gone">
@@ -292,11 +291,11 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/sectionTodayStats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
-            android:elevation="10dp"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -397,11 +396,11 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/sectionMeaning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
-            android:elevation="10dp"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -424,11 +423,11 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/sectionNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
-            android:elevation="10dp"
             android:orientation="vertical"
             android:padding="16dp">
 

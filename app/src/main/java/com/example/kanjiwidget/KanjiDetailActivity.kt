@@ -18,6 +18,7 @@ import com.example.kanjiwidget.detail.KanjiSpeechController
 import com.example.kanjiwidget.detail.UsageHintKey
 import com.example.kanjiwidget.history.RecentKanjiStore
 import com.example.kanjiwidget.stats.StudyTimeTracker
+import com.example.kanjiwidget.theme.ThemeController
 import com.example.kanjiwidget.widget.KanjiApiClient
 import com.example.kanjiwidget.widget.KanjiStrokeOrderClient
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
@@ -92,6 +93,7 @@ class KanjiDetailActivity : ThemedActivity() {
         todayKanjiView = findViewById(R.id.tvTodayStudyKanji)
         compoundsSection = findViewById(R.id.sectionCompoundExamples)
         compoundsContainer = findViewById(R.id.containerCompoundExamples)
+        applyDepthStyling()
 
         val kanji = intent.getStringExtra(EXTRA_KANJI)?.trim().orEmpty()
         currentKanji = kanji
@@ -516,6 +518,7 @@ class KanjiDetailActivity : ThemedActivity() {
                     }
                 }
             )
+            ThemeController.applyGlassDepth(row.findViewById(R.id.compoundExampleRoot), elevatedDp = 8f)
             row.alpha = 0f
             row.translationY = 18f
             compoundsContainer.addView(row)
@@ -584,5 +587,17 @@ class KanjiDetailActivity : ThemedActivity() {
             UsageHintKey.REFERENCE_TERM -> getString(R.string.compound_usage_reference_term)
             UsageHintKey.STUDY_WORD -> getString(R.string.compound_usage_study_word)
         }
+    }
+
+    private fun applyDepthStyling() {
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionDetailHero), elevatedDp = 18f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionStrokeCanvas), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionReadings), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionCompoundExamples), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionTodayStats), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionMeaning), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionNote), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(nextRandomButton, elevatedDp = 10f)
+        ThemeController.applyGlassDepth(replayButton, elevatedDp = 8f)
     }
 }

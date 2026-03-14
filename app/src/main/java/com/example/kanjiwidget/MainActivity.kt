@@ -71,6 +71,7 @@ class MainActivity : ThemedActivity() {
         themeButton = findViewById(R.id.btnTheme)
         languageValue = findViewById(R.id.tvLanguageValue)
         languageButton = findViewById(R.id.btnLanguage)
+        applyDepthStyling()
 
         findViewById<Button>(R.id.btnWidgetHelp).setOnClickListener {
             showWidgetHelpDialog()
@@ -275,6 +276,7 @@ class MainActivity : ThemedActivity() {
                 item.meaning ?: getString(R.string.home_latest_meaning_placeholder)
             row.findViewById<TextView>(R.id.tvRecentMeta).text = buildRecentMeta(item)
             row.setOnClickListener { startActivity(buildDetailIntent(item)) }
+            ThemeController.applyGlassDepth(row.findViewById(R.id.recentKanjiItemRoot), elevatedDp = 8f)
             row.alpha = 0f
             row.translationY = 20f
             recentKanjiContainer.addView(row)
@@ -397,5 +399,21 @@ class MainActivity : ThemedActivity() {
         KanjiAppWidgetProvider.refreshAllWidgets(this)
         updateLanguageSummary()
         recreate()
+    }
+
+    private fun applyDepthStyling() {
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionHero), elevatedDp = 18f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionContinueLearning), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionRecentKanji), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionWidgetControls), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionTheme), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionLanguage), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(primaryStudyActionButton, elevatedDp = 10f)
+        ThemeController.applyGlassDepth(openRandomButton, elevatedDp = 8f)
+        ThemeController.applyGlassDepth(statsButton, elevatedDp = 8f)
+        ThemeController.applyGlassDepth(widgetOpacityButton, elevatedDp = 8f)
+        ThemeController.applyGlassDepth(themeButton, elevatedDp = 8f)
+        ThemeController.applyGlassDepth(languageButton, elevatedDp = 8f)
+        ThemeController.applyGlassDepth(findViewById(R.id.btnWidgetHelp), elevatedDp = 8f)
     }
 }
