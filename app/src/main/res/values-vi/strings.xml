@@ -51,6 +51,7 @@
     <string name="home_action_today_stats">Xem thống kê</string>
     <string name="home_action_widget_help">Hướng dẫn thêm widget</string>
     <string name="home_action_widget_opacity">Đổi độ trong suốt</string>
+    <string name="home_action_open_settings">Mở cài đặt</string>
     <string name="home_hero_body_with_latest">Tiếp tục đúng chỗ bạn vừa dừng lại, rồi dùng các phần bên dưới để mở lại nhanh hoặc chỉnh các điều khiển gọn nhẹ.</string>
     <string name="home_hero_body_no_latest">Chưa có kanji gần đây. Hãy bắt đầu từ hướng dẫn widget hoặc mở một kanji ngẫu nhiên để tạo đà học.</string>
     <string name="home_hero_body_no_widget">Thêm widget để có vòng review nhanh nhất, rồi quay lại đây khi bạn muốn xem tóm tắt và điều khiển nhanh.</string>
@@ -68,6 +69,8 @@
     <string name="home_widget_help_dialog_message">1. Nhấn giữ vào vùng trống trên home screen.\n2. Chọn Widgets.\n3. Tìm Kanji Widget.\n4. Kéo widget ra màn hình chính.</string>
     <string name="home_widget_opacity_body" formatted="false">Áp dụng cho độ trong suốt mặc định dùng chung. Khi thêm widget mới, bạn có thể ghi đè theo từng widget. Bấm để chuyển qua các mức 100%, 85%, 70%, 55%, 40%.</string>
     <string name="home_widget_opacity_value">%1$d%%</string>
+    <string name="home_settings_title">CÀI ĐẶT</string>
+    <string name="home_settings_body">Theme, ngôn ngữ, và điều khiển widget giờ nằm trong một màn hình riêng để launcher gọn hơn và tập trung vào việc học.</string>
     <string name="home_action_open_random_disabled">Chưa có deck để chọn ngẫu nhiên</string>
     <string name="widget_config_title">Thiết lập widget</string>
     <string name="widget_config_body">Chọn sẵn một mức độ trong suốt nền trước khi widget được thêm. Bạn có thể làm widget này khác các widget cũ mà không phải đổi tất cả cùng lúc.</string>
@@ -118,6 +121,10 @@
     <string name="theme_option_light">Sáng</string>
     <string name="theme_option_dark">Tối</string>
     <string name="theme_option_glass">Glass</string>
+    <string name="settings_section_label">TIỆN ÍCH</string>
+    <string name="settings_title">Cài đặt</string>
+    <string name="settings_subtitle">Theme, ngôn ngữ, và các điều khiển widget dùng chung nằm ở đây để màn hình chính tập trung hơn vào luồng học.</string>
+    <string name="settings_action_back">Quay lại</string>
 
     <string name="bullet_separator"> • </string>
     <string name="jlpt_format">JLPT %1$s</string>

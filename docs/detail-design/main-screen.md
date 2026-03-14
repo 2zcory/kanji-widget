@@ -27,8 +27,7 @@ The screen should help users:
 - install or use the widget
 - continue learning from the latest kanji or a random kanji
 - review today’s learning activity
-- adjust a small set of widget appearance preferences
-- choose the in-app theme direction
+- open a lightweight settings screen for non-study controls
 
 ## Scope
 
@@ -103,65 +102,24 @@ First-slice direction:
 - improve row hierarchy so the Kanji and its metadata are easier to scan
 - avoid promoting the first recent item as a second primary action when the hero already owns that role
 
-### 4. Widget Controls Section
+### 4. Settings Entry Section
 
 Contents:
-- widget state summary text
-- current widget background opacity value
-- one tap action to cycle through supported opacity presets
-- action to open widget setup instructions
+- short explanation that app controls now live in a separate screen
+- one clear entry button to open settings
 
 Purpose:
-- keep widget controls near the learning hub without turning the main screen into a full settings page
-- support both installed-widget and missing-widget states in one place
+- keep the main screen focused on learning and summary content
+- preserve access to utility controls without stacking multiple low-priority cards below the main study sections
 
 First-slice direction:
-- keep this section clearly secondary to study actions
-- use shorter copy and stronger state-specific emphasis when the widget is missing
-
-Current v1 behavior:
-- opacity is global across all active widget instances
-- the action cycles through preset levels rather than exposing a slider
-
-### 5. Appearance Section
-
-Contents:
-- short explanation of theme behavior
-- current selected app theme label
-- action to open the theme picker
-
-Purpose:
-- let users switch between `System`, `Light`, `Dark`, and `Glass` without introducing a separate settings screen
-- keep theme control near the existing launcher utility sections
-
-First-slice direction:
-- keep the section lightweight and consistent with the existing card stack
-- make `Glass` feel like a distinct style direction rather than a simple tint swap
+- keep this section visually quieter than the learning-focused cards above it
+- expose only one launcher entry instead of multiple settings cards
 
 Behavior:
-- the selected theme persists locally
-- changing theme recreates the current screen so all in-app surfaces update together
-- the first slice applies to in-app screens only; the home screen widget visuals remain unchanged
-
-### 6. Language Section
-
-Contents:
-- short description that language can follow the system or be overridden
-- current app language label
-- action to open the language picker
-
-Purpose:
-- allow quick language switching without adding a full settings screen
-- keep the control lightweight and consistent with the widget-first launcher flow
-
-First-slice direction:
-- keep the section visually quieter than the learning-focused blocks above it
-- preserve simple one-tap access without expanding into a full settings surface
-
-Behavior:
-- default selection is system language
-- selection updates the app locale via AppCompat per-app language APIs
-- changing language refreshes the launcher screen and active widgets
+- tapping the entry opens a dedicated `SettingsActivity`
+- the main screen no longer directly hosts widget-opacity, theme, or language controls
+- the settings screen becomes the home for widget utility actions and in-app appearance controls
 
 ## User Flow
 
@@ -172,12 +130,12 @@ Behavior:
 3. Main screen emphasizes how to add the home screen widget
 4. User returns to the launcher and adds the widget
 
-### Flow D: Adjust widget opacity
+### Flow D: Open settings
 
 1. User opens app
-2. User taps the widget opacity action
-3. App cycles to the next supported opacity preset
-4. Active widget instances rerender with the new background opacity
+2. User taps the settings entry
+3. App opens `SettingsActivity`
+4. User changes theme, language, widget opacity, or opens widget setup help from that screen
 
 ### Flow B: Returning user
 
@@ -204,15 +162,9 @@ flowchart TD
     F -- No --> H[Hero falls back to setup or discovery guidance]
     A --> I[User opens stats]
     I --> J[Show stats bottom sheet]
-    A --> K[User changes widget opacity]
-    K --> L[Persist global opacity]
-    L --> M[Refresh active widgets]
-    A --> N[User changes app theme]
-    N --> O[Persist theme and recreate current screen]
-    O --> P[Reinflate in-app surfaces with the selected theme]
-    A --> Q[User changes app language]
-    Q --> R[Update AppCompat locale]
-    R --> S[Refresh main screen and widgets]
+    A --> K[User opens settings]
+    K --> L[Launch SettingsActivity]
+    L --> M[User changes theme, language, or widget utility controls]
 ```
 
 ## Behavior Rules
@@ -239,18 +191,18 @@ If study data exists:
 - prioritize one-tap continuation through the hero CTA
 - keep recent-history and utility sections secondary in visual emphasis
 
-### Widget opacity rule
+### Settings entry rule
 
-The launcher exposes a lightweight widget opacity control.
+The launcher exposes one lightweight navigation point for settings-oriented controls.
 
 Current behavior:
-- store one shared default opacity value for the widget background surface
-- support preset values `100%`, `85%`, `70%`, `55%`, and `40%`
-- rerender active widget instances immediately after the value changes so widgets still using the shared default update in place
+- the main screen no longer hosts dedicated cards for widget opacity, theme, or language
+- one settings entry opens the dedicated settings screen
+- the settings screen holds the shared widget-opacity control, theme picker, language picker, and widget-help action
 
 Reason:
-- the main screen remains a lightweight shared-default control
-- widget-specific overrides can now be introduced during placement without turning the main screen into a heavier settings surface
+- the main screen stays aligned with its learning-hub role
+- utility controls remain available without diluting the main study hierarchy
 
 ### Widget detection rule
 
@@ -271,7 +223,7 @@ Behavior:
 Suggested destinations from the main screen:
 - detail screen for the most recently viewed kanji
 - a lightweight stats bottom sheet
-- widget setup instructions
+- dedicated settings screen for theme, language, and widget utility controls
 
 Navigation style:
 - simple explicit buttons or cards
@@ -335,7 +287,7 @@ Current implementation path:
 - `MainActivity` is a layout-based activity
 - summary fields are populated through a single repository-owned summary model
 - keep business logic separate from the activity
-- allow `MainActivity` to directly handle lightweight widget appearance preferences until a dedicated settings or repository layer is introduced
+- keep `MainActivity` focused on study and summary concerns while `SettingsActivity` owns utility controls
 
 Primary files:
 - `app/src/main/res/layout/activity_main.xml`
