@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kanjiwidget.home.HomeSummary
 import com.example.kanjiwidget.home.RecentKanjiSummaryItem
 import com.example.kanjiwidget.home.HomeSummaryRepository
@@ -17,6 +18,15 @@ import com.example.kanjiwidget.theme.ThemeController
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 
 class MainActivity : ThemedActivity() {
+    private val settingsLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val changed = result.data?.getBooleanExtra(SettingsActivity.EXTRA_SETTINGS_CHANGED, false) == true
+        if (result.resultCode == RESULT_OK && changed) {
+            recreate()
+        }
+    }
+
     private lateinit var repository: HomeSummaryRepository
     private lateinit var studyStatsRepository: StudyStatsRepository
     private lateinit var homeTitle: TextView
@@ -56,7 +66,7 @@ class MainActivity : ThemedActivity() {
         applyDepthStyling()
 
         openSettingsButton.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
+            settingsLauncher.launch(Intent(this, SettingsActivity::class.java))
         }
     }
 

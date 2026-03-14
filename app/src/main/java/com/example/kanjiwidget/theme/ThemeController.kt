@@ -48,6 +48,8 @@ object ThemeController {
 
     fun applyGlassDepth(view: View?, elevatedDp: Float, defaultDp: Float = 0f) {
         if (view == null) return
+        view.stateListAnimator = null
+        view.translationZ = 0f
         val targetDp = if (isGlassMode(view.context)) elevatedDp else defaultDp
         view.elevation = targetDp * view.resources.displayMetrics.density
     }
