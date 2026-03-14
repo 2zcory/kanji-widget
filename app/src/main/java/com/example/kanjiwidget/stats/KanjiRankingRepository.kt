@@ -34,7 +34,7 @@ class KanjiRankingRepository(private val context: Context) {
 }
 
 internal fun buildRankingFromEntries(
-    context: Context,
+    context: Context? = null,
     entries: Map<String, *>,
     scope: RankingScope,
     limit: Int,
@@ -70,7 +70,7 @@ internal fun buildRankingFromEntries(
                     ?.atStartOfDay(ZoneId.systemDefault())
                     ?.toInstant()
                     ?.toEpochMilli(),
-                meaning = resolveDisplayMeaning(context, entry),
+                meaning = if (context != null) resolveDisplayMeaning(context, entry) else entry?.meaning,
                 jlptLevel = entry?.jlptLevel,
             )
         }
