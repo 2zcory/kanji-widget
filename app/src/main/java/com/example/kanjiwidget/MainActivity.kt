@@ -18,6 +18,12 @@ import com.example.kanjiwidget.theme.ThemeController
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 
 class MainActivity : ThemedActivity() {
+    private val detailLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        recreate()
+    }
+
     private val settingsLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -132,7 +138,7 @@ class MainActivity : ThemedActivity() {
                 primaryStudyActionButton.text = getString(R.string.home_action_open_latest)
                 primaryStudyActionButton.isEnabled = true
                 primaryStudyActionButton.alpha = 1f
-                primaryStudyActionButton.setOnClickListener { startActivity(latestIntent) }
+                primaryStudyActionButton.setOnClickListener { detailLauncher.launch(latestIntent) }
             }
 
             summary.showWidgetHelp -> {
@@ -147,7 +153,7 @@ class MainActivity : ThemedActivity() {
                 primaryStudyActionButton.isEnabled = true
                 primaryStudyActionButton.alpha = 1f
                 primaryStudyActionButton.setOnClickListener {
-                    startActivity(buildRandomDetailIntent(catalog, summary.latestKanji))
+                    detailLauncher.launch(buildRandomDetailIntent(catalog, summary.latestKanji))
                 }
             }
 
@@ -219,7 +225,7 @@ class MainActivity : ThemedActivity() {
                 null
             } else {
                 View.OnClickListener {
-                    startActivity(buildRandomDetailIntent(catalog, summary.latestKanji))
+                    detailLauncher.launch(buildRandomDetailIntent(catalog, summary.latestKanji))
                 }
             }
         )
@@ -239,7 +245,7 @@ class MainActivity : ThemedActivity() {
             row.findViewById<TextView>(R.id.tvRecentMeaning).text =
                 item.meaning ?: getString(R.string.home_latest_meaning_placeholder)
             row.findViewById<TextView>(R.id.tvRecentMeta).text = buildRecentMeta(item)
-            row.setOnClickListener { startActivity(buildDetailIntent(item)) }
+            row.setOnClickListener { detailLauncher.launch(buildDetailIntent(item)) }
             ThemeController.applyGlassDepth(row.findViewById(R.id.recentKanjiItemRoot), elevatedDp = 8f)
             row.alpha = 0f
             row.translationY = 20f
