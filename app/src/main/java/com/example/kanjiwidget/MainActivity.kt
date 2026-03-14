@@ -1,6 +1,5 @@
 package com.example.kanjiwidget
 
-import androidx.appcompat.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
@@ -206,12 +205,13 @@ class MainActivity : ThemedActivity() {
     }
 
     private fun showWidgetHelpDialog() {
-        val dialog = AlertDialog.Builder(this)
-            .setTitle(R.string.home_widget_help_title)
-            .setMessage(getString(R.string.home_widget_help_dialog_message))
-            .setPositiveButton(android.R.string.ok, null)
-            .show()
-        ThemeController.styleDialog(dialog)
+        val dialog = createOverlayDialog(R.layout.dialog_widget_help)
+        dialog.findViewById<View>(R.id.dialogWidgetHelpOverlay).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.dialogWidgetHelpRoot).setOnClickListener { }
+        dialog.findViewById<Button>(R.id.btnWidgetHelpClose).setOnClickListener { dialog.dismiss() }
+        dialog.show()
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.dialogWidgetHelpRoot), elevatedDp = 30f)
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.btnWidgetHelpClose), elevatedDp = 8f)
     }
 
     private fun cycleWidgetOpacity() {
@@ -327,35 +327,53 @@ class MainActivity : ThemedActivity() {
     }
 
     private fun showLanguageDialog() {
-        val options = arrayOf(
-            getString(R.string.language_option_system),
-            getString(R.string.language_option_english),
-            getString(R.string.language_option_vietnamese),
+        val options = listOf(
+            0 to getString(R.string.language_option_system),
+            1 to getString(R.string.language_option_english),
+            2 to getString(R.string.language_option_vietnamese),
         )
         val currentIndex = resolveLanguageOptionIndex()
-        val dialog = AlertDialog.Builder(this)
-            .setTitle(R.string.language_dialog_title)
-            .setSingleChoiceItems(options, currentIndex) { dialog, which ->
-                applyLanguageSelection(which)
-                dialog.dismiss()
+        val dialog = createOverlayDialog(R.layout.dialog_language_picker)
+        val group = dialog.findViewById<RadioGroup>(R.id.groupLanguageOptions)
+        val cancelButton = dialog.findViewById<Button>(R.id.btnLanguageDialogCancel)
+        val applyButton = dialog.findViewById<Button>(R.id.btnLanguageDialogApply)
+
+        options.forEach { (index, label) ->
+            val option = RadioButton(this).apply {
+                id = View.generateViewId()
+                text = label
+                tag = index
+                textSize = 18f
+                setTextColor(ThemeController.resolveColor(this@MainActivity, R.attr.colorTextPrimary))
+                buttonTintList = android.content.res.ColorStateList.valueOf(
+                    ThemeController.resolveColor(this@MainActivity, R.attr.colorAccentMain)
+                )
+                setPadding(0, 10, 0, 10)
+                isChecked = index == currentIndex
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
-        ThemeController.styleDialog(dialog)
+            group.addView(option)
+        }
+
+        dialog.findViewById<View>(R.id.dialogLanguageOverlay).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.dialogLanguageRoot).setOnClickListener { }
+        cancelButton.setOnClickListener { dialog.dismiss() }
+        applyButton.setOnClickListener {
+            val selected = dialog.findViewById<RadioButton>(group.checkedRadioButtonId)
+            val selectedIndex = selected?.tag as? Int ?: currentIndex
+            applyLanguageSelection(selectedIndex)
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.dialogLanguageRoot), elevatedDp = 30f)
+        ThemeController.applyGlassDepth(applyButton, elevatedDp = 8f)
+        ThemeController.applyGlassDepth(cancelButton, elevatedDp = 6f)
     }
 
     private fun showThemeDialog() {
         val modes = AppThemeMode.entries.toTypedArray()
         val currentMode = KanjiWidgetPrefs.getAppThemeMode(this)
-        val dialog = Dialog(this)
-        dialog.setContentView(R.layout.dialog_theme_picker)
-        dialog.setCanceledOnTouchOutside(true)
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        dialog.window?.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT
-        )
-        dialog.window?.setGravity(Gravity.CENTER)
+        val dialog = createOverlayDialog(R.layout.dialog_theme_picker)
 
         val group = dialog.findViewById<RadioGroup>(R.id.groupThemeOptions)
         val cancelButton = dialog.findViewById<Button>(R.id.btnThemeDialogCancel)
@@ -382,6 +400,8 @@ class MainActivity : ThemedActivity() {
             group.addView(option)
         }
 
+        dialog.findViewById<View>(R.id.dialogThemeOverlay).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.dialogThemeRoot).setOnClickListener { }
         cancelButton.setOnClickListener { dialog.dismiss() }
         applyButton.setOnClickListener {
             val selected = dialog.findViewById<RadioButton>(group.checkedRadioButtonId)
@@ -398,7 +418,6 @@ class MainActivity : ThemedActivity() {
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.dialogThemeRoot), elevatedDp = 30f)
         ThemeController.applyGlassDepth(applyButton, elevatedDp = 8f)
         ThemeController.applyGlassDepth(cancelButton, elevatedDp = 6f)
-        ThemeController.styleCenteredOverlayDialog(dialog)
     }
 
     private fun updateThemeSummary() {
@@ -456,5 +475,19 @@ class MainActivity : ThemedActivity() {
         ThemeController.applyGlassDepth(themeButton, elevatedDp = 6f)
         ThemeController.applyGlassDepth(languageButton, elevatedDp = 6f)
         ThemeController.applyGlassDepth(findViewById(R.id.btnWidgetHelp), elevatedDp = 6f)
+    }
+
+    private fun createOverlayDialog(layoutRes: Int): Dialog {
+        return Dialog(this).apply {
+            setContentView(layoutRes)
+            setCanceledOnTouchOutside(true)
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            window?.setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT
+            )
+            window?.setGravity(Gravity.CENTER)
+            ThemeController.styleCenteredOverlayDialog(this)
+        }
     }
 }

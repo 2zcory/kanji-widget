@@ -104,6 +104,7 @@
     <string name="language_section_title">LANGUAGE</string>
     <string name="language_section_body">Choose the app language. System default follows your device settings.</string>
     <string name="language_action_change">Change language</string>
+    <string name="language_action_apply">Apply</string>
     <string name="language_dialog_title">App language</string>
     <string name="language_option_system">System default</string>
     <string name="language_option_english">English</string>
