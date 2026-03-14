@@ -3,6 +3,8 @@ package com.example.kanjiwidget.theme
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -57,6 +59,15 @@ object ThemeController {
         window.decorView.elevation = 28f * dialog.context.resources.displayMetrics.density
         window.decorView.translationZ = 28f * dialog.context.resources.displayMetrics.density
         window.setDimAmount(0f)
+    }
+
+    fun styleCenteredOverlayDialog(dialog: Dialog) {
+        val window = dialog.window ?: return
+        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        if (!isGlassMode(dialog.context)) return
+        window.decorView.elevation = 0f
+        window.decorView.translationZ = 0f
+        window.setDimAmount(0.08f)
     }
 
     @ColorInt

@@ -394,11 +394,11 @@ class MainActivity : ThemedActivity() {
             }
         }
 
+        dialog.show()
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.dialogThemeRoot), elevatedDp = 30f)
         ThemeController.applyGlassDepth(applyButton, elevatedDp = 8f)
         ThemeController.applyGlassDepth(cancelButton, elevatedDp = 6f)
-        ThemeController.styleDialog(dialog)
-        dialog.show()
+        ThemeController.styleCenteredOverlayDialog(dialog)
     }
 
     private fun updateThemeSummary() {
