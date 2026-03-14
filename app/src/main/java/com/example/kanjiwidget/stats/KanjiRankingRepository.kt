@@ -2,6 +2,7 @@ package com.example.kanjiwidget.stats
 
 import android.content.Context
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
+import com.example.kanjiwidget.widget.resolveDisplayMeaning
 import java.time.LocalDate
 import java.time.ZoneId
 
@@ -12,6 +13,7 @@ class KanjiRankingRepository(private val context: Context) {
 
     fun getRanking(scope: RankingScope, limit: Int = 10): KanjiStudyRanking {
         return buildRankingFromEntries(
+            context = context,
             entries = prefs.all,
             scope = scope,
             limit = limit,
@@ -32,6 +34,7 @@ class KanjiRankingRepository(private val context: Context) {
 }
 
 internal fun buildRankingFromEntries(
+    context: Context,
     entries: Map<String, *>,
     scope: RankingScope,
     limit: Int,
@@ -67,7 +70,7 @@ internal fun buildRankingFromEntries(
                     ?.atStartOfDay(ZoneId.systemDefault())
                     ?.toInstant()
                     ?.toEpochMilli(),
-                meaning = entry?.meaningVi,
+                meaning = resolveDisplayMeaning(context, entry),
                 jlptLevel = entry?.jlptLevel,
             )
         }

@@ -163,6 +163,7 @@ object KanjiWidgetPrefs {
             put("kanji", entry.kanji)
             put("onyomi", entry.onyomi)
             put("kunyomi", entry.kunyomi)
+            put("meaning", entry.meaning)
             put("meaningVi", entry.meaningVi)
             put("example", entry.example)
             put("jlptLevel", entry.jlptLevel)
@@ -205,6 +206,7 @@ object KanjiWidgetPrefs {
                                 put("written", entry.written)
                                 put("reading", entry.reading)
                                 put("meaning", entry.meaning)
+                                put("meaningVi", entry.meaningVi)
                                 put("usageHintKey", entry.usageHintKey.storageKey)
                                 put("priorities", JSONArray(entry.priorities))
                             }
@@ -230,6 +232,7 @@ object KanjiWidgetPrefs {
                             written = item.optString("written"),
                             reading = item.optString("reading"),
                             meaning = item.optString("meaning"),
+                            meaningVi = item.optString("meaningVi").ifBlank { null },
                             usageHintKey = UsageHintKey.fromStorageKey(item.optString("usageHintKey"))
                                 ?: UsageHintKey.fromLegacyText(item.optString("usageHint"))
                                 ?: UsageHintKey.STUDY_WORD,
@@ -254,7 +257,10 @@ object KanjiWidgetPrefs {
             val kanji = json.optString("kanji")
             val onyomi = json.optString("onyomi")
             val kunyomi = json.optString("kunyomi")
+            val sourceMeaning = json.optString("meaning")
+                .ifBlank { json.optString("meaningVi") }
             val meaningVi = json.optString("meaningVi")
+                .takeIf { it.isNotBlank() && it != sourceMeaning }
             val example = json.optString("example")
             val jlptLevel = json.optString("jlptLevel")
             val unicode = json.optString("unicode").ifBlank { null }
@@ -263,6 +269,7 @@ object KanjiWidgetPrefs {
                 kanji = kanji,
                 onyomi = onyomi,
                 kunyomi = kunyomi,
+                meaning = sourceMeaning,
                 meaningVi = meaningVi,
                 example = example,
                 jlptLevel = jlptLevel,
@@ -285,7 +292,8 @@ object KanjiWidgetPrefs {
             kanji = parts[0],
             onyomi = parts[1],
             kunyomi = parts[2],
-            meaningVi = parts[3],
+            meaning = parts[3],
+            meaningVi = null,
             example = parts[4],
             jlptLevel = parts[5],
             unicode = null,

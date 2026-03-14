@@ -33,7 +33,8 @@ class KanjiRefreshWorker(
         val remote = KanjiApiClient.fetchKanji(targetKanji)
             ?: KanjiWidgetPrefs.getRemoteEntry(applicationContext, targetKanji)
             ?: return Result.retry()
-        KanjiWidgetPrefs.saveRemoteEntry(applicationContext, targetKanji, remote)
+        val localized = localizeMeaningIfNeeded(applicationContext, remote)
+        KanjiWidgetPrefs.saveRemoteEntry(applicationContext, targetKanji, localized)
 
         val manager = AppWidgetManager.getInstance(applicationContext)
         val provider = ComponentName(applicationContext, KanjiAppWidgetProvider::class.java)

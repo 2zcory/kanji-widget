@@ -24,7 +24,10 @@ import com.example.kanjiwidget.widget.KanjiStrokeOrderClient
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 import com.example.kanjiwidget.widget.buildNoteText
 import com.example.kanjiwidget.widget.formatJlptLabel
+import com.example.kanjiwidget.widget.localizeCompoundMeaningsIfNeeded
+import com.example.kanjiwidget.widget.localizeMeaningIfNeededAsync
 import com.example.kanjiwidget.widget.normalizeMeaning
+import com.example.kanjiwidget.widget.resolveDisplayMeaning
 import kotlin.concurrent.thread
 
 class KanjiDetailActivity : AppCompatActivity() {
@@ -270,7 +273,7 @@ class KanjiDetailActivity : AppCompatActivity() {
                             val nextIntent = KanjiDetailNavigator.buildDetailIntent(
                                 context = this,
                                 kanji = selectedKanji,
-                                meaningFallback = resolvedEntry?.meaningVi,
+                                meaningFallback = resolveDisplayMeaning(this, resolvedEntry),
                                 jlptFallback = resolvedEntry?.jlptLevel,
                             )
                             startActivity(nextIntent)
@@ -348,7 +351,25 @@ class KanjiDetailActivity : AppCompatActivity() {
         initialFrequency: Int?,
     ) {
         val cachedEntry = KanjiWidgetPrefs.getRemoteEntry(this, kanji)
-        if (cachedEntry != null) return
+        if (cachedEntry != null) {
+            localizeMeaningIfNeededAsync(this, kanji, cachedEntry) { localizedEntry ->
+                runOnUiThread {
+                    if (isFinishing || isDestroyed || currentKanji != kanji) return@runOnUiThread
+                    applyResolvedDetailEntry(
+                        source = localizedEntry.source ?: initialSource,
+                        jlpt = localizedEntry.jlptLevel.ifBlank { initialJlpt },
+                        onyomi = localizedEntry.onyomi.ifBlank { initialOnyomi },
+                        kunyomi = localizedEntry.kunyomi.ifBlank { initialKunyomi },
+                        meaning = resolveDisplayMeaning(this, localizedEntry) ?: initialMeaning,
+                        note = buildNoteText(this, localizedEntry).ifBlank { initialNote },
+                        strokeCount = localizedEntry.strokeCount ?: initialStrokeCount,
+                        grade = localizedEntry.grade ?: initialGrade,
+                        frequency = localizedEntry.frequency ?: initialFrequency,
+                    )
+                }
+            }
+            return
+        }
         thread(name = "detail-entry-loader") {
             val fetched = KanjiApiClient.fetchKanji(kanji) ?: return@thread
             KanjiWidgetPrefs.saveRemoteEntry(this, kanji, fetched)
@@ -359,12 +380,28 @@ class KanjiDetailActivity : AppCompatActivity() {
                     jlpt = fetched.jlptLevel.ifBlank { initialJlpt },
                     onyomi = fetched.onyomi.ifBlank { initialOnyomi },
                     kunyomi = fetched.kunyomi.ifBlank { initialKunyomi },
-                    meaning = fetched.meaningVi.ifBlank { initialMeaning },
+                    meaning = resolveDisplayMeaning(this, fetched) ?: initialMeaning,
                     note = buildNoteText(this, fetched).ifBlank { initialNote },
                     strokeCount = fetched.strokeCount ?: initialStrokeCount,
                     grade = fetched.grade ?: initialGrade,
                     frequency = fetched.frequency ?: initialFrequency,
                 )
+            }
+            localizeMeaningIfNeededAsync(this, kanji, fetched) { localizedEntry ->
+                runOnUiThread {
+                    if (isFinishing || isDestroyed || currentKanji != kanji) return@runOnUiThread
+                    applyResolvedDetailEntry(
+                        source = localizedEntry.source ?: initialSource,
+                        jlpt = localizedEntry.jlptLevel.ifBlank { initialJlpt },
+                        onyomi = localizedEntry.onyomi.ifBlank { initialOnyomi },
+                        kunyomi = localizedEntry.kunyomi.ifBlank { initialKunyomi },
+                        meaning = resolveDisplayMeaning(this, localizedEntry) ?: initialMeaning,
+                        note = buildNoteText(this, localizedEntry).ifBlank { initialNote },
+                        strokeCount = localizedEntry.strokeCount ?: initialStrokeCount,
+                        grade = localizedEntry.grade ?: initialGrade,
+                        frequency = localizedEntry.frequency ?: initialFrequency,
+                    )
+                }
             }
         }
     }
@@ -415,6 +452,22 @@ class KanjiDetailActivity : AppCompatActivity() {
     private fun bindCompounds(kanji: String) {
         val cachedEntries = compoundRepository.getCachedCompounds(kanji)
         renderCompounds(cachedEntries)
+        if (cachedEntries.isNotEmpty()) {
+            thread(name = "compound-meaning-localizer") {
+                val localized = localizeCompoundMeaningsIfNeeded(this, cachedEntries)
+                if (localized == cachedEntries) return@thread
+                KanjiWidgetPrefs.saveCompoundEntries(
+                    context = this,
+                    kanji = kanji,
+                    entries = localized,
+                    savedAtEpochMs = System.currentTimeMillis(),
+                )
+                runOnUiThread {
+                    if (isFinishing || isDestroyed || currentKanji != kanji) return@runOnUiThread
+                    renderCompounds(localized)
+                }
+            }
+        }
 
         if (!compoundRepository.shouldRefreshCompounds(kanji)) return
 
@@ -442,7 +495,9 @@ class KanjiDetailActivity : AppCompatActivity() {
             row.findViewById<TextView>(R.id.tvCompoundReading).text = entry.reading.ifBlank {
                 getString(R.string.stroke_order_info_placeholder)
             }
-            row.findViewById<TextView>(R.id.tvCompoundMeaning).text = entry.meaning
+            row.findViewById<TextView>(R.id.tvCompoundMeaning).text =
+                resolveDisplayMeaning(this, entry.meaning, entry.meaningVi)
+                    ?: entry.meaning
             val usageHint = formatUsageHint(entry.usageHintKey)
             row.findViewById<TextView>(R.id.tvCompoundUsage).text =
                 getString(R.string.detail_compound_usage_value, usageHint)

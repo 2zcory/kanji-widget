@@ -4,6 +4,7 @@ data class KanjiCompoundEntry(
     val written: String,
     val reading: String,
     val meaning: String,
+    val meaningVi: String? = null,
     val usageHintKey: UsageHintKey,
     val priorities: List<String> = emptyList(),
 )

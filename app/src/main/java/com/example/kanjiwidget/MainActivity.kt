@@ -77,6 +77,12 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         bindSummary(repository.loadSummary())
         updateLanguageSummary()
+        repository.backfillVietnameseMeaningsIfNeeded {
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                bindSummary(repository.loadSummary())
+            }
+        }
     }
 
     private fun bindSummary(summary: HomeSummary) {
