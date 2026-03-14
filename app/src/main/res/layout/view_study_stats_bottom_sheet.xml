@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_study_stats_sheet"
+        android:elevation="18dp"
         android:orientation="vertical"
         android:padding="18dp">
 
@@ -74,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
+            android:elevation="8dp"
             android:orientation="vertical"
             android:padding="14dp">
 
@@ -131,6 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
+            android:elevation="8dp"
             android:orientation="vertical"
             android:padding="14dp">
 

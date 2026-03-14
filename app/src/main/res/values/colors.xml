@@ -57,15 +57,15 @@
 
     <color name="kw_glass_screen_start">#F6FBFF</color>
     <color name="kw_glass_screen_end">#D8E9F6</color>
-    <color name="kw_glass_hero_start">#CCFFFFFF</color>
-    <color name="kw_glass_hero_end">#80DFF0FF</color>
-    <color name="kw_glass_surface_card">#70FFFFFF</color>
-    <color name="kw_glass_surface_panel">#55F5FBFF</color>
-    <color name="kw_glass_surface_canvas">#3DF5FBFF</color>
-    <color name="kw_glass_surface_elevated">#8AFFFFFF</color>
-    <color name="kw_glass_surface_inline">#66FFFFFF</color>
-    <color name="kw_glass_stroke_strong">#80FFFFFF</color>
-    <color name="kw_glass_stroke_soft">#4DFFFFFF</color>
+    <color name="kw_glass_hero_start">#F2FFFFFF</color>
+    <color name="kw_glass_hero_end">#D9EAF7FF</color>
+    <color name="kw_glass_surface_card">#E8FFFFFF</color>
+    <color name="kw_glass_surface_panel">#DCF7FBFF</color>
+    <color name="kw_glass_surface_canvas">#CCF6FBFF</color>
+    <color name="kw_glass_surface_elevated">#FCFFFFFF</color>
+    <color name="kw_glass_surface_inline">#F0FFFFFF</color>
+    <color name="kw_glass_stroke_strong">#C2FFFFFF</color>
+    <color name="kw_glass_stroke_soft">#94D8E6F2</color>
     <color name="kw_glass_text_primary">#10253A</color>
     <color name="kw_glass_text_secondary">#294257</color>
     <color name="kw_glass_text_muted">#53677A</color>
@@ -74,9 +74,9 @@
     <color name="kw_glass_accent_main">#2A6D8C</color>
     <color name="kw_glass_badge_surface">#AA2A6D8C</color>
     <color name="kw_glass_badge_text">#F8FCFF</color>
-    <color name="kw_glass_primary_button">#A6263F5A</color>
+    <color name="kw_glass_primary_button">#D65E7691</color>
     <color name="kw_glass_primary_button_text">#F8FCFF</color>
-    <color name="kw_glass_secondary_button">#70FFFFFF</color>
+    <color name="kw_glass_secondary_button">#F2FFFFFF</color>
     <color name="kw_glass_secondary_button_text">#163249</color>
     <color name="kw_glass_chart_axis">#66FFFFFF</color>
     <color name="kw_glass_chart_bar">#2A6D8C</color>
