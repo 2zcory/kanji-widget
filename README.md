@@ -66,7 +66,7 @@ Release APK output:
 ## GitHub Actions
 
 The repository includes:
-- `.github/workflows/build-debug.yml` for debug APK builds on push and pull request
+- `.github/workflows/build-debug.yml` for debug APK builds on pull request and manual dispatch
 - `.github/workflows/release.yml` for signed release APK builds on tags such as `v1.0.1`
 
 Required GitHub Secrets for the release workflow:
@@ -99,10 +99,17 @@ Local machine note:
 The source repository keeps code-facing documentation only.
 
 - [`docs/basic-design.md`](docs/basic-design.md)
+- [`docs/detail-design/README.md`](docs/detail-design/README.md)
 - [`docs/detail-design/daily-study-time-tracking.md`](docs/detail-design/daily-study-time-tracking.md)
 - [`docs/detail-design/kanji-study-ranking.md`](docs/detail-design/kanji-study-ranking.md)
+- [`docs/detail-design/kanji-detail.md`](docs/detail-design/kanji-detail.md)
+- [`docs/detail-design/localization.md`](docs/detail-design/localization.md)
 - [`docs/detail-design/main-screen.md`](docs/detail-design/main-screen.md)
+- [`docs/detail-design/settings-screen.md`](docs/detail-design/settings-screen.md)
 - [`docs/detail-design/study-time-chart.md`](docs/detail-design/study-time-chart.md)
+- [`docs/detail-design/theme-system.md`](docs/detail-design/theme-system.md)
 - [`docs/detail-design/widget.md`](docs/detail-design/widget.md)
+- [`docs/diagram-standards.md`](docs/diagram-standards.md)
+- [`docs/releases/README.md`](docs/releases/README.md)
 
 Durable AI workflow instructions, project context, and implementation checklists now live in the private context repository `kanji-widget-ctx`.
