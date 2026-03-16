@@ -146,14 +146,22 @@ Visual rules:
 - zero-value days remain visible as short or faint bars
 - current day may be highlighted subtly
 
+Current shipped presentation:
+- the bottom sheet opens with one clear chart card first, rather than a stack of equal-weight cards
+- range selection uses pill-style segmented buttons
+- summary values are split into compact metric tiles for total time, daily average, active days, and current streak
+- best day remains in a quieter support card below the metric tiles
+- ranking remains in the same bottom sheet as its own lower section with a separate scope selector
+
 ### Supporting text
 
-The chart should be accompanied by summary text such as:
+The chart should be accompanied by summary text and metrics such as:
 - total study time in selected range
 - average daily study time in selected range
 - best day in selected range
 - active study days in the selected range
 - current streak ending today
+- latest viewed kanji when launcher summary data includes one
 
 This keeps the screen useful even if the chart area is small.
 
@@ -307,7 +315,7 @@ If the selected range has no study time:
 - render the chart with zero bars or a low-emphasis empty visualization
 - show text such as `Chưa có dữ liệu học trong khoảng này`
 - keep range switching available
-- keep the summary area visible with zero-friendly or guidance-oriented copy instead of collapsing it
+- keep the summary area visible with zero-friendly metric values or guidance-oriented copy instead of collapsing it
 
 The screen should not collapse into a blank area.
 

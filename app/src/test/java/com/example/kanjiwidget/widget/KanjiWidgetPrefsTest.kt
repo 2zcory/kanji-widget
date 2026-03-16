@@ -65,6 +65,13 @@ class KanjiWidgetPrefsTest {
     }
 
     @Test
+    fun widgetSurfaceAlpha_preservesIntermediateSliderValues() {
+        KanjiWidgetPrefs.setWidgetSurfaceAlpha(context, 0.62f)
+
+        assertEquals(0.62f, KanjiWidgetPrefs.getWidgetSurfaceAlpha(context))
+    }
+
+    @Test
     fun perWidgetSurfaceAlpha_fallsBackToSharedDefaultAndCleansUp() {
         KanjiWidgetPrefs.setWidgetSurfaceAlpha(context, 0.7f)
         assertEquals(0.7f, KanjiWidgetPrefs.getWidgetSurfaceAlpha(context, 11))

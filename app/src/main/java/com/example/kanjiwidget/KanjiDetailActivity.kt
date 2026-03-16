@@ -3,19 +3,22 @@ package com.example.kanjiwidget
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.text.TextUtils
+import android.view.Gravity
 import android.view.View
 import android.view.LayoutInflater
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.Button
+import android.widget.GridLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import com.example.kanjiwidget.detail.KanjiCompoundEntry
 import com.example.kanjiwidget.detail.KanjiCompoundRepository
 import com.example.kanjiwidget.detail.KanjiSpeechController
-import com.example.kanjiwidget.detail.UsageHintKey
 import com.example.kanjiwidget.history.RecentKanjiStore
 import com.example.kanjiwidget.stats.StudyTimeTracker
 import com.example.kanjiwidget.theme.ThemeController
@@ -29,27 +32,31 @@ import com.example.kanjiwidget.widget.localizeMeaningIfNeededAsync
 import com.example.kanjiwidget.widget.normalizeMeaning
 import com.example.kanjiwidget.widget.resolveDisplayMeaning
 import kotlin.concurrent.thread
+import kotlin.math.roundToInt
 
 class KanjiDetailActivity : ThemedActivity() {
 
+    private lateinit var backButton: ImageButton
     private lateinit var titleView: TextView
     private lateinit var subtitleView: TextView
     private lateinit var heroMetaView: TextView
     private lateinit var jlptBadgeView: TextView
+    private lateinit var gradeBadgeView: TextView
     private lateinit var statusView: TextView
     private lateinit var progressView: ProgressBar
     private lateinit var replayButton: Button
     private lateinit var nextRandomButton: Button
     private lateinit var webView: WebView
-    private lateinit var onyomiView: TextView
-    private lateinit var kunyomiView: TextView
+    private lateinit var onyomiCountView: TextView
+    private lateinit var kunyomiCountView: TextView
+    private lateinit var onyomiChipGrid: GridLayout
+    private lateinit var kunyomiChipGrid: GridLayout
     private lateinit var playMainReadingButton: ImageButton
     private lateinit var meaningView: TextView
     private lateinit var noteView: TextView
     private lateinit var sourceView: TextView
-    private lateinit var todayTotalView: TextView
     private lateinit var todayOpenCountView: TextView
-    private lateinit var todayKanjiView: TextView
+    private lateinit var compoundMetricValueView: TextView
     private lateinit var compoundsSection: View
     private lateinit var compoundsContainer: LinearLayout
 
@@ -61,7 +68,8 @@ class KanjiDetailActivity : ThemedActivity() {
     private var renderedCompounds: List<KanjiCompoundEntry> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prepareTheme(savedInstanceState)
+        applyPreparedTheme()
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kanji_detail)
         runScreenEntranceAnimation()
 
@@ -73,27 +81,31 @@ class KanjiDetailActivity : ThemedActivity() {
                 renderCompounds(renderedCompounds)
             }
         }
+        backButton = findViewById(R.id.btnDetailBack)
         titleView = findViewById(R.id.tvDetailKanji)
         subtitleView = findViewById(R.id.tvDetailSubtitle)
         heroMetaView = findViewById(R.id.tvDetailHeroMeta)
         jlptBadgeView = findViewById(R.id.tvDetailJlptBadge)
+        gradeBadgeView = findViewById(R.id.tvDetailGradeBadge)
         statusView = findViewById(R.id.tvDetailStatus)
         progressView = findViewById(R.id.progressStrokeOrder)
         replayButton = findViewById(R.id.btnReplayStrokeOrder)
         nextRandomButton = findViewById(R.id.btnNextRandomKanji)
         webView = findViewById(R.id.webStrokeOrder)
-        onyomiView = findViewById(R.id.tvDetailOnyomi)
-        kunyomiView = findViewById(R.id.tvDetailKunyomi)
+        onyomiCountView = findViewById(R.id.tvDetailOnyomiCount)
+        kunyomiCountView = findViewById(R.id.tvDetailKunyomiCount)
+        onyomiChipGrid = findViewById(R.id.gridDetailOnyomiChips)
+        kunyomiChipGrid = findViewById(R.id.gridDetailKunyomiChips)
         playMainReadingButton = findViewById(R.id.btnPlayMainReading)
         meaningView = findViewById(R.id.tvDetailMeaning)
         noteView = findViewById(R.id.tvDetailNote)
         sourceView = findViewById(R.id.tvDetailSource)
-        todayTotalView = findViewById(R.id.tvTodayStudyTotal)
         todayOpenCountView = findViewById(R.id.tvTodayStudyOpenCount)
-        todayKanjiView = findViewById(R.id.tvTodayStudyKanji)
+        compoundMetricValueView = findViewById(R.id.tvCompoundMetricValue)
         compoundsSection = findViewById(R.id.sectionCompoundExamples)
         compoundsContainer = findViewById(R.id.containerCompoundExamples)
         applyDepthStyling()
+        backButton.setOnClickListener { finish() }
 
         val kanji = intent.getStringExtra(EXTRA_KANJI)?.trim().orEmpty()
         currentKanji = kanji
@@ -312,11 +324,16 @@ class KanjiDetailActivity : ThemedActivity() {
         grade: Int?,
         frequency: Int?,
     ) {
+        gradeBadgeView.visibility = if (grade != null) View.VISIBLE else View.GONE
+        if (grade != null) {
+            gradeBadgeView.text = getString(R.string.stroke_order_meta_grade, grade)
+        } else {
+            gradeBadgeView.text = ""
+        }
         val parts = buildList {
             strokeCount?.let {
                 add(resources.getQuantityString(R.plurals.stroke_count, it, it))
             }
-            grade?.let { add(getString(R.string.stroke_order_meta_grade, it)) }
             frequency?.let { add(getString(R.string.stroke_order_meta_frequency, it)) }
         }
         if (parts.isEmpty()) {
@@ -335,8 +352,8 @@ class KanjiDetailActivity : ThemedActivity() {
         note: String,
         source: String,
     ) {
-        onyomiView.text = onyomi.ifBlank { getString(R.string.stroke_order_info_placeholder) }
-        kunyomiView.text = kunyomi.ifBlank { getString(R.string.stroke_order_info_placeholder) }
+        bindReadingGroup(onyomi, onyomiCountView, onyomiChipGrid)
+        bindReadingGroup(kunyomi, kunyomiCountView, kunyomiChipGrid)
         meaningView.text = normalizeMeaning(meaning)
             ?: getString(R.string.stroke_order_meaning_placeholder)
         noteView.text = note.ifBlank { getString(R.string.stroke_order_note_placeholder) }
@@ -494,6 +511,7 @@ class KanjiDetailActivity : ThemedActivity() {
         compoundsContainer.removeAllViews()
         if (entries.isEmpty()) {
             compoundsSection.visibility = View.GONE
+            compoundMetricValueView.text = "0"
             return
         }
 
@@ -501,15 +519,9 @@ class KanjiDetailActivity : ThemedActivity() {
         entries.forEach { entry ->
             val row = inflater.inflate(R.layout.item_compound_example, compoundsContainer, false)
             row.findViewById<TextView>(R.id.tvCompoundWritten).text = entry.written
-            row.findViewById<TextView>(R.id.tvCompoundReading).text = entry.reading.ifBlank {
-                getString(R.string.stroke_order_info_placeholder)
-            }
-            row.findViewById<TextView>(R.id.tvCompoundMeaning).text =
-                resolveDisplayMeaning(this, entry.meaning, entry.meaningVi)
-                    ?: entry.meaning
-            val usageHint = formatUsageHint(entry.usageHintKey)
-            row.findViewById<TextView>(R.id.tvCompoundUsage).text =
-                getString(R.string.detail_compound_usage_value, usageHint)
+            val meaning = resolveDisplayMeaning(this, entry.meaning, entry.meaningVi) ?: entry.meaning
+            row.findViewById<TextView>(R.id.tvCompoundSubtitle).text =
+                buildCompoundSubtitle(meaning = meaning, reading = entry.reading)
             val playButton = row.findViewById<ImageButton>(R.id.btnPlayCompoundReading)
             val canPlay = isPlayableReading(entry.reading)
             val isReady = speechController.isReady()
@@ -525,7 +537,11 @@ class KanjiDetailActivity : ThemedActivity() {
                     }
                 }
             )
-            ThemeController.applyGlassDepth(row.findViewById(R.id.compoundExampleRoot), elevatedDp = 8f)
+            ThemeController.applyGlassDepth(
+                row.findViewById(R.id.compoundExampleRoot),
+                elevatedDp = 6f,
+                defaultDp = 3f
+            )
             row.alpha = 0f
             row.translationY = 18f
             compoundsContainer.addView(row)
@@ -536,6 +552,7 @@ class KanjiDetailActivity : ThemedActivity() {
                 .start()
         }
         compoundsSection.visibility = View.VISIBLE
+        compoundMetricValueView.text = entries.size.toString()
     }
 
     private fun selectMainReading(
@@ -554,62 +571,114 @@ class KanjiDetailActivity : ThemedActivity() {
     }
 
     private fun refreshTodayStats() {
-        val totalMs = StudyTimeTracker.getTodayTotalMs(this)
         val openCount = StudyTimeTracker.getTodayOpenCount(this)
-        val kanjiMs = StudyTimeTracker.getTodayKanjiMs(this, currentKanji)
-        todayTotalView.text = formatDuration(totalMs)
-        todayOpenCountView.text = resources.getQuantityString(
-            R.plurals.open_count,
-            openCount,
-            openCount
-        )
-        todayKanjiView.text = formatDuration(kanjiMs)
-    }
-
-    private fun formatDuration(durationMs: Long): String {
-        val totalSeconds = durationMs / 1000L
-        val minutes = totalSeconds / 60L
-        val seconds = totalSeconds % 60L
-        val minutesText = resources.getQuantityString(
-            R.plurals.duration_minutes,
-            minutes.toInt(),
-            minutes
-        )
-        val secondsText = resources.getQuantityString(
-            R.plurals.duration_seconds,
-            seconds.toInt(),
-            seconds
-        )
-        return if (minutes > 0L) {
-            getString(R.string.duration_minutes_seconds, minutesText, secondsText)
-        } else {
-            secondsText
-        }
-    }
-
-    private fun formatUsageHint(key: UsageHintKey): String {
-        return when (key) {
-            UsageHintKey.NEWS_HEAVY -> getString(R.string.compound_usage_news_heavy)
-            UsageHintKey.COMMON_WORD -> getString(R.string.compound_usage_common_word)
-            UsageHintKey.REFERENCE_TERM -> getString(R.string.compound_usage_reference_term)
-            UsageHintKey.STUDY_WORD -> getString(R.string.compound_usage_study_word)
+        todayOpenCountView.text = openCount.toString()
+        if (renderedCompounds.isEmpty()) {
+            compoundMetricValueView.text = "0"
         }
     }
 
     private fun applyDepthStyling() {
-        ThemeController.applyGlassDepth(findViewById(R.id.sectionDetailHero), elevatedDp = 18f)
-        ThemeController.applyGlassDepth(findViewById(R.id.sectionStrokeCanvas), elevatedDp = 12f)
-        ThemeController.applyGlassDepth(findViewById(R.id.sectionReadings), elevatedDp = 12f)
-        ThemeController.applyGlassDepth(findViewById(R.id.sectionCompoundExamples), elevatedDp = 12f)
-        ThemeController.applyGlassDepth(findViewById(R.id.sectionTodayStats), elevatedDp = 12f)
-        ThemeController.applyGlassDepth(findViewById(R.id.sectionMeaning), elevatedDp = 12f)
-        ThemeController.applyGlassDepth(findViewById(R.id.sectionNote), elevatedDp = 12f)
-        ThemeController.applyGlassDepth(nextRandomButton, elevatedDp = 0f)
-        ThemeController.applyGlassDepth(replayButton, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionDetailHero), elevatedDp = 16f, defaultDp = 8f)
+        ThemeController.applyGlassDepth(findViewById(R.id.cardDetailOnyomi), elevatedDp = 4f, defaultDp = 2f)
+        ThemeController.applyGlassDepth(findViewById(R.id.cardDetailKunyomi), elevatedDp = 4f, defaultDp = 2f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionStrokeCanvas), elevatedDp = 8f, defaultDp = 4f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionCompoundExamples), elevatedDp = 8f, defaultDp = 4f)
+        ThemeController.applyGlassDepth(findViewById(R.id.cardTodayMetric), elevatedDp = 4f, defaultDp = 2f)
+        ThemeController.applyGlassDepth(findViewById(R.id.cardCompoundMetric), elevatedDp = 4f, defaultDp = 2f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionMeaning), elevatedDp = 6f, defaultDp = 3f)
+        ThemeController.applyGlassDepth(findViewById(R.id.sectionNote), elevatedDp = 6f, defaultDp = 3f)
+        ThemeController.applyGlassDepth(backButton, elevatedDp = 2f, defaultDp = 1f)
+        ThemeController.applyGlassDepth(playMainReadingButton, elevatedDp = 2f, defaultDp = 1f)
+        ThemeController.applyGlassDepth(nextRandomButton, elevatedDp = 3f, defaultDp = 2f)
+        ThemeController.applyGlassDepth(replayButton, elevatedDp = 1f, defaultDp = 0.5f)
     }
 
     private fun resolveCssColor(attr: Int): String {
         val color = ThemeController.resolveColor(this, attr) and 0xFFFFFF
         return String.format("#%06X", color)
     }
+
+    private fun bindReadingGroup(
+        rawValue: String,
+        countView: TextView,
+        chipGrid: GridLayout,
+    ) {
+        val readings = parseReadings(rawValue)
+        countView.text = readings.size.toString()
+        chipGrid.removeAllViews()
+
+        val placeholder = getString(R.string.stroke_order_info_placeholder)
+        val visibleTokens = when {
+            readings.isEmpty() -> listOf(placeholder)
+            readings.size > 3 -> readings.take(3) + resources.getQuantityString(
+                R.plurals.detail_reading_more,
+                readings.size - 3,
+                readings.size - 3
+            )
+            else -> readings
+        }
+
+        visibleTokens.forEachIndexed { index, token ->
+            val isMuted = token == placeholder || token.startsWith("+")
+            val chip = TextView(this).apply {
+                background = AppCompatResources.getDrawable(
+                    this@KanjiDetailActivity,
+                    if (isMuted) {
+                        R.drawable.bg_detail_reading_chip_muted
+                    } else {
+                        R.drawable.bg_detail_reading_chip
+                    }
+                )
+                gravity = Gravity.CENTER_VERTICAL
+                ellipsize = TextUtils.TruncateAt.END
+                maxLines = 1
+                minHeight = dp(34)
+                setPadding(dp(12), dp(0), dp(12), dp(0))
+                setTextColor(
+                    ThemeController.resolveColor(
+                        this@KanjiDetailActivity,
+                        if (isMuted) R.attr.colorTextMuted else R.attr.colorTextPrimary
+                    )
+                )
+                text = token
+                textSize = if (isMuted) 13f else 16f
+                setTypeface(typeface, if (isMuted) android.graphics.Typeface.NORMAL else android.graphics.Typeface.BOLD)
+            }
+            val column = index % 2
+            val row = index / 2
+            chip.layoutParams = GridLayout.LayoutParams(
+                GridLayout.spec(row),
+                GridLayout.spec(column)
+            ).apply {
+                width = GridLayout.LayoutParams.WRAP_CONTENT
+                setMargins(
+                    if (column == 0) 0 else dp(8),
+                    if (row == 0) 0 else dp(8),
+                    0,
+                    0
+                )
+            }
+            chipGrid.addView(chip)
+        }
+    }
+
+    private fun parseReadings(value: String): List<String> {
+        return value
+            .split(Regex("[\\n,/;、]+"))
+            .map { it.trim() }
+            .filter { it.isNotBlank() && it != "-" }
+            .distinct()
+    }
+
+    private fun buildCompoundSubtitle(meaning: String, reading: String): String {
+        val parts = buildList {
+            if (meaning.isNotBlank()) add(meaning)
+            if (reading.isNotBlank()) add(reading)
+        }
+        return parts.joinToString(getString(R.string.bullet_separator))
+            .ifBlank { getString(R.string.stroke_order_info_placeholder) }
+    }
+
+    private fun dp(value: Int): Int = (value * resources.displayMetrics.density).roundToInt()
 }

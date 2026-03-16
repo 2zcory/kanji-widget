@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -55,6 +56,32 @@ object ThemeController {
         view.elevation = targetDp * view.resources.displayMetrics.density
     }
 
+    fun applyMainHeroDepth(view: View?, elevatedDp: Float, defaultDp: Float = 0f) {
+        if (view == null) return
+        applyGlassDepth(view, elevatedDp = elevatedDp, defaultDp = defaultDp)
+        val targetDp = if (isGlassMode(view.context)) elevatedDp else defaultDp
+        val targetPx = targetDp * view.resources.displayMetrics.density
+        view.translationZ = targetPx * 0.12f
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val shadowColor = resolveColor(view.context, R.attr.colorMainHeroShadow)
+            view.outlineAmbientShadowColor = shadowColor
+            view.outlineSpotShadowColor = shadowColor
+        }
+    }
+
+    fun applyMainCardDepth(view: View?, elevatedDp: Float, defaultDp: Float = 0f) {
+        if (view == null) return
+        applyGlassDepth(view, elevatedDp = elevatedDp, defaultDp = defaultDp)
+        val targetDp = if (isGlassMode(view.context)) elevatedDp else defaultDp
+        val targetPx = targetDp * view.resources.displayMetrics.density
+        view.translationZ = targetPx * 0.1f
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val shadowColor = resolveColor(view.context, R.attr.colorMainCardShadow)
+            view.outlineAmbientShadowColor = shadowColor
+            view.outlineSpotShadowColor = shadowColor
+        }
+    }
+
     fun styleDialog(dialog: Dialog) {
         val window = dialog.window ?: return
         if (!isGlassMode(dialog.context)) return
@@ -75,10 +102,15 @@ object ThemeController {
 
     @ColorInt
     fun resolveColor(activity: Activity, @AttrRes attr: Int): Int {
+        return resolveColor(activity as Context, attr)
+    }
+
+    @ColorInt
+    fun resolveColor(context: Context, @AttrRes attr: Int): Int {
         val typedValue = android.util.TypedValue()
-        activity.theme.resolveAttribute(attr, typedValue, true)
+        context.theme.resolveAttribute(attr, typedValue, true)
         return if (typedValue.resourceId != 0) {
-            ContextCompat.getColor(activity, typedValue.resourceId)
+            ContextCompat.getColor(context, typedValue.resourceId)
         } else {
             typedValue.data
         }

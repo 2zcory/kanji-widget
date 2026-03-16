@@ -11,10 +11,8 @@ import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import com.example.kanjiwidget.theme.AppThemeMode
 import com.example.kanjiwidget.theme.ThemeController
 import com.example.kanjiwidget.widget.KanjiAppWidgetProvider
-import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 
 object SettingsDialogs {
     fun showWidgetHelpDialog(activity: AppCompatActivity) {
@@ -72,68 +70,11 @@ object SettingsDialogs {
         ThemeController.applyGlassDepth(cancelButton, elevatedDp = 0f)
     }
 
-    fun showThemeDialog(activity: AppCompatActivity, onApplied: (() -> Unit)? = null) {
-        val modes = AppThemeMode.entries.toTypedArray()
-        val currentMode = KanjiWidgetPrefs.getAppThemeMode(activity)
-        val dialog = createOverlayDialog(activity, R.layout.dialog_theme_picker)
-        val group = dialog.findViewById<RadioGroup>(R.id.groupThemeOptions)
-        val cancelButton = dialog.findViewById<Button>(R.id.btnThemeDialogCancel)
-        val applyButton = dialog.findViewById<Button>(R.id.btnThemeDialogApply)
-
-        modes.forEach { mode ->
-            val option = RadioButton(activity).apply {
-                id = View.generateViewId()
-                text = themeLabel(activity, mode)
-                tag = mode
-                textSize = 18f
-                setTextColor(ThemeController.resolveColor(activity, R.attr.colorTextPrimary))
-                buttonTintList = ColorStateList.valueOf(
-                    ThemeController.resolveColor(activity, R.attr.colorAccentMain)
-                )
-                setPadding(0, 10, 0, 10)
-                isChecked = mode == currentMode
-            }
-            group.addView(option)
-        }
-
-        dialog.findViewById<View>(R.id.dialogThemeOverlay).setOnClickListener { dialog.dismiss() }
-        dialog.findViewById<View>(R.id.dialogThemeRoot).setOnClickListener { }
-        cancelButton.setOnClickListener { dialog.dismiss() }
-        applyButton.setOnClickListener {
-            val selected = dialog.findViewById<RadioButton>(group.checkedRadioButtonId)
-            val selectedMode = selected?.tag as? AppThemeMode ?: currentMode
-            val didChange = ThemeController.updateThemeSelection(activity, selectedMode)
-            dialog.dismiss()
-            if (didChange) {
-                onApplied?.invoke()
-                activity.recreate()
-            }
-        }
-
-        dialog.show()
-        ThemeController.applyGlassDepth(dialog.findViewById(R.id.dialogThemeRoot), elevatedDp = 30f)
-        ThemeController.applyGlassDepth(applyButton, elevatedDp = 0f)
-        ThemeController.applyGlassDepth(cancelButton, elevatedDp = 0f)
-    }
-
-    fun currentThemeLabel(activity: AppCompatActivity): String {
-        return themeLabel(activity, KanjiWidgetPrefs.getAppThemeMode(activity))
-    }
-
     fun currentLanguageLabel(activity: AppCompatActivity): String {
         return when (resolveLanguageOptionIndex()) {
             1 -> activity.getString(R.string.language_option_english)
             2 -> activity.getString(R.string.language_option_vietnamese)
             else -> activity.getString(R.string.language_option_system)
-        }
-    }
-
-    private fun themeLabel(activity: AppCompatActivity, mode: AppThemeMode): String {
-        return when (mode) {
-            AppThemeMode.SYSTEM -> activity.getString(R.string.theme_option_system)
-            AppThemeMode.LIGHT -> activity.getString(R.string.theme_option_light)
-            AppThemeMode.DARK -> activity.getString(R.string.theme_option_dark)
-            AppThemeMode.GLASS -> activity.getString(R.string.theme_option_glass)
         }
     }
 

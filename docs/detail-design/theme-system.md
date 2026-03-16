@@ -57,18 +57,20 @@ Behavior:
 - keep the base layout structure, but restyle surfaces to look more layered and translucent
 - reuse lightweight motion so the visual direction feels intentional without relying on platform blur APIs
 
-## Main-Screen Integration
+## Settings-Screen Integration
 
-The first slice keeps theme controls inside the existing launcher dashboard instead of adding a new settings destination.
+The refreshed settings slice keeps theme controls inside `SettingsActivity` instead of presenting them on the launcher itself.
 
 Placement:
-- add an `Appearance` section on `MainActivity`
-- show the current selected theme label
-- use one action to open a single-choice theme picker dialog
+- add a dedicated theme-selection card on `SettingsActivity`
+- show a two-row tile grid for `System`, `Light`, `Dark`, and `Glass`
+- give each tile a small preview treatment and let the selected state live on the tile itself
+- keep the settings top bar quiet and route `Widget help` through the utility row instead of a second top-bar affordance
 
 Reason:
-- the launcher already acts as the app control center
-- this keeps the slice app-wide without broadening scope into a dedicated settings flow
+- the launcher stays focused on study continuation and recent activity
+- the settings screen already owns appearance and shared widget utility controls
+- the tighter settings chrome keeps the theme selector visually closer to the approved canonical screen artifact
 
 ## UI Rules
 
@@ -123,7 +125,7 @@ Behavior:
 
 ```mermaid
 flowchart TD
-    A[User opens Appearance section] --> B[Open theme picker dialog]
+    A[User opens SettingsActivity] --> B[Open Appearance section]
     B --> C{Selected option}
     C -- System --> D[Use AppCompat follow-system mode]
     C -- Light --> E[Force light mode]

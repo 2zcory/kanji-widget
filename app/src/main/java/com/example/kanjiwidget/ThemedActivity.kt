@@ -1,13 +1,10 @@
 package com.example.kanjiwidget
-
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kanjiwidget.theme.ThemeController
 
 abstract class ThemedActivity : AppCompatActivity() {
-    protected fun prepareTheme(savedInstanceState: Bundle?) {
+    protected fun applyPreparedTheme() {
         ThemeController.applyTheme(this)
-        super.onCreate(savedInstanceState)
     }
 
     protected fun runScreenEntranceAnimation() {

@@ -12,7 +12,6 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.example.kanjiwidget.KanjiDetailActivity
 import com.example.kanjiwidget.KanjiDetailNavigator
 import com.example.kanjiwidget.MainActivity
 import com.example.kanjiwidget.R
@@ -37,6 +36,7 @@ class StudyStatsBottomSheet(
     private lateinit var btnRankingAll: Button
     private lateinit var btnRanking30: Button
     private lateinit var rangeLabel: TextView
+    private lateinit var summaryHintView: TextView
     private lateinit var totalView: TextView
     private lateinit var averageView: TextView
     private lateinit var activeDaysView: TextView
@@ -65,6 +65,7 @@ class StudyStatsBottomSheet(
         btnRankingAll = dialog.findViewById(R.id.btnRankingScopeAll)
         btnRanking30 = dialog.findViewById(R.id.btnRankingScope30)
         rangeLabel = dialog.findViewById(R.id.tvChartRangeLabel)
+        summaryHintView = dialog.findViewById(R.id.tvChartSummaryHint)
         totalView = dialog.findViewById(R.id.tvChartTotal)
         averageView = dialog.findViewById(R.id.tvChartAverage)
         activeDaysView = dialog.findViewById(R.id.tvChartActiveDays)
@@ -99,39 +100,34 @@ class StudyStatsBottomSheet(
         chartView.points = chartSummary.points
         val dayCountText = activity.resources.getQuantityString(R.plurals.day_count, days, days)
         rangeLabel.text = activity.getString(R.string.chart_range_value, dayCountText)
-        totalView.text = if (hasStudyData) {
-            activity.getString(
-                R.string.chart_total_value,
-                activity.formatDurationForUi(chartSummary.totalMs)
-            )
-        } else {
-            activity.getString(R.string.chart_total_empty_value, dayCountText)
-        }
-        averageView.text = if (hasStudyData) {
-            activity.getString(
-                R.string.chart_average_value,
-                activity.formatDurationForUi(chartSummary.averageMs)
-            )
+        summaryHintView.text = if (hasStudyData) {
+            activity.getString(R.string.chart_summary_hint_value)
         } else {
             activity.getString(R.string.chart_average_empty_value)
         }
-        activeDaysView.text = activity.getString(
-            R.string.chart_active_days_value,
-            dayCountText,
+        totalView.text = if (hasStudyData) {
+            formatDurationCompact(chartSummary.totalMs)
+        } else {
+            activity.getString(R.string.chart_metric_value_empty)
+        }
+        averageView.text = if (hasStudyData) {
+            formatDurationCompact(chartSummary.averageMs)
+        } else {
+            activity.getString(R.string.chart_metric_value_empty)
+        }
+        activeDaysView.text = activity.resources.getQuantityString(
+            R.plurals.day_count,
+            chartSummary.activeDays,
             chartSummary.activeDays
         )
         currentStreakView.text = if (chartSummary.currentStreakDays > 0) {
-            val streakText = activity.resources.getQuantityString(
+            activity.resources.getQuantityString(
                 R.plurals.day_count,
                 chartSummary.currentStreakDays,
                 chartSummary.currentStreakDays
             )
-            activity.getString(
-                R.string.chart_current_streak_value,
-                streakText
-            )
         } else {
-            activity.getString(R.string.chart_current_streak_empty_value)
+            activity.getString(R.string.chart_metric_streak_empty_short)
         }
         bestDayView.text = chartSummary.bestDay?.let {
             val locale = currentLocale()
@@ -139,7 +135,7 @@ class StudyStatsBottomSheet(
             activity.getString(
                 R.string.chart_best_day_value,
                 it.date.format(formatter),
-                activity.formatDurationForUi(it.totalMs)
+                formatDurationCompact(it.totalMs)
             )
         } ?: activity.getString(R.string.chart_best_day_empty)
 
@@ -248,8 +244,17 @@ class StudyStatsBottomSheet(
         return activity.resources.configuration.locales[0]
     }
 
+    private fun formatDurationCompact(durationMs: Long): String {
+        return DateUtils.formatElapsedTime(durationMs / 1000L)
+    }
+
     private fun applyDepthStyling(dialog: Dialog) {
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsSheetRoot), elevatedDp = 20f)
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsChartCard), elevatedDp = 12f)
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.cardChartTotal), elevatedDp = 8f)
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.cardChartAverage), elevatedDp = 8f)
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.cardChartActiveDays), elevatedDp = 8f)
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.cardChartCurrentStreak), elevatedDp = 8f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsSummaryCard), elevatedDp = 10f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsRankingCard), elevatedDp = 10f)
         ThemeController.applyGlassDepth(btnRange7, elevatedDp = 0f)

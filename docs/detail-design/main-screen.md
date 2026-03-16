@@ -53,44 +53,46 @@ The main screen should act as:
 
 ### 1. Hero Summary
 
-The first slice of the refreshed main screen should merge the old header and today-summary areas into one stronger hero block.
+The refreshed main screen now uses one stronger hero block that owns the next study action and the only settings entry affordance.
 
 Contents:
-- app title
+- dynamic hero label
+- one large continuation title
 - short one-line description
-- widget-installed status badge
-- today summary with study time and open count
+- two compact metadata pills
 - one dominant primary CTA
+- two secondary action chips for random review and study stats
+- one compact settings icon aligned to the hero top row
 
 Purpose:
-- immediately explain that this is a widget-centered learning app
-- make the first visible action feel obvious
-- give today’s activity enough visual weight to justify opening the launcher
+- make the next learning action feel obvious immediately
+- keep secondary actions nearby without creating a second full study card
+- keep the launcher visually aligned with the approved first-slice demo direction
 
 Behavior:
 - the dominant CTA should represent the best next learning step for the current state
 - if recent history exists, the primary CTA should continue the latest Kanji
 - if recent history is missing, the hero should fall back to setup or discovery guidance instead of showing a dead primary action
+- the hero metadata should prioritize recent-context signals such as relative open time, JLPT level, widget status, and readiness state instead of repeating long status copy
 
-### 2. Supporting Actions Section
+### 2. Hero Secondary Actions
 
 Contents:
-- short supporting guidance text
-- `Open random Kanji`
-- `View stats`
+- `Random review`
+- `Study stats`
 
 Purpose:
 - keep secondary study actions accessible without competing with the hero CTA
 
 Behavior:
-- this section should no longer duplicate the dominant latest-study CTA from the hero
+- these actions should stay inside the hero block instead of living in a second standalone card
 - random-kanji action uses the cached catalog and avoids the latest kanji when possible
 - the stats action remains available from this section because it is a secondary exploration path
 
 ### 3. Recent Kanji Section
 
 Contents:
-- latest viewed kanji items
+- up to four recent kanji tiles
 - each item opens the detail screen
 
 Purpose:
@@ -98,28 +100,44 @@ Purpose:
 - support quick re-entry into recent study history without competing with the hero CTA
 
 First-slice direction:
-- keep the bounded recent list directly on the screen
-- improve row hierarchy so the Kanji and its metadata are easier to scan
+- keep the bounded recent grid directly on the screen
+- show each tile as a compact card with Kanji, meaning, and recent metadata
 - avoid promoting the first recent item as a second primary action when the hero already owns that role
 
-### 4. Settings Entry Section
+### 4. Settings Entry
 
 Contents:
-- short explanation that app controls now live in a separate screen
-- one clear entry button to open settings
+- one compact settings icon inside the hero block
+- one quiet widget-status summary section lower on the screen
 
 Purpose:
 - keep the main screen focused on learning and summary content
-- preserve access to utility controls without stacking multiple low-priority cards below the main study sections
+- preserve access to utility controls without stacking multiple low-priority calls to action below the main study sections
 
 First-slice direction:
-- keep this section visually quieter than the learning-focused cards above it
-- expose only one launcher entry instead of multiple settings cards
+- keep the top-bar settings entry compact and obvious
+- keep the widget-status section informational rather than interactive
+- expose only one launcher entry instead of a second settings CTA in the content area
 
 Behavior:
-- tapping the entry opens a dedicated `SettingsActivity`
+- tapping the top-bar icon opens a dedicated `SettingsActivity`
 - the main screen no longer directly hosts widget-opacity, theme, or language controls
 - the settings screen becomes the home for widget utility actions and in-app appearance controls
+
+### 5. Snapshot Metrics
+
+Contents:
+- one `Today` metric card
+- one `Consistency` metric card
+
+Purpose:
+- keep lightweight daily momentum visible without opening the stats bottom sheet
+- give the bottom of the screen a clean finish instead of ending on utility-only content
+
+Behavior:
+- the `Today` metric should show current valid opens for the day
+- the `Consistency` metric should show the current streak in days
+- both cards remain informational and should not compete with the hero CTA or stats action
 
 ## User Flow
 
@@ -133,21 +151,21 @@ Behavior:
 ### Flow D: Open settings
 
 1. User opens app
-2. User taps the settings entry
+2. User taps the top-bar settings icon
 3. App opens `SettingsActivity`
 4. User changes theme, language, widget opacity, or opens widget setup help from that screen
 
 ### Flow B: Returning user
 
 1. User taps app icon
-2. Hero shows today summary and the dominant next study action
+2. Hero shows recent-study context and the dominant next study action
 3. User continues the latest kanji from the hero, or uses supporting actions for random study or stats
 
 ### Flow C: User without widget
 
 1. User opens app
 2. Main screen detects that no widget instance is currently active
-3. Hero and widget-controls copy emphasize setup help over deeper exploration
+3. Hero and widget-status copy emphasize setup help over deeper exploration
 
 ## Main Interaction Diagram
 
@@ -155,11 +173,12 @@ Behavior:
 flowchart TD
     A[Open MainActivity] --> B[Load summary from local stores]
     B --> C{Widget installed?}
-    C -- Yes --> D[Show normal widget controls copy]
+    C -- Yes --> D[Show normal widget-status summary]
     C -- No --> E[Emphasize widget help]
     B --> F{Recent kanji exists?}
     F -- Yes --> G[Hero CTA continues latest kanji]
     F -- No --> H[Hero falls back to setup or discovery guidance]
+    B --> N[Bind bottom metrics]
     A --> I[User opens stats]
     I --> J[Show stats bottom sheet]
     A --> K[User opens settings]
@@ -187,9 +206,9 @@ If there is no recorded study data:
 ### With data
 
 If study data exists:
-- show today summary inside the hero first
+- show recent context and quick metadata inside the hero first
 - prioritize one-tap continuation through the hero CTA
-- keep recent-history and utility sections secondary in visual emphasis
+- keep recent-history, widget-status, and snapshot-metric sections secondary in visual emphasis
 
 ### Settings entry rule
 
@@ -197,8 +216,9 @@ The launcher exposes one lightweight navigation point for settings-oriented cont
 
 Current behavior:
 - the main screen no longer hosts dedicated cards for widget opacity, theme, or language
-- one settings entry opens the dedicated settings screen
-- the settings screen holds the shared widget-opacity control, theme picker, language picker, and widget-help action
+- one top-bar settings icon opens the dedicated settings screen
+- the content-level widget-status section is informational only and must not compete with the top-bar settings action
+- the settings screen holds the shared widget-opacity slider, visible theme selection, language picker, and widget-help action
 
 Reason:
 - the main screen stays aligned with its learning-hub role
@@ -234,12 +254,14 @@ Navigation style:
 Required local data:
 - daily total study time
 - daily open count
+- current streak days
 - latest viewed kanji
 - optional recent kanji list
-- current widget background opacity preset
+- current shared widget background opacity value
 
 Existing reusable source:
 - `StudyTimeTracker` for today totals
+- `StudyStatsRepository` for the current streak snapshot
 
 Existing local storage:
 - recent kanji history store
@@ -385,7 +407,7 @@ Manual test cases:
 - open app on a fresh install and verify the empty state
 - open app after using the detail screen and verify today summary is shown
 - verify the hero shows one clearly dominant study CTA
-- verify main-screen actions open the expected destinations
+- verify the top-bar settings icon opens the expected destination
 - verify the stats bottom sheet updates when the chart range changes
 - verify the stats bottom sheet remains useful when there is no study data
 - verify layout works on both narrow and tall devices

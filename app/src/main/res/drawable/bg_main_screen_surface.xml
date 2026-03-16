@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <gradient
+                android:angle="300"
+                android:endColor="?attr/colorScreenBackgroundEnd"
+                android:startColor="?attr/colorScreenBackgroundStart" />
+        </shape>
+    </item>
+
+    <item
+        android:gravity="top|start"
+        android:width="360dp"
+        android:height="360dp"
+        android:left="-140dp"
+        android:top="-170dp">
+        <shape android:shape="oval">
+            <gradient
+                android:endColor="@android:color/transparent"
+                android:gradientRadius="220dp"
+                android:startColor="?attr/colorChartBarFaint"
+                android:type="radial" />
+        </shape>
+    </item>
+
+    <item
+        android:gravity="bottom|end"
+        android:width="340dp"
+        android:height="340dp"
+        android:right="-130dp"
+        android:bottom="-130dp">
+        <shape android:shape="oval">
+            <gradient
+                android:endColor="@android:color/transparent"
+                android:gradientRadius="210dp"
+                android:startColor="?attr/colorChartBarFaint"
+                android:type="radial" />
+        </shape>
+    </item>
+</layer-list>

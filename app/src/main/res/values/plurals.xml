@@ -3,10 +3,6 @@
         <item quantity="one">%d stroke</item>
         <item quantity="other">%d strokes</item>
     </plurals>
-    <plurals name="open_count">
-        <item quantity="one">%d valid open</item>
-        <item quantity="other">%d valid opens</item>
-    </plurals>
     <plurals name="duration_minutes">
         <item quantity="one">%d minute</item>
         <item quantity="other">%d minutes</item>
@@ -34,5 +30,9 @@
     <plurals name="widget_freshness_days">
         <item quantity="one">%d day ago</item>
         <item quantity="other">%d days ago</item>
+    </plurals>
+    <plurals name="detail_reading_more">
+        <item quantity="one">+%d more</item>
+        <item quantity="other">+%d more</item>
     </plurals>
 </resources>

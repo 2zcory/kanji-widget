@@ -9,6 +9,8 @@
         <item name="colorScreenBackgroundEnd">@color/kw_light_screen_end</item>
         <item name="colorSurfaceHeroStart">@color/kw_light_hero_start</item>
         <item name="colorSurfaceHeroEnd">@color/kw_light_hero_end</item>
+        <item name="colorMainHeroStart">@color/kw_light_main_hero_start</item>
+        <item name="colorMainHeroEnd">@color/kw_light_main_hero_end</item>
         <item name="colorSurfaceCard">@color/kw_light_surface_card</item>
         <item name="colorSurfacePanel">@color/kw_light_surface_panel</item>
         <item name="colorSurfaceCanvas">@color/kw_light_surface_canvas</item>
@@ -16,6 +18,10 @@
         <item name="colorSurfaceInline">@color/kw_light_surface_inline</item>
         <item name="colorStrokeStrong">@color/kw_light_stroke_strong</item>
         <item name="colorStrokeSoft">@color/kw_light_stroke_soft</item>
+        <item name="colorMainHeroGlow">@color/kw_light_main_hero_glow</item>
+        <item name="colorMainHeroShadow">@color/kw_light_main_hero_shadow</item>
+        <item name="colorMainCardShadow">@color/kw_light_main_card_shadow</item>
+        <item name="colorMainPrimaryEnd">@color/kw_light_main_primary_end</item>
         <item name="colorTextPrimary">@color/kw_light_text_primary</item>
         <item name="colorTextSecondary">@color/kw_light_text_secondary</item>
         <item name="colorTextMuted">@color/kw_light_text_muted</item>
@@ -40,6 +46,8 @@
         <item name="colorScreenBackgroundEnd">@color/kw_glass_screen_end</item>
         <item name="colorSurfaceHeroStart">@color/kw_glass_hero_start</item>
         <item name="colorSurfaceHeroEnd">@color/kw_glass_hero_end</item>
+        <item name="colorMainHeroStart">@color/kw_glass_main_hero_start</item>
+        <item name="colorMainHeroEnd">@color/kw_glass_main_hero_end</item>
         <item name="colorSurfaceCard">@color/kw_glass_surface_card</item>
         <item name="colorSurfacePanel">@color/kw_glass_surface_panel</item>
         <item name="colorSurfaceCanvas">@color/kw_glass_surface_canvas</item>
@@ -47,6 +55,10 @@
         <item name="colorSurfaceInline">@color/kw_glass_surface_inline</item>
         <item name="colorStrokeStrong">@color/kw_glass_stroke_strong</item>
         <item name="colorStrokeSoft">@color/kw_glass_stroke_soft</item>
+        <item name="colorMainHeroGlow">@color/kw_glass_main_hero_glow</item>
+        <item name="colorMainHeroShadow">@color/kw_glass_main_hero_shadow</item>
+        <item name="colorMainCardShadow">@color/kw_glass_main_card_shadow</item>
+        <item name="colorMainPrimaryEnd">@color/kw_glass_main_primary_end</item>
         <item name="colorTextPrimary">@color/kw_glass_text_primary</item>
         <item name="colorTextSecondary">@color/kw_glass_text_secondary</item>
         <item name="colorTextMuted">@color/kw_glass_text_muted</item>

@@ -377,6 +377,12 @@ The current widget presentation uses:
 - chip-style badges for JLPT and state
 - a large hero panel for the Kanji itself
 - state-aware accent surfaces for loading, hidden-answer, and revealed-answer states
+- the same light blue, soft-stroke surface language now used across the refreshed main, detail, and stats screens
+- compact and medium layouts that keep one clear study card first instead of splitting attention across too many equal blocks
+
+Current implementation note after the UI refresh:
+- `RemoteViews` still limits animation and blur, so the widget uses simplified gradients, opaque subcards, and state-aware button fills instead of trying to mirror the in-app Glass surfaces directly
+- the compact widget now keeps a short reading prompt visible so the smallest size still feels like a deliberate study card rather than only a large kanji plus button
 
 ## Rendering Rules
 
