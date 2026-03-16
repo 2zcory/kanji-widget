@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_screen_surface"
@@ -12,61 +13,263 @@
         android:padding="16dp">
 
         <LinearLayout
+            android:id="@+id/rowDetailTopBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnDetailBack"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_icon_button"
+                android:contentDescription="@string/detail_action_back"
+                android:padding="9dp"
+                app:srcCompat="@drawable/ic_arrow_back_kw"
+                app:tint="?attr/colorTextPrimary" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/sectionDetailHero"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:background="@drawable/bg_detail_hero"
-            android:gravity="top"
-            android:orientation="horizontal"
-            android:padding="20dp">
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="24dp">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tvDetailKanji"
+                    android:id="@+id/tvDetailHeroLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:letterSpacing="0.12"
+                    android:text="@string/detail_hero_label_focus"
+                    android:textAllCaps="true"
+                    android:textColor="?attr/colorAccentWarm"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/btnPlayMainReading"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:background="@drawable/bg_icon_button"
+                    android:contentDescription="@string/detail_audio_play_content_description"
+                    android:padding="7dp"
+                    app:srcCompat="@drawable/ic_speaker_kw"
+                    app:tint="?attr/colorTextPrimary" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvDetailKanji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:textColor="?attr/colorTextPrimary"
+                android:textSize="84sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDetailSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:textColor="?attr/colorTextPrimary"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/rowDetailHeroBadges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:baselineAligned="false"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvDetailJlptBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/bg_home_meta_pill"
+                    android:gravity="center"
+                    android:minHeight="30dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
                     android:textColor="?attr/colorTextPrimary"
-                    android:textSize="52sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tvDetailSubtitle"
+                    android:id="@+id/tvDetailGradeBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textColor="?attr/colorTextMuted"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvDetailHeroMeta"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textColor="?attr/colorTextMuted"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_home_meta_pill"
+                    android:gravity="center"
+                    android:minHeight="30dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:textColor="?attr/colorTextPrimary"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:visibility="gone" />
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tvDetailJlptBadge"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvDetailHeroMeta"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
-                android:background="@drawable/bg_detail_badge"
-                android:paddingLeft="12dp"
-                android:paddingTop="7dp"
-                android:paddingRight="12dp"
-                android:paddingBottom="7dp"
-                android:textColor="?attr/colorBadgeText"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:textColor="?attr/colorTextMuted"
                 android:textSize="13sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/stroke_order_reading_label"
+                    android:textColor="?attr/colorAccentWarm"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_readings_link_compact"
+                    android:textColor="?attr/colorAccentMain"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/cardDetailOnyomi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_detail_panel"
+                    android:orientation="vertical"
+                    android:minHeight="128dp"
+                    android:padding="14dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/stroke_order_onyomi_label"
+                            android:textColor="?attr/colorTextMuted"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvDetailOnyomiCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_detail_count_pill"
+                            android:gravity="center"
+                            android:minHeight="28dp"
+                            android:minWidth="28dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:textColor="?attr/colorTextMuted"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <GridLayout
+                        android:id="@+id/gridDetailOnyomiChips"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:columnCount="2"
+                        android:useDefaultMargins="false" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cardDetailKunyomi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_detail_panel"
+                    android:orientation="vertical"
+                    android:minHeight="128dp"
+                    android:padding="14dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/stroke_order_kunyomi_label"
+                            android:textColor="?attr/colorTextMuted"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvDetailKunyomiCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_detail_count_pill"
+                            android:gravity="center"
+                            android:minHeight="28dp"
+                            android:minWidth="28dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:textColor="?attr/colorTextMuted"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <GridLayout
+                        android:id="@+id/gridDetailKunyomiChips"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:columnCount="2"
+                        android:useDefaultMargins="false" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -76,21 +279,39 @@
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="18dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/stroke_order_canvas_title"
-                android:textColor="?attr/colorTextPrimary"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/detail_stroke_section_title"
+                    android:textAllCaps="true"
+                    android:textColor="?attr/colorTextMuted"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_stroke_link_preview"
+                    android:textColor="?attr/colorAccentMain"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvAttribution"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="4dp"
                 android:text="@string/stroke_order_attribution"
                 android:textColor="?attr/colorTextMuted"
                 android:textSize="12sp" />
@@ -105,10 +326,10 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="312dp"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/bg_detail_canvas"
-                android:padding="2dp">
+                android:padding="6dp">
 
                 <WebView
                     android:id="@+id/webStrokeOrder"
@@ -139,121 +360,18 @@
                 </LinearLayout>
             </FrameLayout>
 
-            <LinearLayout
+            <Button
+                android:id="@+id/btnReplayStrokeOrder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/btnNextRandomKanji"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_detail_button"
-                    android:text="@string/stroke_order_next_random"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/colorPrimaryButtonText"
-                    android:textSize="15sp" />
-
-                <Button
-                    android:id="@+id/btnReplayStrokeOrder"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_detail_button_secondary"
-                    android:text="@string/stroke_order_replay"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/colorSecondaryButtonText"
-                    android:textSize="15sp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/sectionReadings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/bg_detail_card"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/stroke_order_reading_label"
-                    android:textColor="?attr/colorAccentWarm"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <ImageButton
-                    android:id="@+id/btnPlayMainReading"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/bg_chart_range_idle"
-                    android:contentDescription="@string/detail_audio_play_content_description"
-                    android:padding="8dp"
-                    android:src="@android:drawable/ic_lock_silent_mode_off"
-                    android:tint="?attr/colorTextPrimary" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_detail_panel"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/stroke_order_onyomi_label"
-                    android:textColor="?attr/colorTextMuted"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvDetailOnyomi"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:textColor="?attr/colorTextPrimary"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_detail_panel"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/stroke_order_kunyomi_label"
-                    android:textColor="?attr/colorTextMuted"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvDetailKunyomi"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:textColor="?attr/colorTextPrimary"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_detail_button_secondary"
+                android:minHeight="44dp"
+                android:text="@string/stroke_order_replay"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorSecondaryButtonText"
+                android:textSize="15sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -263,16 +381,33 @@
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
             android:orientation="vertical"
-            android:padding="16dp"
+            android:padding="18dp"
             android:visibility="gone">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/detail_compounds_label"
-                android:textColor="?attr/colorAccentWarm"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/detail_compounds_label"
+                    android:textColor="?attr/colorAccentWarm"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_compounds_link_cached"
+                    android:textColor="?attr/colorAccentMain"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -286,7 +421,7 @@
                 android:id="@+id/containerCompoundExamples"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="8dp"
                 android:orientation="vertical" />
         </LinearLayout>
 
@@ -295,105 +430,94 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:background="@drawable/bg_detail_card"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/today_study_stats_label"
-                android:textColor="?attr/colorAccentWarm"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/cardTodayMetric"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_detail_panel"
+                android:orientation="vertical"
+                android:padding="14dp">
 
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_detail_panel"
-                    android:orientation="vertical"
-                    android:padding="12dp">
+                    android:text="@string/detail_metric_today_label"
+                    android:textColor="?attr/colorTextMuted"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/today_study_total_label"
-                        android:textColor="?attr/colorTextMuted"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvTodayStudyTotal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:textColor="?attr/colorTextPrimary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/tvTodayStudyOpenCount"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_detail_panel"
-                    android:orientation="vertical"
-                    android:padding="12dp">
+                    android:layout_marginTop="8dp"
+                    android:textColor="?attr/colorTextPrimary"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/today_study_open_count_label"
-                        android:textColor="?attr/colorTextMuted"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvTodayStudyOpenCount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:textColor="?attr/colorTextPrimary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_detail_panel"
-                    android:orientation="vertical"
-                    android:padding="12dp">
+                    android:layout_marginTop="4dp"
+                    android:text="@string/detail_metric_today_body"
+                    android:textColor="?attr/colorTextMuted"
+                    android:textSize="13sp" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/today_study_kanji_label"
-                        android:textColor="?attr/colorTextMuted"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/cardCompoundMetric"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_detail_panel"
+                android:orientation="vertical"
+                android:padding="14dp">
 
-                    <TextView
-                        android:id="@+id/tvTodayStudyKanji"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:textColor="?attr/colorTextPrimary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_metric_compounds_label"
+                    android:textColor="?attr/colorTextMuted"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvCompoundMetricValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="?attr/colorTextPrimary"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/detail_metric_compounds_body"
+                    android:textColor="?attr/colorTextMuted"
+                    android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btnNextRandomKanji"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_detail_button"
+            android:minHeight="52dp"
+            android:text="@string/stroke_order_next_random"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorPrimaryButtonText"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:id="@+id/sectionMeaning"
@@ -402,7 +526,7 @@
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="18dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -416,9 +540,9 @@
                 android:id="@+id/tvDetailMeaning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="8dp"
                 android:textColor="?attr/colorTextPrimary"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -429,7 +553,7 @@
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_detail_card"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="18dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -443,7 +567,7 @@
                 android:id="@+id/tvDetailNote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="8dp"
                 android:textColor="?attr/colorTextSecondary"
                 android:textSize="16sp" />
 

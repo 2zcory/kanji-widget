@@ -1,0 +1,10 @@
+# Copy the keys you need into your ignored local.properties file.
+# Do not commit real signing values.
+
+sdk.dir=/absolute/path/to/android-sdk
+
+# Required for ./gradlew assembleRelease
+release.storeFile=/absolute/path/to/kanji-widget-release.jks
+release.storePassword=change-me
+release.keyAlias=kanji-widget
+release.keyPassword=change-me

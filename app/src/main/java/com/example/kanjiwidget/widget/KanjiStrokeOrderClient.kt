@@ -5,6 +5,8 @@ import java.net.URL
 
 object KanjiStrokeOrderClient {
     private const val BASE_URL = "https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji"
+    private val viewBoxRegex =
+        Regex("""viewBox\s*=\s*"([\-0-9.]+)\s+([\-0-9.]+)\s+([\-0-9.]+)\s+([\-0-9.]+)"""")
 
     fun fetchSvg(kanji: String): String? {
         val normalized = kanji.trim()
@@ -65,12 +67,20 @@ object KanjiStrokeOrderClient {
                   justify-content: center;
                   align-items: center;
                   min-height: 100vh;
-                  padding: 0;
+                  padding: 10px;
+                }
+                #stroke-root {
+                  width: min(88vw, 430px);
+                  height: min(88vw, 430px);
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
                 }
                 svg {
-                  width: min(92vw, 460px);
-                  height: min(92vw, 460px);
+                  width: 100%;
+                  height: 100%;
                   display: block;
+                  overflow: visible;
                 }
                 #stroke-root path {
                   stroke: $strokeColorHex !important;
@@ -127,7 +137,27 @@ object KanjiStrokeOrderClient {
     private fun sanitizeSvg(rawSvg: String): String {
         val svgStart = rawSvg.indexOf("<svg")
         if (svgStart < 0) return rawSvg.trim()
-        return rawSvg.substring(svgStart).trim()
+        val svg = rawSvg.substring(svgStart).trim()
+        return expandViewBox(svg)
+    }
+
+    private fun expandViewBox(svg: String): String {
+        val match = viewBoxRegex.find(svg) ?: return svg
+        val minX = match.groupValues[1].toDoubleOrNull() ?: return svg
+        val minY = match.groupValues[2].toDoubleOrNull() ?: return svg
+        val width = match.groupValues[3].toDoubleOrNull() ?: return svg
+        val height = match.groupValues[4].toDoubleOrNull() ?: return svg
+        val padding = maxOf(width, height) * 0.09
+        val expandedViewBox = "viewBox=\"${formatDecimal(minX - padding)} ${formatDecimal(minY - padding)} ${formatDecimal(width + (padding * 2))} ${formatDecimal(height + (padding * 2))}\""
+        return svg.replaceRange(match.range, expandedViewBox)
+    }
+
+    private fun formatDecimal(value: Double): String {
+        return if (value % 1.0 == 0.0) {
+            value.toInt().toString()
+        } else {
+            "%.2f".format(java.util.Locale.US, value)
+        }
     }
 
     private fun escapeHtml(value: String): String {

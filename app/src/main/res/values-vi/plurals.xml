@@ -1,38 +1,29 @@
 <resources>
     <plurals name="stroke_count">
-        <item quantity="one">%d nét</item>
         <item quantity="other">%d nét</item>
     </plurals>
-    <plurals name="open_count">
-        <item quantity="one">%d lượt mở hợp lệ</item>
-        <item quantity="other">%d lượt mở hợp lệ</item>
-    </plurals>
     <plurals name="duration_minutes">
-        <item quantity="one">%d phút</item>
         <item quantity="other">%d phút</item>
     </plurals>
     <plurals name="duration_seconds">
-        <item quantity="one">%d giây</item>
         <item quantity="other">%d giây</item>
     </plurals>
     <plurals name="day_count">
-        <item quantity="one">%d ngày</item>
         <item quantity="other">%d ngày</item>
     </plurals>
     <plurals name="widget_catalog_count">
-        <item quantity="one">Danh sách: %d chữ</item>
         <item quantity="other">Danh sách: %d chữ</item>
     </plurals>
     <plurals name="widget_freshness_minutes">
-        <item quantity="one">%d phút trước</item>
         <item quantity="other">%d phút trước</item>
     </plurals>
     <plurals name="widget_freshness_hours">
-        <item quantity="one">%d giờ trước</item>
         <item quantity="other">%d giờ trước</item>
     </plurals>
     <plurals name="widget_freshness_days">
-        <item quantity="one">%d ngày trước</item>
         <item quantity="other">%d ngày trước</item>
+    </plurals>
+    <plurals name="detail_reading_more">
+        <item quantity="other">+%d mục nữa</item>
     </plurals>
 </resources>

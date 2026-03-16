@@ -24,7 +24,8 @@ class WidgetConfigurationActivity : ThemedActivity() {
     private val opacityLevels = listOf(1.0f, 0.85f, 0.70f, 0.55f, 0.40f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prepareTheme(savedInstanceState)
+        applyPreparedTheme()
+        super.onCreate(savedInstanceState)
         setResult(Activity.RESULT_CANCELED)
 
         appWidgetId = intent?.extras?.getInt(

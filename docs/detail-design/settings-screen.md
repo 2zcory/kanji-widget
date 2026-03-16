@@ -24,7 +24,7 @@ The settings screen should absorb low-frequency utility controls so the main scr
 
 The screen should:
 - feel visually consistent with the shipped theme system
-- reuse the same popup overlay pattern already used for theme and language pickers
+- use a compact top bar with icon affordances instead of an oversized in-screen title block
 - keep utility controls readable in `Light`, `Dark`, and `Glass`
 
 ## Proposed UI Structure
@@ -32,46 +32,53 @@ The screen should:
 ### 1. Header
 
 Contents:
-- back affordance
-- `Settings` title
-- short subtitle explaining that theme, language, and widget controls live here
+- one compact back affordance only
+
+Behavior:
+- do not repeat a large centered screen title when the current screen is already obvious from the content stack
+- keep the screen title implicit and let the cards below carry the information architecture
+- keep the top bar visually quiet instead of adding a second trailing action
+- keep `Widget help` in the utility stack instead of duplicating it as a top-bar action
 
 ### 2. Widget Controls Section
 
 Contents:
 - widget state summary text
-- current shared widget opacity value
-- one action to cycle through supported opacity presets
+- one compact shared-opacity value readout
+- one direct slider for the shared widget opacity
 - one action to open widget setup instructions
 
 Behavior:
 - opacity remains global across active widget instances
-- supported preset levels remain `100%`, `85%`, `70%`, `55%`, and `40%`
+- the slider supports the shared range from `40%` through `100%`
+- keep the opacity label and value in one compact row instead of a large hero-style number
 - widget help continues using the shared overlay popup system
 
 ### 3. Appearance Section
 
 Contents:
 - short explanation of theme behavior
-- current selected app theme label
-- action to open the theme picker
+- a two-row grid of visible theme tiles for `System`, `Light`, `Dark`, and `Glass`
+- one small preview treatment per tile so the choices scan faster than plain buttons
+- one compact section-link style meta label to show the fixed theme count
 
 Behavior:
 - `System`, `Light`, `Dark`, and `Glass` remain available
 - changing theme recreates the current screen so all in-app surfaces update together
 - this slice still applies theme changes only to in-app screens, not to home screen widget `RemoteViews`
+- selected-state styling should be carried by the tile itself instead of a separate current-theme label block
 
 ### 4. Language Section
 
 Contents:
-- short explanation of language behavior
-- current selected app language label
-- action to open the language picker
+- one list row with the current selected app language
+- one list row for widget help
 
 Behavior:
 - default selection is system language
 - changing language updates `AppCompat` per-app locales
 - widget refresh behavior remains unchanged after language changes
+- the language and help rows should live in the same utility stack as the widget-opacity control instead of becoming separate heavyweight cards
 
 ## Interaction Diagram
 
@@ -79,13 +86,13 @@ Behavior:
 flowchart TD
     A[Open SettingsActivity] --> B[Read current theme, language, and widget opacity]
     B --> C[Render utility sections]
-    C --> D[User opens theme picker]
+    C --> D[User taps a visible theme option]
     D --> E[Persist selected theme]
     E --> F[Recreate settings screen]
     C --> G[User opens language picker]
     G --> H[Update AppCompat locales]
     H --> I[Refresh widgets and recreate]
-    C --> J[User changes widget opacity]
+    C --> J[User drags the widget opacity slider]
     J --> K[Persist shared opacity]
     K --> L[Refresh active widgets]
     C --> M[User opens widget help]
@@ -94,5 +101,6 @@ flowchart TD
 
 ## Notes
 
-- The first slice prefers moving existing controls over redesigning their underlying behavior
+- This slice changes the shared widget-opacity interaction from preset cycling to a direct slider while keeping the setting global across active widgets
 - Shared popup styling should stay centralized so later settings additions do not reintroduce divergent dialog behavior
+- The shipped first slice now uses a back-only top bar on `Settings`; `Widget help` remains reachable from the list row in the utility stack

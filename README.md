@@ -63,6 +63,20 @@ Debug APK output:
 Release APK output:
 - `app/build/outputs/apk/release/app-release.apk`
 
+### Local Signed Release
+
+1. Copy the needed keys from `local.properties.example` into your ignored `local.properties`
+2. Point `release.storeFile` at your local keystore path
+3. Fill `release.storePassword`, `release.keyAlias`, and `release.keyPassword`
+4. Run:
+
+```bash
+./gradlew assembleRelease
+```
+
+Release notes for the current prep target:
+- `docs/releases/v1.7.0.md`
+
 ## GitHub Actions
 
 The repository includes:

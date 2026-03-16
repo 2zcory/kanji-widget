@@ -82,24 +82,29 @@ Out-of-scope for this slice:
 ### Hero section
 
 Current contents:
+- top-left back action
+- small `Study focus` label
+- one main pronunciation action inside the hero top row
 - large kanji title
 - meaning subtitle
-- optional hero metadata row
-- JLPT badge
+- JLPT badge plus optional grade badge
+- optional hero metadata row for stroke count and frequency
+- embedded Onyomi and Kunyomi cards with compact count pills and reading chips
 
 Hero metadata currently includes:
 - stroke count
-- grade
 - frequency
 
 Behavior:
-- hide the hero metadata row when all three values are missing
+- keep the grade as its own badge when available
+- hide the hero metadata row when stroke count and frequency are both missing
 - show the JLPT placeholder badge when JLPT data is unavailable
 
 V2 first-slice direction:
 - the hero should read as a study card with stronger visual separation between dominant study content and supporting metadata
 - the JLPT badge should remain visible but secondary to the kanji and meaning
 - metadata should stay scannable without competing with the main study target
+- readings should now live inside the hero so the first screenful feels like one coherent study block instead of separate stacked sections
 
 ### Stroke-order card
 
@@ -108,11 +113,10 @@ Current contents:
 - short usage hint
 - stroke-order canvas area
 - status and loading state
-- action row
+- one secondary `Replay` action
 
-Current action row:
-- `Replay`
-- `Next random`
+Current continuation action:
+- `Next random` lives below the support sections as its own clear continuation CTA
 
 Behavior:
 - `Replay` restarts the current animation if stroke-order HTML is already loaded
@@ -120,17 +124,17 @@ Behavior:
 - `Next random` opens another kanji detail screen and finishes the current detail activity
 
 V2 first-slice direction:
-- `Next random` should become the visually primary continuation action
-- `Replay` should stay immediately available as a secondary action
-- the action layout should remain comfortable on common phone widths without making the row feel crowded
+- `Next random` should remain the visually primary continuation action even though it no longer sits inside the stroke card
+- `Replay` should stay immediately available near the canvas as a secondary action
+- the stroke card should focus on the animation surface itself instead of competing with a second large CTA
 - loading and error states should still occupy the canvas area without leaving broken transitions around the action area
 
 ### Readings section
 
 Current contents:
-- Onyomi label and value
-- Kunyomi label and value
-- one main pronunciation playback control
+- Onyomi card with compact chip grid and count
+- Kunyomi card with compact chip grid and count
+- one main pronunciation playback control in the hero header
 
 Behavior:
 - use a shared placeholder when a reading field is unavailable
@@ -151,9 +155,7 @@ Current first-slice goal:
 
 Each visible compound row should include:
 - written form
-- reading
-- short meaning
-- short usage hint
+- one compact subtitle line that combines meaning and reading when available
 - a small pronunciation playback control when the row has a usable reading
 
 Behavior:
@@ -164,11 +166,6 @@ Current behavior target:
 - prefer compounds that appear common or readable based on source priority metadata
 - avoid unusually long, low-signal, or obviously obscure rows when better candidates exist
 - hide the entire section if no suitable compounds are available after filtering
-
-Usage hint rule for v1:
-- the usage field is a short label derived from source priority markers and meaning shape
-- it is not a generated full sentence example
-- example labels may include `Common word`, `News-heavy`, `Formal term`, or `Study word`
 
 Compound audio rule for v1:
 - compound-row playback uses the row reading returned from the compounds source
@@ -184,17 +181,16 @@ V2 first-slice direction:
 ### Today section
 
 Current contents:
-- Today total
-- Valid opens
-- This kanji
+- one `Today` metric card for valid detail opens
+- one `Compounds` metric card for the currently rendered local example count
 
 Behavior:
 - values are computed from local study tracking only
 - the section always renders, even when the values are zero
 
 V2 first-slice direction:
-- today stats should feel like supportive context rather than a second primary content block
-- the three values should be easy to compare at a glance without taking more visual weight than the hero, stroke-order, or readings sections
+- support metrics should feel like quiet context rather than a second primary content block
+- the cards should stay easy to compare at a glance without taking more visual weight than the hero, stroke-order, or compounds sections
 
 ### Meaning and note sections
 
@@ -281,7 +277,7 @@ sequenceDiagram
     Detail->>Stats: Start study session
     Detail->>Stroke: fetchSvg(kanji)
     Stroke-->>Detail: Animated HTML payload
-    Detail->>Detail: Render hero, readings, note, today stats
+    Detail->>Detail: Render hero study block, stroke preview, compounds, and support metrics
 
     opt Play pronunciation
         User->>Detail: Tap play

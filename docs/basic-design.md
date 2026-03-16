@@ -182,6 +182,8 @@ UI direction:
 - clear empty and loading states
 - compact stats that do not compete visually with the learning flow
 - widget surfaces should feel like layered study cards rather than plain stacked text
+- refreshed in-app surfaces should share one calm light-blue card language rather than looking like separate feature silos
+- each screen should have one obvious primary study block first, with utility and support content visually quieter underneath
 - the launcher icon should visually match the widget-first Kanji card identity
 
 ## Constraints

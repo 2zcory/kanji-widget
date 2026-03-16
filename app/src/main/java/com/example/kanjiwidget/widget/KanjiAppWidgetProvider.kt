@@ -258,33 +258,33 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             val scale = minOf(widthScale, heightScale).coerceIn(0.42f, 1.45f)
 
             val kanjiSize = when (sizeClass) {
-                WidgetSizeClass.COMPACT -> 56f * scale
-                WidgetSizeClass.MEDIUM -> 66f * scale
-                WidgetSizeClass.EXPANDED -> 72f * scale
+                WidgetSizeClass.COMPACT -> 52f * scale
+                WidgetSizeClass.MEDIUM -> 60f * scale
+                WidgetSizeClass.EXPANDED -> 66f * scale
             }
             val jlptSize = when (sizeClass) {
-                WidgetSizeClass.COMPACT -> 14f * scale
-                WidgetSizeClass.MEDIUM -> 16f * scale
-                WidgetSizeClass.EXPANDED -> 18f * scale
+                WidgetSizeClass.COMPACT -> 12f * scale
+                WidgetSizeClass.MEDIUM -> 13f * scale
+                WidgetSizeClass.EXPANDED -> 13f * scale
             }
             val bodySize = when (sizeClass) {
                 WidgetSizeClass.COMPACT -> 13f * scale
-                WidgetSizeClass.MEDIUM -> 15f * scale
-                WidgetSizeClass.EXPANDED -> 16f * scale
+                WidgetSizeClass.MEDIUM -> 14f * scale
+                WidgetSizeClass.EXPANDED -> 15f * scale
             }
             val exampleSize = when (sizeClass) {
                 WidgetSizeClass.COMPACT -> 12f * scale
-                WidgetSizeClass.MEDIUM -> 14f * scale
+                WidgetSizeClass.MEDIUM -> 13f * scale
                 WidgetSizeClass.EXPANDED -> 13f * scale
             }
             val metaSize = when (sizeClass) {
-                WidgetSizeClass.COMPACT -> 11f * scale
-                WidgetSizeClass.MEDIUM -> 12f * scale
-                WidgetSizeClass.EXPANDED -> 13f * scale
+                WidgetSizeClass.COMPACT -> 10f * scale
+                WidgetSizeClass.MEDIUM -> 11f * scale
+                WidgetSizeClass.EXPANDED -> 12f * scale
             }
             val stateSize = when (sizeClass) {
                 WidgetSizeClass.COMPACT -> 11f * scale
-                WidgetSizeClass.MEDIUM -> 12f * scale
+                WidgetSizeClass.MEDIUM -> 11f * scale
                 WidgetSizeClass.EXPANDED -> 12f * scale
             }
             val buttonSize = when (sizeClass) {
@@ -314,9 +314,9 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
                 else -> R.drawable.bg_widget_pill_hidden
             }
             val stateTextColor = when {
-                !hasLoadedEntry -> Color.parseColor("#4D6172")
-                revealAnswer -> Color.parseColor("#376347")
-                else -> Color.parseColor("#4F5B66")
+                !hasLoadedEntry -> Color.parseColor("#54687B")
+                revealAnswer -> Color.parseColor("#296E69")
+                else -> Color.parseColor("#5B6A7D")
             }
             val heroBackground = when {
                 !hasLoadedEntry -> R.drawable.bg_widget_hero_loading
@@ -328,11 +328,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
                 revealAnswer -> R.drawable.bg_widget_action_revealed
                 else -> R.drawable.bg_widget_action
             }
-            val actionTextColor = if (revealAnswer) {
-                Color.parseColor("#F5FFF3")
-            } else {
-                Color.parseColor("#FFF8F1")
-            }
+            val actionTextColor = Color.parseColor("#FFFFFF")
             val exampleBackground = if (revealAnswer) {
                 R.drawable.bg_widget_info_card_revealed
             } else {
@@ -354,7 +350,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             hasLoadedEntry: Boolean,
         ) {
             val showMeaning = sizeClass != WidgetSizeClass.COMPACT
-            val showReading = sizeClass != WidgetSizeClass.COMPACT
+            val showReading = true
             val showExample = sizeClass == WidgetSizeClass.EXPANDED
                 || (sizeClass == WidgetSizeClass.MEDIUM && revealAnswer && hasLoadedEntry)
             val showMeta = sizeClass != WidgetSizeClass.COMPACT

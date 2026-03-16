@@ -37,6 +37,7 @@ class StudyTimeChartView @JvmOverloads constructor(
         textSize = sp(11f)
         textAlign = Paint.Align.CENTER
     }
+    private val barRect = RectF()
 
     init {
         refreshThemeColors()
@@ -78,7 +79,8 @@ class StudyTimeChartView @JvmOverloads constructor(
             }
             val top = chartBottom - barHeight
             val paint = if (point.totalMs <= 0L) zeroBarPaint else barPaint
-            canvas.drawRoundRect(RectF(left, top, right, chartBottom), dp(6f), dp(6f), paint)
+            barRect.set(left, top, right, chartBottom)
+            canvas.drawRoundRect(barRect, dp(6f), dp(6f), paint)
 
             if (shouldDrawLabel(index, points.size)) {
                 canvas.drawText(

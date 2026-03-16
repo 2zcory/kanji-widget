@@ -3,72 +3,34 @@
     android:id="@+id/recentKanjiItemRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:background="@drawable/bg_recent_kanji_item"
-    android:gravity="center_vertical"
-    android:minHeight="72dp"
-    android:orientation="horizontal"
-    android:paddingLeft="12dp"
-    android:paddingTop="10dp"
-    android:paddingRight="12dp"
-    android:paddingBottom="10dp">
+    android:background="@drawable/bg_home_recent_tile"
+    android:minHeight="124dp"
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/tvRecentKanji"
-        android:layout_width="56dp"
-        android:layout_height="wrap_content"
-        android:textColor="?attr/colorTextPrimary"
-        android:textSize="28sp"
-        android:textStyle="bold" />
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvRecentLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_detail_badge"
-            android:paddingLeft="8dp"
-            android:paddingTop="4dp"
-            android:paddingRight="8dp"
-            android:paddingBottom="4dp"
-            android:text="@string/home_recent_latest_label"
-            android:textColor="?attr/colorBadgeText"
-            android:textSize="10sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/tvRecentMeaning"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:textColor="?attr/colorTextSecondary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvRecentMeta"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="?attr/colorTextMuted"
-            android:textSize="13sp" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvRecentChevron"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:text="@string/home_recent_chevron"
-        android:textColor="?attr/colorAccentWarm"
-        android:textSize="18sp"
+        android:textColor="?attr/colorTextPrimary"
+        android:textSize="34sp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvRecentMeaning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="?attr/colorTextPrimary"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvRecentMeta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="?attr/colorTextMuted"
+        android:textSize="12sp" />
 
 </LinearLayout>
