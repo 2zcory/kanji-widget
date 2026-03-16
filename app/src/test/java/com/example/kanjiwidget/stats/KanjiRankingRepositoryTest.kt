@@ -20,14 +20,15 @@ class KanjiRankingRepositoryTest {
         val ranking = buildRankingFromEntries(
             entries = entries,
             scope = RankingScope.ALL_TIME,
+            metric = RankingMetric.STUDY_TIME,
             limit = 10,
             today = today,
             metadataProvider = { null },
         )
 
-        assertEquals(listOf("日", "月"), ranking.mostStudied.take(2).map { it.kanji })
-        assertEquals(listOf("A", "B"), ranking.leastStudied.take(2).map { it.kanji })
-        assertTrue(ranking.mostStudied.any { it.kanji == "日" && it.totalStudyMs == 180_000L })
+        assertEquals(listOf("日", "月"), ranking.mostRanked.take(2).map { it.kanji })
+        assertEquals(listOf("A", "B"), ranking.leastRanked.take(2).map { it.kanji })
+        assertTrue(ranking.mostRanked.any { it.kanji == "日" && it.totalStudyMs == 180_000L })
     }
 
     @Test
@@ -42,12 +43,61 @@ class KanjiRankingRepositoryTest {
         val ranking = buildRankingFromEntries(
             entries = entries,
             scope = RankingScope.LAST_30_DAYS,
+            metric = RankingMetric.STUDY_TIME,
             limit = 10,
             today = today,
             metadataProvider = { null },
         )
 
-        assertEquals(listOf("E"), ranking.mostStudied.map { it.kanji })
-        assertEquals(listOf("E"), ranking.leastStudied.map { it.kanji })
+        assertEquals(listOf("E"), ranking.mostRanked.map { it.kanji })
+        assertEquals(listOf("E"), ranking.leastRanked.map { it.kanji })
+    }
+
+    @Test
+    fun buildRankingFromEntries_openCountMetric() {
+        val today = LocalDate.of(2026, 3, 11)
+        val entries = mapOf(
+            "study_open_kanji_${today}_日" to 5L,
+            "study_open_kanji_${today.minusDays(1)}_日" to 2L,
+            "study_open_kanji_${today}_月" to 10L,
+            "study_kanji_${today}_日" to 1000L, // Time data should be ignored for open count sorting
+        )
+
+        val ranking = buildRankingFromEntries(
+            entries = entries,
+            scope = RankingScope.ALL_TIME,
+            metric = RankingMetric.OPEN_COUNT,
+            limit = 10,
+            today = today,
+            metadataProvider = { null },
+        )
+
+        assertEquals(listOf("月", "日"), ranking.mostRanked.map { it.kanji })
+        assertEquals(7L, ranking.mostRanked.find { it.kanji == "日" }?.openCount)
+        assertEquals(10L, ranking.mostRanked.find { it.kanji == "月" }?.openCount)
+    }
+
+    @Test
+    fun buildRankingFromEntries_last7DaysScope() {
+        val today = LocalDate.of(2026, 3, 11)
+        val entries = mapOf(
+            "study_kanji_${today.minusDays(8)}_OLD" to 1000L,
+            "study_kanji_${today.minusDays(6)}_NEW" to 500L,
+            "study_kanji_${today}_TODAY" to 200L,
+        )
+
+        val ranking = buildRankingFromEntries(
+            entries = entries,
+            scope = RankingScope.LAST_7_DAYS,
+            metric = RankingMetric.STUDY_TIME,
+            limit = 10,
+            today = today,
+            metadataProvider = { null },
+        )
+
+        val kanjis = ranking.mostRanked.map { it.kanji }
+        assertTrue("NEW" in kanjis)
+        assertTrue("TODAY" in kanjis)
+        assertTrue("OLD" !in kanjis)
     }
 }

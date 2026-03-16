@@ -68,6 +68,21 @@ object StudyTimeTracker {
         return prefs(context).getLong(kanjiKey(today(), normalizedKanji), 0L)
     }
 
+    @Synchronized
+    fun recordKanjiOpen(context: Context, kanji: String) {
+        val normalizedKanji = kanji.trim()
+        if (normalizedKanji.isBlank()) return
+        val sp = prefs(context)
+        val key = kanjiOpenKey(today(), normalizedKanji)
+        sp.edit().putLong(key, sp.getLong(key, 0L) + 1L).apply()
+    }
+
+    fun getTodayKanjiOpenCount(context: Context, kanji: String): Long {
+        val normalizedKanji = kanji.trim()
+        if (normalizedKanji.isBlank()) return 0L
+        return prefs(context).getLong(kanjiOpenKey(today(), normalizedKanji), 0L)
+    }
+
     fun getTodayOpenCount(context: Context): Int {
         return prefs(context).getInt(openCountKey(today()), 0)
     }
@@ -131,6 +146,8 @@ object StudyTimeTracker {
     private fun totalKey(date: LocalDate) = "study_total_$date"
 
     private fun openCountKey(date: LocalDate) = "study_open_count_$date"
+
+    private fun kanjiOpenKey(date: LocalDate, kanji: String) = "study_open_kanji_${date}_$kanji"
 
     private fun kanjiKey(date: LocalDate, kanji: String) = "study_kanji_${date}_$kanji"
 

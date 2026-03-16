@@ -1,0 +1,15 @@
+    <string name="ranking_title">Kanji ranking</string>
+    <string name="ranking_section_label">RANKING</string>
+    <string name="ranking_section_body">Open a row to jump straight back into a kanji detail card.</string>
+    <string name="ranking_scope_all">All time</string>
+    <string name="ranking_scope_30">30 days</string>
+    <string name="ranking_scope_7">7 days</string>
+    <string name="ranking_metric_time">Study time</string>
+    <string name="ranking_metric_open">Open count</string>
+    <string name="ranking_most_title">MOST RANKED</string>
+    <string name="ranking_least_title">LEAST RANKED</string>
+    <string name="ranking_empty">Not enough activity to rank yet.</string>
+    <string name="ranking_secondary_with_jlpt">%1$s • JLPT %2$s</string>
+    <string name="ranking_secondary_fallback">No detailed metadata</string>
+    <string name="ranking_secondary_last_activity">Last active %1$s</string>
+    <string name="ranking_last_activity_today">Today</string>

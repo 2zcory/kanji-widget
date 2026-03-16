@@ -35,6 +35,9 @@ class StudyStatsBottomSheet(
     private lateinit var btnRange30: Button
     private lateinit var btnRankingAll: Button
     private lateinit var btnRanking30: Button
+    private lateinit var btnRanking7: Button
+    private lateinit var btnMetricTime: Button
+    private lateinit var btnMetricOpen: Button
     private lateinit var rangeLabel: TextView
     private lateinit var summaryHintView: TextView
     private lateinit var totalView: TextView
@@ -43,9 +46,14 @@ class StudyStatsBottomSheet(
     private lateinit var currentStreakView: TextView
     private lateinit var bestDayView: TextView
     private lateinit var latestView: TextView
+    private lateinit var rankingMostTitle: TextView
+    private lateinit var rankingLeastTitle: TextView
     private lateinit var rankingMostContainer: LinearLayout
     private lateinit var rankingLeastContainer: LinearLayout
     private lateinit var rankingEmptyView: TextView
+
+    private var currentRankingScope = RankingScope.ALL_TIME
+    private var currentRankingMetric = RankingMetric.STUDY_TIME
 
     fun show() {
         val dialog = Dialog(activity)
@@ -64,6 +72,9 @@ class StudyStatsBottomSheet(
         btnRange30 = dialog.findViewById(R.id.btnChartRange30)
         btnRankingAll = dialog.findViewById(R.id.btnRankingScopeAll)
         btnRanking30 = dialog.findViewById(R.id.btnRankingScope30)
+        btnRanking7 = dialog.findViewById(R.id.btnRankingScope7)
+        btnMetricTime = dialog.findViewById(R.id.btnRankingMetricTime)
+        btnMetricOpen = dialog.findViewById(R.id.btnRankingMetricOpen)
         rangeLabel = dialog.findViewById(R.id.tvChartRangeLabel)
         summaryHintView = dialog.findViewById(R.id.tvChartSummaryHint)
         totalView = dialog.findViewById(R.id.tvChartTotal)
@@ -72,14 +83,21 @@ class StudyStatsBottomSheet(
         currentStreakView = dialog.findViewById(R.id.tvChartCurrentStreak)
         bestDayView = dialog.findViewById(R.id.tvChartBestDay)
         latestView = dialog.findViewById(R.id.tvChartLatestKanji)
+        rankingMostTitle = dialog.findViewById(R.id.tvRankingMostTitle)
+        rankingLeastTitle = dialog.findViewById(R.id.tvRankingLeastTitle)
         rankingMostContainer = dialog.findViewById(R.id.containerRankingMost)
         rankingLeastContainer = dialog.findViewById(R.id.containerRankingLeast)
         rankingEmptyView = dialog.findViewById(R.id.tvRankingEmpty)
 
         btnRange7.setOnClickListener { bindRange(7) }
         btnRange30.setOnClickListener { bindRange(30) }
-        btnRankingAll.setOnClickListener { bindRanking(RankingScope.ALL_TIME) }
-        btnRanking30.setOnClickListener { bindRanking(RankingScope.LAST_30_DAYS) }
+        
+        btnRankingAll.setOnClickListener { updateRankingScope(RankingScope.ALL_TIME) }
+        btnRanking30.setOnClickListener { updateRankingScope(RankingScope.LAST_30_DAYS) }
+        btnRanking7.setOnClickListener { updateRankingScope(RankingScope.LAST_7_DAYS) }
+        
+        btnMetricTime.setOnClickListener { updateRankingMetric(RankingMetric.STUDY_TIME) }
+        btnMetricOpen.setOnClickListener { updateRankingMetric(RankingMetric.OPEN_COUNT) }
 
         if (summary.latestKanji.isNullOrBlank()) {
             latestView.visibility = View.GONE
@@ -89,9 +107,19 @@ class StudyStatsBottomSheet(
         }
 
         bindRange(7)
-        bindRanking(RankingScope.ALL_TIME)
+        bindRanking()
         applyDepthStyling(dialog)
         dialog.show()
+    }
+
+    private fun updateRankingScope(scope: RankingScope) {
+        currentRankingScope = scope
+        bindRanking()
+    }
+
+    private fun updateRankingMetric(metric: RankingMetric) {
+        currentRankingMetric = metric
+        bindRanking()
     }
 
     private fun bindRange(days: Int) {
@@ -142,27 +170,35 @@ class StudyStatsBottomSheet(
         updateRangeButtons(days)
     }
 
-    private fun bindRanking(scope: RankingScope) {
-        val ranking = rankingRepository.getRanking(scope)
+    private fun bindRanking() {
+        val ranking = rankingRepository.getRanking(currentRankingScope, currentRankingMetric)
+        
+        rankingMostTitle.text = activity.getString(R.string.ranking_most_title)
+        rankingLeastTitle.text = activity.getString(R.string.ranking_least_title)
+        
         renderRankingSection(
             container = rankingMostContainer,
-            items = ranking.mostStudied,
+            items = ranking.mostRanked,
+            metric = currentRankingMetric
         )
         renderRankingSection(
             container = rankingLeastContainer,
-            items = ranking.leastStudied,
+            items = ranking.leastRanked,
+            metric = currentRankingMetric
         )
 
-        val hasAnyRanking = ranking.mostStudied.isNotEmpty() || ranking.leastStudied.isNotEmpty()
+        val hasAnyRanking = ranking.mostRanked.isNotEmpty() || ranking.leastRanked.isNotEmpty()
         rankingEmptyView.visibility = if (hasAnyRanking) View.GONE else View.VISIBLE
-        rankingMostContainer.visibility = if (ranking.mostStudied.isNotEmpty()) View.VISIBLE else View.GONE
-        rankingLeastContainer.visibility = if (ranking.leastStudied.isNotEmpty()) View.VISIBLE else View.GONE
-        updateRankingButtons(scope)
+        rankingMostContainer.visibility = if (ranking.mostRanked.isNotEmpty()) View.VISIBLE else View.GONE
+        rankingLeastContainer.visibility = if (ranking.leastRanked.isNotEmpty()) View.VISIBLE else View.GONE
+        
+        updateRankingControls()
     }
 
     private fun renderRankingSection(
         container: LinearLayout,
         items: List<KanjiStudyRankItem>,
+        metric: RankingMetric,
     ) {
         container.removeAllViews()
         val inflater = LayoutInflater.from(activity)
@@ -172,8 +208,14 @@ class StudyStatsBottomSheet(
             row.findViewById<TextView>(R.id.tvRankingPrimary).text =
                 item.meaning?.takeIf { it.isNotBlank() } ?: item.kanji
             row.findViewById<TextView>(R.id.tvRankingSecondary).text = buildSecondaryText(item)
-            row.findViewById<TextView>(R.id.tvRankingDuration).text =
+            
+            val metricValueView = row.findViewById<TextView>(R.id.tvRankingDuration)
+            metricValueView.text = if (metric == RankingMetric.STUDY_TIME) {
                 activity.formatDurationForUi(item.totalStudyMs)
+            } else {
+                item.openCount.toString()
+            }
+            
             row.setOnClickListener { activity.startActivity(buildDetailIntent(item)) }
             ThemeController.applyGlassDepth(row.findViewById(R.id.rankingItemRoot), elevatedDp = 8f)
             container.addView(row)
@@ -185,12 +227,12 @@ class StudyStatsBottomSheet(
         item.jlptLevel?.takeIf { it.isNotBlank() }?.let {
             parts += activity.getString(R.string.jlpt_format, it)
         }
-        item.lastStudiedAt?.let {
+        item.lastActivityAt?.let {
             val nowZone = ZoneId.systemDefault()
             val lastDate = Instant.ofEpochMilli(it).atZone(nowZone).toLocalDate()
             val today = LocalDate.now(nowZone)
             val relativeText = if (lastDate == today) {
-                activity.getString(R.string.ranking_last_studied_today)
+                activity.getString(R.string.ranking_last_activity_today)
             } else {
                 DateUtils.getRelativeTimeSpanString(
                     it,
@@ -199,7 +241,7 @@ class StudyStatsBottomSheet(
                 ).toString()
             }
             parts += activity.getString(
-                R.string.ranking_secondary_last_studied,
+                R.string.ranking_secondary_last_activity,
                 relativeText
             )
         }
@@ -226,13 +268,25 @@ class StudyStatsBottomSheet(
         applySegmentButtonTextColors(btnRange30, isSelected = days == 30)
     }
 
-    private fun updateRankingButtons(scope: RankingScope) {
+    private fun updateRankingControls() {
         val selected = R.drawable.bg_chart_range_selected
         val idle = R.drawable.bg_chart_range_idle
-        btnRankingAll.setBackgroundResource(if (scope == RankingScope.ALL_TIME) selected else idle)
-        btnRanking30.setBackgroundResource(if (scope == RankingScope.LAST_30_DAYS) selected else idle)
-        applySegmentButtonTextColors(btnRankingAll, isSelected = scope == RankingScope.ALL_TIME)
-        applySegmentButtonTextColors(btnRanking30, isSelected = scope == RankingScope.LAST_30_DAYS)
+        
+        // Update Scopes
+        btnRankingAll.setBackgroundResource(if (currentRankingScope == RankingScope.ALL_TIME) selected else idle)
+        btnRanking30.setBackgroundResource(if (currentRankingScope == RankingScope.LAST_30_DAYS) selected else idle)
+        btnRanking7.setBackgroundResource(if (currentRankingScope == RankingScope.LAST_7_DAYS) selected else idle)
+        
+        applySegmentButtonTextColors(btnRankingAll, isSelected = currentRankingScope == RankingScope.ALL_TIME)
+        applySegmentButtonTextColors(btnRanking30, isSelected = currentRankingScope == RankingScope.LAST_30_DAYS)
+        applySegmentButtonTextColors(btnRanking7, isSelected = currentRankingScope == RankingScope.LAST_7_DAYS)
+        
+        // Update Metrics
+        btnMetricTime.setBackgroundResource(if (currentRankingMetric == RankingMetric.STUDY_TIME) selected else idle)
+        btnMetricOpen.setBackgroundResource(if (currentRankingMetric == RankingMetric.OPEN_COUNT) selected else idle)
+        
+        applySegmentButtonTextColors(btnMetricTime, isSelected = currentRankingMetric == RankingMetric.STUDY_TIME)
+        applySegmentButtonTextColors(btnMetricOpen, isSelected = currentRankingMetric == RankingMetric.OPEN_COUNT)
     }
 
     private fun applySegmentButtonTextColors(button: Button, isSelected: Boolean) {
@@ -261,5 +315,8 @@ class StudyStatsBottomSheet(
         ThemeController.applyGlassDepth(btnRange30, elevatedDp = 0f)
         ThemeController.applyGlassDepth(btnRankingAll, elevatedDp = 0f)
         ThemeController.applyGlassDepth(btnRanking30, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(btnRanking7, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(btnMetricTime, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(btnMetricOpen, elevatedDp = 0f)
     }
 }

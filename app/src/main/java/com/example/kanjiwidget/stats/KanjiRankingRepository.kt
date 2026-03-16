@@ -11,11 +11,16 @@ class KanjiRankingRepository(private val context: Context) {
         context.getSharedPreferences(STUDY_PREF, Context.MODE_PRIVATE)
     }
 
-    fun getRanking(scope: RankingScope, limit: Int = 10): KanjiStudyRanking {
+    fun getRanking(
+        scope: RankingScope,
+        metric: RankingMetric = RankingMetric.STUDY_TIME,
+        limit: Int = 10
+    ): KanjiStudyRanking {
         return buildRankingFromEntries(
             context = context,
             entries = prefs.all,
             scope = scope,
+            metric = metric,
             limit = limit,
             today = LocalDate.now(ZoneId.systemDefault()),
         ) { kanji ->
@@ -25,7 +30,8 @@ class KanjiRankingRepository(private val context: Context) {
 
     internal class Aggregate {
         var totalStudyMs: Long = 0L
-        var lastStudiedDate: LocalDate? = null
+        var openCount: Long = 0L
+        var lastActivityDate: LocalDate? = null
     }
 
     companion object {
@@ -37,6 +43,7 @@ internal fun buildRankingFromEntries(
     context: Context? = null,
     entries: Map<String, *>,
     scope: RankingScope,
+    metric: RankingMetric,
     limit: Int,
     today: LocalDate,
     metadataProvider: (String) -> com.example.kanjiwidget.widget.KanjiEntry?,
@@ -47,26 +54,40 @@ internal fun buildRankingFromEntries(
     val aggregateByKanji = linkedMapOf<String, KanjiRankingRepository.Aggregate>()
 
     entries.forEach { (key, value) ->
-        val match = KANJI_KEY.matchEntire(key) ?: return@forEach
-        val date = runCatching { LocalDate.parse(match.groupValues[1]) }.getOrNull() ?: return@forEach
+        val match = KANJI_DATA_KEY.matchEntire(key) ?: return@forEach
+        val type = match.groupValues[1] // "kanji" or "open_kanji"
+        val date = runCatching { LocalDate.parse(match.groupValues[2]) }.getOrNull() ?: return@forEach
         if (date !in dateRange) return@forEach
 
-        val kanji = match.groupValues[2]
-        val totalMs = (value as? Long)?.takeIf { it > 0L } ?: return@forEach
+        val kanji = match.groupValues[3]
+        val numericValue = (value as? Number)?.toLong()?.takeIf { it > 0L } ?: return@forEach
+        
         val aggregate = aggregateByKanji.getOrPut(kanji) { KanjiRankingRepository.Aggregate() }
-        aggregate.totalStudyMs += totalMs
-        aggregate.lastStudiedDate = maxOf(aggregate.lastStudiedDate ?: date, date)
+        if (type == "kanji") {
+            aggregate.totalStudyMs += numericValue
+        } else if (type == "open_kanji") {
+            aggregate.openCount += numericValue
+        }
+        aggregate.lastActivityDate = maxOf(aggregate.lastActivityDate ?: date, date)
     }
 
     val items = aggregateByKanji.entries
         .asSequence()
         .mapNotNull { (kanji, aggregate) ->
-            if (aggregate.totalStudyMs <= 0L) return@mapNotNull null
+            val primaryValue = if (metric == RankingMetric.STUDY_TIME) {
+                aggregate.totalStudyMs
+            } else {
+                aggregate.openCount
+            }
+            
+            if (primaryValue <= 0L) return@mapNotNull null
+            
             val entry = metadataProvider(kanji)
             KanjiStudyRankItem(
                 kanji = kanji,
                 totalStudyMs = aggregate.totalStudyMs,
-                lastStudiedAt = aggregate.lastStudiedDate
+                openCount = aggregate.openCount,
+                lastActivityAt = aggregate.lastActivityDate
                     ?.atStartOfDay(ZoneId.systemDefault())
                     ?.toInstant()
                     ?.toEpochMilli(),
@@ -76,45 +97,59 @@ internal fun buildRankingFromEntries(
         }
         .toList()
 
+    val primarySelector: (KanjiStudyRankItem) -> Long = {
+        if (metric == RankingMetric.STUDY_TIME) it.totalStudyMs else it.openCount
+    }
+
     return KanjiStudyRanking(
         scope = scope,
-        mostStudied = items
-            .sortedWith(compareByDescending<KanjiStudyRankItem> { it.totalStudyMs }
-                .thenByDescending { it.lastStudiedAt ?: Long.MIN_VALUE }
+        metric = metric,
+        mostRanked = items
+            .sortedWith(compareByDescending<KanjiStudyRankItem> { primarySelector(it) }
+                .thenByDescending { it.lastActivityAt ?: Long.MIN_VALUE }
                 .thenBy { it.kanji })
             .take(limit),
-        leastStudied = items
-            .sortedWith(compareBy<KanjiStudyRankItem> { it.totalStudyMs }
-                .thenBy { it.lastStudiedAt ?: Long.MAX_VALUE }
+        leastRanked = items
+            .sortedWith(compareBy<KanjiStudyRankItem> { primarySelector(it) }
+                .thenBy { it.lastActivityAt ?: Long.MAX_VALUE }
                 .thenBy { it.kanji })
             .take(limit),
     )
 }
 
-private val KANJI_KEY = Regex("""study_kanji_([0-9]{4}-[0-9]{2}-[0-9]{2})_(.+)""")
+private val KANJI_DATA_KEY = Regex("""study_(kanji|open_kanji)_([0-9]{4}-[0-9]{2}-[0-9]{2})_(.+)""")
 
 data class KanjiStudyRankItem(
     val kanji: String,
     val totalStudyMs: Long,
-    val lastStudiedAt: Long?,
+    val openCount: Long,
+    val lastActivityAt: Long?,
     val meaning: String?,
     val jlptLevel: String?,
 )
 
 data class KanjiStudyRanking(
     val scope: RankingScope,
-    val mostStudied: List<KanjiStudyRankItem>,
-    val leastStudied: List<KanjiStudyRankItem>,
+    val metric: RankingMetric,
+    val mostRanked: List<KanjiStudyRankItem>,
+    val leastRanked: List<KanjiStudyRankItem>,
 )
 
 enum class RankingScope {
     ALL_TIME,
     LAST_30_DAYS,
+    LAST_7_DAYS,
+}
+
+enum class RankingMetric {
+    STUDY_TIME,
+    OPEN_COUNT,
 }
 
 private fun RankingScope.toDateRange(today: LocalDate): ClosedRange<LocalDate> {
     return when (this) {
         RankingScope.ALL_TIME -> LocalDate.of(1970, 1, 1)..today
         RankingScope.LAST_30_DAYS -> today.minusDays(29)..today
+        RankingScope.LAST_7_DAYS -> today.minusDays(6)..today
     }
 }
