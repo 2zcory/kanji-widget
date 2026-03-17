@@ -96,6 +96,33 @@ Reason:
 5. Repository joins cached kanji metadata.
 6. Repository returns sorted `KanjiStudyRanking` object.
 
+## Main Interaction Diagram
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Sheet as Study Stats Bottom Sheet
+    participant Repo as KanjiRankingRepository
+    participant Store as Study tracking storage
+    participant Prefs as KanjiWidgetPrefs
+    participant Detail as KanjiDetailActivity
+
+    User->>Sheet: Open stats and select scope/metric
+    Sheet->>Repo: getRanking(scope, metric, 10)
+    Repo->>Store: Read study/open keys in scope (IO Thread)
+    Repo->>Repo: Parse keys and aggregate by kanji
+    Repo->>Repo: Filter items by selected metric > 0
+    Repo->>Prefs: Join cached meaning/JLPT if available
+    Repo->>Repo: Sort most-ranked and least-ranked lists
+    Repo-->>Sheet: KanjiStudyRanking
+    Sheet->>Sheet: Render both ranking sections
+
+    opt User opens a ranked kanji
+        User->>Sheet: Tap ranking row
+        Sheet->>Detail: Open kanji detail for selected kanji
+    end
+```
+
 ## Repository Design
 
 Suggested models:
