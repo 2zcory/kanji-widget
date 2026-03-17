@@ -63,6 +63,14 @@ Debug APK output:
 Release APK output:
 - `app/build/outputs/apk/release/app-release.apk`
 
+### Debug Install Behavior
+
+- Debug builds install as a separate app because the debug variant uses the application ID suffix `.debug`
+- A new debug APK can update an already installed debug APK only when both APKs are signed with the same certificate
+- Local debug builds from the same host usually upgrade each other in place because they reuse that host's debug keystore
+- The GitHub Actions debug workflow does not inject a shared debug keystore, so remote debug artifacts should not be assumed to upgrade an existing local debug install without uninstalling first
+- Treat CI debug APKs as review artifacts unless the installed debug build is known to use the same signing identity
+
 ### Local Signed Release
 
 1. Copy the needed keys from `local.properties.example` into your ignored `local.properties`
