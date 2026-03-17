@@ -20,6 +20,10 @@ import com.example.kanjiwidget.widget.KanjiWidgetPrefs
 import kotlin.math.roundToInt
 import java.util.Locale
 
+import androidx.lifecycle.lifecycleScope
+import com.example.kanjiwidget.db.StudyStatsMigrator
+import kotlinx.coroutines.launch
+
 class MainActivity : ThemedActivity() {
     private val detailLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -61,6 +65,10 @@ class MainActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         runScreenEntranceAnimation()
+
+        lifecycleScope.launch {
+            StudyStatsMigrator(this@MainActivity).migrateIfNeeded()
+        }
 
         repository = HomeSummaryRepository(this)
         studyStatsRepository = StudyStatsRepository(this)

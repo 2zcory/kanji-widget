@@ -4,16 +4,29 @@ import android.content.Context
 import java.time.LocalDate
 import java.time.ZoneId
 
+import com.example.kanjiwidget.db.AppDatabase
+import kotlinx.coroutines.runBlocking
+
 class StudyStatsRepository(
     private val context: Context,
     private val todayProvider: () -> LocalDate = { LocalDate.now(ZoneId.systemDefault()) },
 ) {
-    fun getDailyChart(days: Int): StudyChartSummary {
-        return buildStudyChartSummary(
+    private val db by lazy { AppDatabase.getInstance(context) }
+
+    fun getDailyChart(days: Int): StudyChartSummary = runBlocking {
+        val today = todayProvider()
+        val startDate = today.minusDays(days.toLong() - 1)
+        
+        val dailyTotals = db.dailyTotalStudyDao().getDailyTotals(
+            startDate = startDate.toString(),
+            endDate = today.toString()
+        ).associateBy { it.date }
+
+        buildStudyChartSummary(
             days = days,
-            today = todayProvider(),
-            totalMsForDate = { date -> StudyTimeTracker.getTotalMs(context, date) },
-            openCountForDate = { date -> StudyTimeTracker.getOpenCount(context, date) },
+            today = today,
+            totalMsForDate = { date -> dailyTotals[date.toString()]?.totalStudyMs ?: 0L },
+            openCountForDate = { date -> dailyTotals[date.toString()]?.totalOpenCount ?: 0 },
         )
     }
 }
