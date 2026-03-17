@@ -178,6 +178,7 @@ class KanjiDetailActivity : ThemedActivity() {
         super.onStart()
         if (currentKanji.isNotBlank()) {
             RecentKanjiStore.recordViewedKanji(this, currentKanji)
+            StudyTimeTracker.recordKanjiOpen(this, currentKanji)
             StudyTimeTracker.startSession(this, currentKanji)
             refreshTodayStats()
         }
