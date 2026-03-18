@@ -6,6 +6,15 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 
+import com.example.kanjiwidget.db.AppDatabase
+import com.example.kanjiwidget.db.DailyKanjiStudyEntity
+import com.example.kanjiwidget.db.DailyTotalStudyEntity
+import androidx.room.withTransaction
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+
 object StudyTimeTracker {
     private const val PREF = "kanji_study_stats"
     private const val KEY_ACTIVE_KANJI = "active_kanji"
@@ -13,6 +22,8 @@ object StudyTimeTracker {
     private const val KEY_ACTIVE_START_ELAPSED = "active_start_elapsed_ms"
     private const val MIN_SESSION_MS = 1_000L
     private const val MAX_SESSION_MS = 10 * 60_000L
+
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     @Synchronized
     fun startSession(context: Context, kanji: String) {
@@ -51,48 +62,76 @@ object StudyTimeTracker {
 
         val durationMs = rawDurationMs.coerceAtMost(MAX_SESSION_MS)
         val endWallMs = startWallMs + durationMs
-        persistAcrossDates(sp, kanji, startWallMs, endWallMs)
+        
+        scope.launch {
+            persistAcrossDates(context, kanji, startWallMs, endWallMs)
+        }
     }
 
-    fun getTodayTotalMs(context: Context): Long {
-        return prefs(context).getLong(totalKey(today()), 0L)
+    fun getTodayTotalMs(context: Context): Long = runBlocking {
+        AppDatabase.getInstance(context).dailyTotalStudyDao().getEntry(today().toString())?.totalStudyMs ?: 0L
     }
 
-    fun getTotalMs(context: Context, date: LocalDate): Long {
-        return prefs(context).getLong(totalKey(date), 0L)
+    fun getTotalMs(context: Context, date: LocalDate): Long = runBlocking {
+        AppDatabase.getInstance(context).dailyTotalStudyDao().getEntry(date.toString())?.totalStudyMs ?: 0L
     }
 
-    fun getTodayKanjiMs(context: Context, kanji: String): Long {
+    fun getTodayKanjiMs(context: Context, kanji: String): Long = runBlocking {
         val normalizedKanji = kanji.trim()
-        if (normalizedKanji.isBlank()) return 0L
-        return prefs(context).getLong(kanjiKey(today(), normalizedKanji), 0L)
+        if (normalizedKanji.isBlank()) return@runBlocking 0L
+        AppDatabase.getInstance(context).dailyKanjiStudyDao().getEntry(today().toString(), normalizedKanji)?.studyTimeMs ?: 0L
     }
 
     @Synchronized
     fun recordKanjiOpen(context: Context, kanji: String) {
         val normalizedKanji = kanji.trim()
         if (normalizedKanji.isBlank()) return
-        val sp = prefs(context)
-        val key = kanjiOpenKey(today(), normalizedKanji)
-        sp.edit().putLong(key, sp.getLong(key, 0L) + 1L).apply()
+
+        scope.launch {
+            val date = today().toString()
+            val db = AppDatabase.getInstance(context)
+            db.withTransaction {
+                val kanjiDao = db.dailyKanjiStudyDao()
+                val totalDao = db.dailyTotalStudyDao()
+
+                val existingKanji = kanjiDao.getEntry(date, normalizedKanji)
+                kanjiDao.upsert(
+                    DailyKanjiStudyEntity(
+                        date = date,
+                        kanji = normalizedKanji,
+                        studyTimeMs = existingKanji?.studyTimeMs ?: 0L,
+                        openCount = (existingKanji?.openCount ?: 0L) + 1L
+                    )
+                )
+
+                val existingTotal = totalDao.getEntry(date)
+                totalDao.upsert(
+                    DailyTotalStudyEntity(
+                        date = date,
+                        totalStudyMs = existingTotal?.totalStudyMs ?: 0L,
+                        totalOpenCount = (existingTotal?.totalOpenCount ?: 0) + 1
+                    )
+                )
+            }
+        }
     }
 
-    fun getTodayKanjiOpenCount(context: Context, kanji: String): Long {
+    fun getTodayKanjiOpenCount(context: Context, kanji: String): Long = runBlocking {
         val normalizedKanji = kanji.trim()
-        if (normalizedKanji.isBlank()) return 0L
-        return prefs(context).getLong(kanjiOpenKey(today(), normalizedKanji), 0L)
+        if (normalizedKanji.isBlank()) return@runBlocking 0L
+        AppDatabase.getInstance(context).dailyKanjiStudyDao().getEntry(today().toString(), normalizedKanji)?.openCount ?: 0L
     }
 
-    fun getTodayOpenCount(context: Context): Int {
-        return prefs(context).getInt(openCountKey(today()), 0)
+    fun getTodayOpenCount(context: Context): Int = runBlocking {
+        AppDatabase.getInstance(context).dailyTotalStudyDao().getEntry(today().toString())?.totalOpenCount ?: 0
     }
 
-    fun getOpenCount(context: Context, date: LocalDate): Int {
-        return prefs(context).getInt(openCountKey(date), 0)
+    fun getOpenCount(context: Context, date: LocalDate): Int = runBlocking {
+        AppDatabase.getInstance(context).dailyTotalStudyDao().getEntry(date.toString())?.totalOpenCount ?: 0
     }
 
-    private fun persistAcrossDates(
-        sp: android.content.SharedPreferences,
+    private suspend fun persistAcrossDates(
+        context: Context,
         kanji: String,
         startWallMs: Long,
         endWallMs: Long,
@@ -101,35 +140,45 @@ object StudyTimeTracker {
 
         val zoneId = ZoneId.systemDefault()
         var cursor = startWallMs
-        val editor = sp.edit()
-        var incrementedOpenCount = false
+        
+        val db = AppDatabase.getInstance(context)
 
-        while (cursor < endWallMs) {
-            val date = dateAt(cursor, zoneId)
-            val nextBoundary = date.plusDays(1).atStartOfDay(zoneId).toInstant().toEpochMilli()
-            val segmentEnd = minOf(endWallMs, nextBoundary)
-            val segmentDuration = (segmentEnd - cursor).coerceAtLeast(0L)
-            if (segmentDuration > 0L) {
-                editor.putLong(
-                    totalKey(date),
-                    sp.getLong(totalKey(date), 0L) + segmentDuration
-                )
-                editor.putLong(
-                    kanjiKey(date, kanji),
-                    sp.getLong(kanjiKey(date, kanji), 0L) + segmentDuration
-                )
-                if (!incrementedOpenCount) {
-                    editor.putInt(
-                        openCountKey(date),
-                        sp.getInt(openCountKey(date), 0) + 1
+        db.withTransaction {
+            val kanjiDao = db.dailyKanjiStudyDao()
+            val totalDao = db.dailyTotalStudyDao()
+
+            while (cursor < endWallMs) {
+                val date = dateAt(cursor, zoneId)
+                val dateStr = date.toString()
+                val nextBoundary = date.plusDays(1).atStartOfDay(zoneId).toInstant().toEpochMilli()
+                val segmentEnd = minOf(endWallMs, nextBoundary)
+                val segmentDuration = (segmentEnd - cursor).coerceAtLeast(0L)
+                
+                if (segmentDuration > 0L) {
+                    // Update Total
+                    val existingTotal = totalDao.getEntry(dateStr)
+                    totalDao.upsert(
+                        DailyTotalStudyEntity(
+                            date = dateStr,
+                            totalStudyMs = (existingTotal?.totalStudyMs ?: 0L) + segmentDuration,
+                            totalOpenCount = existingTotal?.totalOpenCount ?: 0
+                        )
                     )
-                    incrementedOpenCount = true
+                    
+                    // Update Kanji
+                    val existingKanji = kanjiDao.getEntry(dateStr, kanji)
+                    kanjiDao.upsert(
+                        DailyKanjiStudyEntity(
+                            date = dateStr,
+                            kanji = kanji,
+                            studyTimeMs = (existingKanji?.studyTimeMs ?: 0L) + segmentDuration,
+                            openCount = existingKanji?.openCount ?: 0L
+                        )
+                    )
                 }
+                cursor = segmentEnd
             }
-            cursor = segmentEnd
         }
-
-        editor.apply()
     }
 
     private fun clearActiveSession(sp: android.content.SharedPreferences) {

@@ -1,97 +1,73 @@
 package com.example.kanjiwidget.stats
 
 import android.content.Context
-import com.example.kanjiwidget.widget.KanjiWidgetPrefs
-import com.example.kanjiwidget.widget.resolveDisplayMeaning
+import com.example.kanjiwidget.db.AppDatabase
+import com.example.kanjiwidget.db.KanjiRankingResult
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.ZoneId
 
 class KanjiRankingRepository(private val context: Context) {
-    private val prefs by lazy {
-        context.getSharedPreferences(STUDY_PREF, Context.MODE_PRIVATE)
-    }
+    private val db by lazy { AppDatabase.getInstance(context) }
 
     fun getRanking(
         scope: RankingScope,
         metric: RankingMetric = RankingMetric.STUDY_TIME,
         limit: Int = 10
-    ): KanjiStudyRanking {
-        return buildRankingFromEntries(
+    ): KanjiStudyRanking = runBlocking {
+        val today = LocalDate.now(ZoneId.systemDefault())
+        val dateRange = scope.toDateRange(today)
+        
+        val results = db.dailyKanjiStudyDao().getRanking(
+            startDate = dateRange.start.toString(),
+            endDate = dateRange.endInclusive.toString()
+        )
+
+        buildRankingFromResults(
             context = context,
-            entries = prefs.all,
+            results = results,
             scope = scope,
             metric = metric,
-            limit = limit,
-            today = LocalDate.now(ZoneId.systemDefault()),
+            limit = limit
         ) { kanji ->
-            KanjiWidgetPrefs.getRemoteEntry(context, kanji)
+            com.example.kanjiwidget.widget.KanjiWidgetPrefs.getRemoteEntry(context, kanji)
         }
-    }
-
-    internal class Aggregate {
-        var totalStudyMs: Long = 0L
-        var openCount: Long = 0L
-        var lastActivityDate: LocalDate? = null
-    }
-
-    companion object {
-        private const val STUDY_PREF = "kanji_study_stats"
     }
 }
 
-internal fun buildRankingFromEntries(
+internal fun buildRankingFromResults(
     context: Context? = null,
-    entries: Map<String, *>,
+    results: List<KanjiRankingResult>,
     scope: RankingScope,
     metric: RankingMetric,
     limit: Int,
-    today: LocalDate,
     metadataProvider: (String) -> com.example.kanjiwidget.widget.KanjiEntry?,
 ): KanjiStudyRanking {
     require(limit > 0) { "limit must be positive" }
 
-    val dateRange = scope.toDateRange(today)
-    val aggregateByKanji = linkedMapOf<String, KanjiRankingRepository.Aggregate>()
-
-    entries.forEach { (key, value) ->
-        val match = KANJI_DATA_KEY.matchEntire(key) ?: return@forEach
-        val type = match.groupValues[1] // "kanji" or "open_kanji"
-        val date = runCatching { LocalDate.parse(match.groupValues[2]) }.getOrNull() ?: return@forEach
-        if (date !in dateRange) return@forEach
-
-        val kanji = match.groupValues[3]
-        val numericValue = (value as? Number)?.toLong()?.takeIf { it > 0L } ?: return@forEach
-        
-        val aggregate = aggregateByKanji.getOrPut(kanji) { KanjiRankingRepository.Aggregate() }
-        if (type == "kanji") {
-            aggregate.totalStudyMs += numericValue
-        } else if (type == "open_kanji") {
-            aggregate.openCount += numericValue
-        }
-        aggregate.lastActivityDate = maxOf(aggregate.lastActivityDate ?: date, date)
-    }
-
-    val items = aggregateByKanji.entries
+    val items = results
         .asSequence()
-        .mapNotNull { (kanji, aggregate) ->
+        .mapNotNull { result ->
             val primaryValue = if (metric == RankingMetric.STUDY_TIME) {
-                aggregate.totalStudyMs
+                result.totalStudyTimeMs
             } else {
-                aggregate.openCount
+                result.totalOpenCount
             }
             
             if (primaryValue <= 0L) return@mapNotNull null
             
-            val entry = metadataProvider(kanji)
+            val entry = metadataProvider(result.kanji)
+            val lastActivityDate = runCatching { LocalDate.parse(result.lastActivityDate) }.getOrNull()
+            
             KanjiStudyRankItem(
-                kanji = kanji,
-                totalStudyMs = aggregate.totalStudyMs,
-                openCount = aggregate.openCount,
-                lastActivityAt = aggregate.lastActivityDate
+                kanji = result.kanji,
+                totalStudyMs = result.totalStudyTimeMs,
+                openCount = result.totalOpenCount,
+                lastActivityAt = lastActivityDate
                     ?.atStartOfDay(ZoneId.systemDefault())
                     ?.toInstant()
                     ?.toEpochMilli(),
-                meaning = if (context != null) resolveDisplayMeaning(context, entry) else entry?.meaning,
+                meaning = if (context != null) com.example.kanjiwidget.widget.resolveDisplayMeaning(context, entry) else entry?.meaning,
                 jlptLevel = entry?.jlptLevel,
             )
         }
@@ -116,8 +92,6 @@ internal fun buildRankingFromEntries(
             .take(limit),
     )
 }
-
-private val KANJI_DATA_KEY = Regex("""study_(kanji|open_kanji)_([0-9]{4}-[0-9]{2}-[0-9]{2})_(.+)""")
 
 data class KanjiStudyRankItem(
     val kanji: String,
