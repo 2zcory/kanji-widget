@@ -122,4 +122,11 @@ class KanjiWidgetLogicTest {
             ),
         )
     }
+
+    @Test
+    fun formatWidgetStreak_returnsFormattedStringForPositiveStreak() {
+        assertEquals("5d", formatWidgetStreak(5) { count -> "${count}d" })
+        assertEquals(null, formatWidgetStreak(0) { "streak" })
+        assertEquals(null, formatWidgetStreak(-1) { "streak" })
+    }
 }

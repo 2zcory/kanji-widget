@@ -89,7 +89,9 @@
     <string name="widget_config_opacity_option">%1$d%%</string>
     <string name="widget_config_action_add">Thêm widget</string>
     <string name="widget_config_action_cancel">Hủy</string>
-    <string name="chart_title">Thống kê thời gian học</string>
+    <string name="widget_streak_value">%1$dn</string>
+    <string name="widget_study_done">XONG</string>
+    <string name="chart_title">Thống kê học tập</string>
     <string name="chart_sheet_label">THỐNG KÊ HỌC</string>
     <string name="chart_sheet_body">Nhịp học gần đây, tổng thời gian, và xếp hạng nằm gọn trong một sheet.</string>
     <string name="chart_range_7">7 ngày</string>
