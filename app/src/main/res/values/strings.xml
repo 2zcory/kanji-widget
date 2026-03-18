@@ -89,6 +89,8 @@
     <string name="widget_config_opacity_option">%1$d%%</string>
     <string name="widget_config_action_add">Add widget</string>
     <string name="widget_config_action_cancel">Cancel</string>
+    <string name="widget_streak_value">%1$dd</string>
+    <string name="widget_study_done">DONE</string>
     <string name="chart_title">Study time stats</string>
     <string name="chart_sheet_label">STUDY STATS</string>
     <string name="chart_sheet_body">Recent rhythm, totals, and ranking in one lightweight sheet.</string>

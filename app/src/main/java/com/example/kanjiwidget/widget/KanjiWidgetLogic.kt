@@ -108,3 +108,11 @@ internal fun shouldRotateWidgetForNewDay(
     val recordedDay = lastShownLocalDay?.takeIf { it.isNotBlank() } ?: return false
     return recordedDay != currentLocalDay
 }
+
+internal fun formatWidgetStreak(
+    streakDays: Int,
+    streakFormat: (Int) -> String,
+): String? {
+    if (streakDays <= 0) return null
+    return streakFormat(streakDays)
+}

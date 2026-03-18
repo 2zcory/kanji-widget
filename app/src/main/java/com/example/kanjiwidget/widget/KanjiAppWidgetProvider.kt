@@ -20,6 +20,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.kanjiwidget.KanjiDetailNavigator
 import com.example.kanjiwidget.R
+import com.example.kanjiwidget.stats.StudyStatsRepository
 
 class KanjiAppWidgetProvider : AppWidgetProvider() {
 
@@ -156,6 +157,10 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
                 WidgetSizeClass.EXPANDED -> R.layout.widget_kanji_expanded
             }
             val views = RemoteViews(context.packageName, layoutId)
+
+            val statsRepository = StudyStatsRepository(context)
+            val statsSummary = statsRepository.getDailyChart(days = 30)
+
             applyResponsiveLayout(manager, widgetId, views, sizeClass)
             views.setInt(
                 R.id.widgetBackground,
@@ -171,6 +176,8 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
                 formatJlptLabel(localizedContext, item?.jlptLevel, R.string.jlpt_placeholder)
             )
             applyStateStyling(views, revealAnswer, hasLoadedEntry)
+            applyStreakBadge(localizedContext, views, statsSummary.currentStreakDays, statsSummary.points.last().totalMs)
+
             views.setTextViewText(
                 R.id.tvState,
                 when {
@@ -244,6 +251,32 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             manager.updateAppWidget(widgetId, views)
         }
 
+        private fun applyStreakBadge(
+            context: Context,
+            views: RemoteViews,
+            streakDays: Int,
+            todayMs: Long,
+        ) {
+            val streakText = formatWidgetStreak(streakDays) { count ->
+                context.getString(R.string.widget_streak_value, count)
+            }
+            if (streakText == null) {
+                views.setViewVisibility(R.id.tvStreak, View.GONE)
+                return
+            }
+
+            views.setViewVisibility(R.id.tvStreak, View.VISIBLE)
+            
+            val isDone = todayMs > 0L
+            if (isDone) {
+                views.setTextViewText(R.id.tvStreak, context.getString(R.string.widget_study_done))
+                views.setTextColor(R.id.tvStreak, Color.parseColor("#2E7D32")) // Green
+            } else {
+                views.setTextViewText(R.id.tvStreak, streakText)
+                views.setTextColor(R.id.tvStreak, Color.parseColor("#E65100")) // Orange
+            }
+        }
+
         private fun applyResponsiveLayout(
             manager: AppWidgetManager,
             widgetId: Int,
@@ -296,6 +329,7 @@ class KanjiAppWidgetProvider : AppWidgetProvider() {
             views.setTextViewTextSize(R.id.tvKanji, TypedValue.COMPLEX_UNIT_SP, kanjiSize)
             views.setTextViewTextSize(R.id.tvJlpt, TypedValue.COMPLEX_UNIT_SP, jlptSize)
             views.setTextViewTextSize(R.id.tvState, TypedValue.COMPLEX_UNIT_SP, stateSize)
+            views.setTextViewTextSize(R.id.tvStreak, TypedValue.COMPLEX_UNIT_SP, stateSize)
             views.setTextViewTextSize(R.id.tvReading, TypedValue.COMPLEX_UNIT_SP, bodySize)
             views.setTextViewTextSize(R.id.tvMeaning, TypedValue.COMPLEX_UNIT_SP, bodySize)
             views.setTextViewTextSize(R.id.tvExample, TypedValue.COMPLEX_UNIT_SP, exampleSize)
