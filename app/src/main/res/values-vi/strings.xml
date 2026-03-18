@@ -63,6 +63,16 @@
     <string name="home_latest_meaning_placeholder">Đã mở gần đây nhưng chưa có dữ liệu chi tiết.</string>
     <string name="home_recent_title">Kanji gần đây</string>
     <string name="home_recent_link">Review gần đây</string>
+    <string name="dashboard_title">Trung tâm học tập</string>
+    <string name="dashboard_card_momentum">Tiến độ hôm nay</string>
+    <string name="dashboard_card_rhythm">Nhịp điệu học tập</string>
+    <string name="dashboard_card_insights">Cần chú trọng</string>
+    <string name="dashboard_card_ranking">Xếp hạng Kanji</string>
+    <string name="dashboard_streak_active">CHUỖI HOẠT ĐỘNG</string>
+    <string name="dashboard_streak_inactive">CỐ GẮNG LÊN</string>
+    <string name="dashboard_insight_difficult_reason">Xem %1$d lần, học %2$s</string>
+    <string name="dashboard_action_review">Ôn tập</string>
+    <string name="dashboard_action_view_all">Xem toàn bộ xếp hạng</string>
     <string name="home_recent_empty_link">Tạo lịch sử review</string>
     <string name="home_recent_empty_body">Hãy mở một kanji để tạo lưới review nhanh ở đây.</string>
     <string name="home_recent_chevron">›</string>

@@ -33,6 +33,33 @@ class KanjiRankingRepository(private val context: Context) {
             com.example.kanjiwidget.widget.KanjiWidgetPrefs.getRemoteEntry(context, kanji)
         }
     }
+
+    fun getDifficultKanji(limit: Int = 3): List<KanjiStudyRankItem> = runBlocking {
+        // Find kanji with high open count but low study time (difficult to remember)
+        val allTimeResults = db.dailyKanjiStudyDao().getRanking(
+            startDate = "1970-01-01",
+            endDate = LocalDate.now(ZoneId.systemDefault()).toString()
+        )
+
+        val ranking = buildRankingFromResults(
+            context = context,
+            results = allTimeResults,
+            scope = RankingScope.ALL_TIME,
+            metric = RankingMetric.OPEN_COUNT,
+            limit = 100 // Large pool to calculate ratios
+        ) { kanji ->
+            com.example.kanjiwidget.widget.KanjiWidgetPrefs.getRemoteEntry(context, kanji)
+        }
+
+        // Ratio: more opens per minute of study = more difficult
+        // Filter out those with 0 study time to avoid div by zero (they are also difficult)
+        ranking.mostRanked
+            .sortedWith(compareByDescending<KanjiStudyRankItem> { 
+                val mins = (it.totalStudyMs / 60000.0).coerceAtLeast(0.1)
+                it.openCount / mins
+            }.thenByDescending { it.openCount })
+            .take(limit)
+    }
 }
 
 internal fun buildRankingFromResults(

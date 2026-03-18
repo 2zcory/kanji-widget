@@ -73,6 +73,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.2")
     implementation("androidx.work:work-runtime-ktx:2.9.1")
     implementation("com.google.mlkit:translate:17.0.3")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
 
     val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")

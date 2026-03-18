@@ -63,6 +63,16 @@
     <string name="home_latest_meaning_placeholder">Opened recently, but detail data isn\'t available yet.</string>
     <string name="home_recent_title">Recent Kanji</string>
     <string name="home_recent_link">Recent review</string>
+    <string name="dashboard_title">Study Insights</string>
+    <string name="dashboard_card_momentum">Today\'s Momentum</string>
+    <string name="dashboard_card_rhythm">Study Rhythm</string>
+    <string name="dashboard_card_insights">Focus Required</string>
+    <string name="dashboard_card_ranking">Top Studied Kanji</string>
+    <string name="dashboard_streak_active">STREAK ACTIVE</string>
+    <string name="dashboard_streak_inactive">KEEP IT UP</string>
+    <string name="dashboard_insight_difficult_reason">Viewed %1$d times, studied %2$s</string>
+    <string name="dashboard_action_review">Review</string>
+    <string name="dashboard_action_view_all">View all ranking</string>
     <string name="home_recent_empty_link">Build review history</string>
     <string name="home_recent_empty_body">Open a Kanji to build a quick review grid here.</string>
     <string name="home_recent_chevron">›</string>

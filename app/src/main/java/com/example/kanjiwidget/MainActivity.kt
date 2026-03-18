@@ -13,7 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kanjiwidget.home.HomeSummary
 import com.example.kanjiwidget.home.HomeSummaryRepository
 import com.example.kanjiwidget.home.RecentKanjiSummaryItem
-import com.example.kanjiwidget.stats.StudyStatsBottomSheet
+import com.example.kanjiwidget.stats.StudyStatsDialogFragment
 import com.example.kanjiwidget.stats.StudyStatsRepository
 import com.example.kanjiwidget.theme.ThemeController
 import com.example.kanjiwidget.widget.KanjiWidgetPrefs
@@ -115,7 +115,7 @@ class MainActivity : ThemedActivity() {
         bindRecentKanji(summary.recentKanji)
         bindWidgetStatus(summary)
         bindStats(summary)
-        statsButton.setOnClickListener { showStudyStatsBottomSheet(summary) }
+        statsButton.setOnClickListener { showStudyStatsBottomSheet() }
     }
 
     private fun bindHero(summary: HomeSummary, catalog: List<String>) {
@@ -203,6 +203,17 @@ class MainActivity : ThemedActivity() {
             kanji = kanji,
             meaningFallback = summary.latestMeaning,
             jlptFallback = summary.latestJlpt,
+        )
+    }
+
+    private fun buildRandomDetailIntent(catalog: List<String>, latestKanji: String?): Intent {
+        return KanjiDetailNavigator.buildRandomDetailIntent(
+            context = this,
+            catalog = catalog,
+            currentKanji = latestKanji,
+        ) ?: KanjiDetailNavigator.buildDetailIntent(
+            context = this,
+            kanji = latestKanji.orEmpty(),
         )
     }
 
@@ -308,12 +319,8 @@ class MainActivity : ThemedActivity() {
         )
     }
 
-    private fun showStudyStatsBottomSheet(summary: HomeSummary) {
-        StudyStatsBottomSheet(
-            activity = this,
-            summary = summary,
-            repository = studyStatsRepository,
-        ).show()
+    private fun showStudyStatsBottomSheet() {
+        StudyStatsDialogFragment.newInstance().show(supportFragmentManager, StudyStatsDialogFragment.TAG)
     }
 
     private fun showWidgetHelpDialog() {
@@ -339,17 +346,6 @@ class MainActivity : ThemedActivity() {
         } else {
             secondsText
         }
-    }
-
-    private fun buildRandomDetailIntent(catalog: List<String>, latestKanji: String?): Intent {
-        return KanjiDetailNavigator.buildRandomDetailIntent(
-            context = this,
-            catalog = catalog,
-            currentKanji = latestKanji,
-        ) ?: KanjiDetailNavigator.buildDetailIntent(
-            context = this,
-            kanji = latestKanji.orEmpty(),
-        )
     }
 
     private fun buildDetailIntent(item: RecentKanjiSummaryItem): Intent {
