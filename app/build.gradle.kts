@@ -21,7 +21,7 @@ android {
         applicationId = "com.example.kanjiwidget"
         minSdk = 24
         targetSdk = 34
-        versionCode = 14
+        versionCode = 15
         versionName = "1.7.1"
         manifestPlaceholders["appLabel"] = "Kanji Widget"
     }
@@ -48,7 +48,6 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
             manifestPlaceholders["appLabel"] = "Kanji Widget Debug"
         }
