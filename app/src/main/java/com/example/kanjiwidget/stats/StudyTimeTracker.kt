@@ -86,19 +86,33 @@ object StudyTimeTracker {
     fun recordKanjiOpen(context: Context, kanji: String) {
         val normalizedKanji = kanji.trim()
         if (normalizedKanji.isBlank()) return
-        
+
         scope.launch {
             val date = today().toString()
-            val dao = AppDatabase.getInstance(context).dailyKanjiStudyDao()
-            val existing = dao.getEntry(date, normalizedKanji)
-            dao.upsert(
-                DailyKanjiStudyEntity(
-                    date = date,
-                    kanji = normalizedKanji,
-                    studyTimeMs = existing?.studyTimeMs ?: 0L,
-                    openCount = (existing?.openCount ?: 0L) + 1L
+            val db = AppDatabase.getInstance(context)
+            db.withTransaction {
+                val kanjiDao = db.dailyKanjiStudyDao()
+                val totalDao = db.dailyTotalStudyDao()
+
+                val existingKanji = kanjiDao.getEntry(date, normalizedKanji)
+                kanjiDao.upsert(
+                    DailyKanjiStudyEntity(
+                        date = date,
+                        kanji = normalizedKanji,
+                        studyTimeMs = existingKanji?.studyTimeMs ?: 0L,
+                        openCount = (existingKanji?.openCount ?: 0L) + 1L
+                    )
                 )
-            )
+
+                val existingTotal = totalDao.getEntry(date)
+                totalDao.upsert(
+                    DailyTotalStudyEntity(
+                        date = date,
+                        totalStudyMs = existingTotal?.totalStudyMs ?: 0L,
+                        totalOpenCount = (existingTotal?.totalOpenCount ?: 0) + 1
+                    )
+                )
+            }
         }
     }
 
@@ -126,7 +140,6 @@ object StudyTimeTracker {
 
         val zoneId = ZoneId.systemDefault()
         var cursor = startWallMs
-        var incrementedOpenCount = false
         
         val db = AppDatabase.getInstance(context)
 
@@ -148,7 +161,7 @@ object StudyTimeTracker {
                         DailyTotalStudyEntity(
                             date = dateStr,
                             totalStudyMs = (existingTotal?.totalStudyMs ?: 0L) + segmentDuration,
-                            totalOpenCount = (existingTotal?.totalOpenCount ?: 0) + (if (!incrementedOpenCount) 1 else 0)
+                            totalOpenCount = existingTotal?.totalOpenCount ?: 0
                         )
                     )
                     
@@ -162,8 +175,6 @@ object StudyTimeTracker {
                             openCount = existingKanji?.openCount ?: 0L
                         )
                     )
-                    
-                    incrementedOpenCount = true
                 }
                 cursor = segmentEnd
             }
