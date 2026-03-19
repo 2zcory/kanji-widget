@@ -1,15 +1,12 @@
 package com.example.kanjiwidget.stats
 
-import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.text.format.DateUtils
 import android.view.LayoutInflater
-import android.view.Gravity
 import android.view.View
-import android.view.WindowManager
+import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.kanjiwidget.KanjiDetailNavigator
@@ -17,6 +14,9 @@ import com.example.kanjiwidget.MainActivity
 import com.example.kanjiwidget.R
 import com.example.kanjiwidget.home.HomeSummary
 import com.example.kanjiwidget.theme.ThemeController
+import com.example.kanjiwidget.widget.KanjiWidgetPrefs
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -30,7 +30,18 @@ class StudyStatsBottomSheet(
     private val repository: StudyStatsRepository,
 ) {
     private val rankingRepository = KanjiRankingRepository(activity)
+    private lateinit var scrollView: androidx.core.widget.NestedScrollView
     private lateinit var chartView: StudyTimeChartView
+    private lateinit var guidanceTitleView: TextView
+    private lateinit var guidanceBodyView: TextView
+    private lateinit var guidanceBadgeView: TextView
+    private lateinit var guidanceMetaPrimaryView: TextView
+    private lateinit var guidanceMetaSecondaryView: TextView
+    private lateinit var latestContextRow: View
+    private lateinit var latestContextBodyView: TextView
+    private lateinit var latestContextValueView: TextView
+    private lateinit var primaryButton: Button
+    private lateinit var secondaryButton: Button
     private lateinit var btnRange7: Button
     private lateinit var btnRange30: Button
     private lateinit var btnRankingAll: Button
@@ -38,6 +49,8 @@ class StudyStatsBottomSheet(
     private lateinit var btnRanking7: Button
     private lateinit var btnMetricTime: Button
     private lateinit var btnMetricOpen: Button
+    private lateinit var sheetGuidanceTitleView: TextView
+    private lateinit var sheetGuidanceBodyView: TextView
     private lateinit var rangeLabel: TextView
     private lateinit var summaryHintView: TextView
     private lateinit var totalView: TextView
@@ -45,7 +58,6 @@ class StudyStatsBottomSheet(
     private lateinit var activeDaysView: TextView
     private lateinit var currentStreakView: TextView
     private lateinit var bestDayView: TextView
-    private lateinit var latestView: TextView
     private lateinit var rankingMostTitle: TextView
     private lateinit var rankingLeastTitle: TextView
     private lateinit var rankingMostContainer: LinearLayout
@@ -56,60 +68,165 @@ class StudyStatsBottomSheet(
     private var currentRankingMetric = RankingMetric.STUDY_TIME
 
     fun show() {
-        val dialog = Dialog(activity)
+        val dialog = BottomSheetDialog(activity)
         dialog.setContentView(R.layout.view_study_stats_bottom_sheet)
-        dialog.window?.apply {
-            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            setLayout(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT
-            )
-            setGravity(Gravity.BOTTOM)
-        }
+        scrollView = dialog.findViewById(R.id.statsSheetScroll)!!
+        chartView = dialog.findViewById(R.id.studyTimeChartView)!!
+        guidanceTitleView = dialog.findViewById(R.id.tvGuidanceTitle)!!
+        guidanceBodyView = dialog.findViewById(R.id.tvGuidanceBody)!!
+        guidanceBadgeView = dialog.findViewById(R.id.tvGuidanceBadge)!!
+        guidanceMetaPrimaryView = dialog.findViewById(R.id.tvGuidanceMetaPrimary)!!
+        guidanceMetaSecondaryView = dialog.findViewById(R.id.tvGuidanceMetaSecondary)!!
+        latestContextRow = dialog.findViewById(R.id.rowLatestContext)!!
+        latestContextBodyView = dialog.findViewById(R.id.tvLatestContextBody)!!
+        latestContextValueView = dialog.findViewById(R.id.tvLatestContextValue)!!
+        primaryButton = dialog.findViewById(R.id.btnGuidancePrimary)!!
+        secondaryButton = dialog.findViewById(R.id.btnGuidanceSecondary)!!
+        btnRange7 = dialog.findViewById(R.id.btnChartRange7)!!
+        btnRange30 = dialog.findViewById(R.id.btnChartRange30)!!
+        btnRankingAll = dialog.findViewById(R.id.btnRankingScopeAll)!!
+        btnRanking30 = dialog.findViewById(R.id.btnRankingScope30)!!
+        btnRanking7 = dialog.findViewById(R.id.btnRankingScope7)!!
+        btnMetricTime = dialog.findViewById(R.id.btnRankingMetricTime)!!
+        btnMetricOpen = dialog.findViewById(R.id.btnRankingMetricOpen)!!
+        sheetGuidanceTitleView = dialog.findViewById(R.id.tvSheetGuidanceTitle)!!
+        sheetGuidanceBodyView = dialog.findViewById(R.id.tvSheetGuidanceBody)!!
+        rangeLabel = dialog.findViewById(R.id.tvChartRangeLabel)!!
+        summaryHintView = dialog.findViewById(R.id.tvChartSummaryHint)!!
+        totalView = dialog.findViewById(R.id.tvChartTotal)!!
+        averageView = dialog.findViewById(R.id.tvChartAverage)!!
+        activeDaysView = dialog.findViewById(R.id.tvChartActiveDays)!!
+        currentStreakView = dialog.findViewById(R.id.tvChartCurrentStreak)!!
+        bestDayView = dialog.findViewById(R.id.tvChartBestDay)!!
+        rankingMostTitle = dialog.findViewById(R.id.tvRankingMostTitle)!!
+        rankingLeastTitle = dialog.findViewById(R.id.tvRankingLeastTitle)!!
+        rankingMostContainer = dialog.findViewById(R.id.containerRankingMost)!!
+        rankingLeastContainer = dialog.findViewById(R.id.containerRankingLeast)!!
+        rankingEmptyView = dialog.findViewById(R.id.tvRankingEmpty)!!
 
-        chartView = dialog.findViewById(R.id.studyTimeChartView)
-        btnRange7 = dialog.findViewById(R.id.btnChartRange7)
-        btnRange30 = dialog.findViewById(R.id.btnChartRange30)
-        btnRankingAll = dialog.findViewById(R.id.btnRankingScopeAll)
-        btnRanking30 = dialog.findViewById(R.id.btnRankingScope30)
-        btnRanking7 = dialog.findViewById(R.id.btnRankingScope7)
-        btnMetricTime = dialog.findViewById(R.id.btnRankingMetricTime)
-        btnMetricOpen = dialog.findViewById(R.id.btnRankingMetricOpen)
-        rangeLabel = dialog.findViewById(R.id.tvChartRangeLabel)
-        summaryHintView = dialog.findViewById(R.id.tvChartSummaryHint)
-        totalView = dialog.findViewById(R.id.tvChartTotal)
-        averageView = dialog.findViewById(R.id.tvChartAverage)
-        activeDaysView = dialog.findViewById(R.id.tvChartActiveDays)
-        currentStreakView = dialog.findViewById(R.id.tvChartCurrentStreak)
-        bestDayView = dialog.findViewById(R.id.tvChartBestDay)
-        latestView = dialog.findViewById(R.id.tvChartLatestKanji)
-        rankingMostTitle = dialog.findViewById(R.id.tvRankingMostTitle)
-        rankingLeastTitle = dialog.findViewById(R.id.tvRankingLeastTitle)
-        rankingMostContainer = dialog.findViewById(R.id.containerRankingMost)
-        rankingLeastContainer = dialog.findViewById(R.id.containerRankingLeast)
-        rankingEmptyView = dialog.findViewById(R.id.tvRankingEmpty)
+        val behavior = dialog.behavior
+        dialog.setOnShowListener {
+            configureBehavior(dialog, behavior)
+        }
 
         btnRange7.setOnClickListener { bindRange(7) }
         btnRange30.setOnClickListener { bindRange(30) }
-        
         btnRankingAll.setOnClickListener { updateRankingScope(RankingScope.ALL_TIME) }
         btnRanking30.setOnClickListener { updateRankingScope(RankingScope.LAST_30_DAYS) }
         btnRanking7.setOnClickListener { updateRankingScope(RankingScope.LAST_7_DAYS) }
-        
         btnMetricTime.setOnClickListener { updateRankingMetric(RankingMetric.STUDY_TIME) }
         btnMetricOpen.setOnClickListener { updateRankingMetric(RankingMetric.OPEN_COUNT) }
-
-        if (summary.latestKanji.isNullOrBlank()) {
-            latestView.visibility = View.GONE
-        } else {
-            latestView.visibility = View.VISIBLE
-            latestView.text = activity.getString(R.string.chart_latest_kanji_value, summary.latestKanji)
+        secondaryButton.setOnClickListener {
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            scrollView.post { scrollView.smoothScrollTo(0, 0) }
         }
 
+        bindGuidance(dialog)
         bindRange(7)
         bindRanking()
         applyDepthStyling(dialog)
         dialog.show()
+    }
+
+    private fun configureBehavior(
+        dialog: BottomSheetDialog,
+        behavior: BottomSheetBehavior<FrameLayout>,
+    ) {
+        val bottomSheet =
+            dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+                ?: return
+        bottomSheet.setBackgroundResource(android.R.color.transparent)
+        bottomSheet.layoutParams = bottomSheet.layoutParams.apply {
+            height = ViewGroup.LayoutParams.MATCH_PARENT
+        }
+        behavior.isHideable = true
+        behavior.skipCollapsed = false
+        behavior.peekHeight = (activity.resources.displayMetrics.heightPixels * 0.64f).toInt()
+        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    private fun bindGuidance(dialog: BottomSheetDialog) {
+        val streakDays = repository.getDailyChart(30).currentStreakDays
+        val hasLatest = !summary.latestKanji.isNullOrBlank()
+        val catalog = KanjiWidgetPrefs.getKanjiCatalog(activity)
+
+        guidanceTitleView.text = if (hasLatest) {
+            activity.getString(R.string.stats_guidance_title_review)
+        } else {
+            activity.getString(R.string.stats_guidance_title_random)
+        }
+        sheetGuidanceTitleView.text = activity.getString(R.string.chart_title)
+        guidanceBodyView.text = if (hasLatest) {
+            activity.getString(R.string.stats_guidance_body_review)
+        } else {
+            activity.getString(R.string.stats_guidance_body_random)
+        }
+        sheetGuidanceBodyView.text = activity.getString(R.string.chart_sheet_body)
+        guidanceBadgeView.text = if (streakDays > 0) {
+            activity.getString(R.string.stats_guidance_badge_streak, streakDays)
+        } else {
+            activity.getString(R.string.stats_guidance_badge_today)
+        }
+        guidanceMetaPrimaryView.text = if (summary.todayStudyMs > 0L) {
+            activity.getString(
+                R.string.stats_guidance_meta_today,
+                formatDurationCompact(summary.todayStudyMs)
+            )
+        } else {
+            activity.getString(R.string.stats_guidance_badge_today)
+        }
+        guidanceMetaSecondaryView.text = if (summary.recentKanji.isNotEmpty()) {
+            activity.getString(
+                R.string.stats_guidance_meta_recent,
+                summary.recentKanji.size
+            )
+        } else {
+            activity.getString(R.string.stats_guidance_meta_random)
+        }
+
+        if (hasLatest) {
+            latestContextRow.visibility = View.VISIBLE
+            latestContextBodyView.text = activity.getString(
+                R.string.stats_latest_context_body,
+                summary.latestKanji,
+                formatRelativeTime(summary.latestViewedAt)
+            )
+            latestContextValueView.text = summary.latestKanji
+            primaryButton.text = activity.getString(R.string.stats_guidance_primary)
+            primaryButton.isEnabled = true
+            primaryButton.alpha = 1f
+            primaryButton.setOnClickListener {
+                dialog.dismiss()
+                activity.startActivity(
+                    KanjiDetailNavigator.buildDetailIntent(
+                        context = activity,
+                        kanji = summary.latestKanji.orEmpty(),
+                        meaningFallback = summary.latestMeaning,
+                        jlptFallback = summary.latestJlpt,
+                    )
+                )
+            }
+        } else {
+            latestContextRow.visibility = View.GONE
+            val randomIntent = KanjiDetailNavigator.buildRandomDetailIntent(
+                context = activity,
+                catalog = catalog,
+                currentKanji = summary.latestKanji,
+            )
+            primaryButton.text = activity.getString(R.string.stats_guidance_primary_random)
+            primaryButton.isEnabled = randomIntent != null
+            primaryButton.alpha = if (randomIntent != null) 1f else 0.5f
+            primaryButton.setOnClickListener(
+                if (randomIntent == null) {
+                    null
+                } else {
+                    View.OnClickListener {
+                        dialog.dismiss()
+                        activity.startActivity(randomIntent)
+                    }
+                }
+            )
+        }
     }
 
     private fun updateRankingScope(scope: RankingScope) {
@@ -298,12 +415,25 @@ class StudyStatsBottomSheet(
         return activity.resources.configuration.locales[0]
     }
 
+    private fun formatRelativeTime(timestampMs: Long?): String {
+        if (timestampMs == null) {
+            return activity.getString(R.string.ranking_secondary_fallback)
+        }
+        return DateUtils.getRelativeTimeSpanString(
+            timestampMs,
+            System.currentTimeMillis(),
+            DateUtils.MINUTE_IN_MILLIS,
+            DateUtils.FORMAT_ABBREV_RELATIVE
+        ).toString()
+    }
+
     private fun formatDurationCompact(durationMs: Long): String {
         return DateUtils.formatElapsedTime(durationMs / 1000L)
     }
 
-    private fun applyDepthStyling(dialog: Dialog) {
+    private fun applyDepthStyling(dialog: BottomSheetDialog) {
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsSheetRoot), elevatedDp = 20f)
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.cardGuidance), elevatedDp = 12f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsChartCard), elevatedDp = 12f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.cardChartTotal), elevatedDp = 8f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.cardChartAverage), elevatedDp = 8f)
@@ -311,6 +441,9 @@ class StudyStatsBottomSheet(
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.cardChartCurrentStreak), elevatedDp = 8f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsSummaryCard), elevatedDp = 10f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsRankingCard), elevatedDp = 10f)
+        ThemeController.applyGlassDepth(dialog.findViewById(R.id.rowLatestContext), elevatedDp = 6f)
+        ThemeController.applyGlassDepth(primaryButton, elevatedDp = 2f)
+        ThemeController.applyGlassDepth(secondaryButton, elevatedDp = 0f)
         ThemeController.applyGlassDepth(btnRange7, elevatedDp = 0f)
         ThemeController.applyGlassDepth(btnRange30, elevatedDp = 0f)
         ThemeController.applyGlassDepth(btnRankingAll, elevatedDp = 0f)
