@@ -42,6 +42,7 @@ class StudyStatsBottomSheet(
     private lateinit var latestContextValueView: TextView
     private lateinit var primaryButton: Button
     private lateinit var secondaryButton: Button
+    private lateinit var chartCardView: View
     private lateinit var btnRange7: Button
     private lateinit var btnRange30: Button
     private lateinit var btnRankingAll: Button
@@ -82,6 +83,7 @@ class StudyStatsBottomSheet(
         latestContextValueView = dialog.findViewById(R.id.tvLatestContextValue)!!
         primaryButton = dialog.findViewById(R.id.btnGuidancePrimary)!!
         secondaryButton = dialog.findViewById(R.id.btnGuidanceSecondary)!!
+        chartCardView = dialog.findViewById(R.id.statsChartCard)!!
         btnRange7 = dialog.findViewById(R.id.btnChartRange7)!!
         btnRange30 = dialog.findViewById(R.id.btnChartRange30)!!
         btnRankingAll = dialog.findViewById(R.id.btnRankingScopeAll)!!
@@ -118,7 +120,9 @@ class StudyStatsBottomSheet(
         btnMetricOpen.setOnClickListener { updateRankingMetric(RankingMetric.OPEN_COUNT) }
         secondaryButton.setOnClickListener {
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            scrollView.post { scrollView.smoothScrollTo(0, 0) }
+            scrollView.post {
+                scrollView.smoothScrollTo(0, chartCardView.top)
+            }
         }
 
         bindGuidance(dialog)
@@ -149,6 +153,7 @@ class StudyStatsBottomSheet(
         val streakDays = repository.getDailyChart(30).currentStreakDays
         val hasLatest = !summary.latestKanji.isNullOrBlank()
         val catalog = KanjiWidgetPrefs.getKanjiCatalog(activity)
+        val hasRandomFallback = catalog.isNotEmpty()
 
         guidanceTitleView.text = if (hasLatest) {
             activity.getString(R.string.stats_guidance_title_review)
@@ -158,8 +163,10 @@ class StudyStatsBottomSheet(
         sheetGuidanceTitleView.text = activity.getString(R.string.chart_title)
         guidanceBodyView.text = if (hasLatest) {
             activity.getString(R.string.stats_guidance_body_review)
-        } else {
+        } else if (hasRandomFallback) {
             activity.getString(R.string.stats_guidance_body_random)
+        } else {
+            activity.getString(R.string.stats_guidance_body_empty)
         }
         sheetGuidanceBodyView.text = activity.getString(R.string.chart_sheet_body)
         guidanceBadgeView.text = if (streakDays > 0) {
@@ -180,8 +187,10 @@ class StudyStatsBottomSheet(
                 R.string.stats_guidance_meta_recent,
                 summary.recentKanji.size
             )
-        } else {
+        } else if (hasRandomFallback) {
             activity.getString(R.string.stats_guidance_meta_random)
+        } else {
+            activity.getString(R.string.stats_guidance_meta_empty)
         }
 
         if (hasLatest) {
