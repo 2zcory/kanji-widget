@@ -225,20 +225,6 @@
                 android:textSize="15sp"
                 android:textStyle="bold"
                 tools:ignore="ButtonStyle" />
-
-            <Button
-                android:id="@+id/btnGuidanceSecondary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_chart_range_idle"
-                android:minHeight="46dp"
-                android:text="@string/stats_guidance_secondary"
-                android:textAllCaps="false"
-                android:textColor="?attr/colorSecondaryButtonText"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                tools:ignore="ButtonStyle" />
         </LinearLayout>
 
         <TextView

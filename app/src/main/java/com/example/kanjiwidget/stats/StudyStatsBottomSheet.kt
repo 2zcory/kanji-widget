@@ -41,7 +41,6 @@ class StudyStatsBottomSheet(
     private lateinit var latestContextBodyView: TextView
     private lateinit var latestContextValueView: TextView
     private lateinit var primaryButton: Button
-    private lateinit var secondaryButton: Button
     private lateinit var chartCardView: View
     private lateinit var btnRange7: Button
     private lateinit var btnRange30: Button
@@ -82,7 +81,6 @@ class StudyStatsBottomSheet(
         latestContextBodyView = dialog.findViewById(R.id.tvLatestContextBody)!!
         latestContextValueView = dialog.findViewById(R.id.tvLatestContextValue)!!
         primaryButton = dialog.findViewById(R.id.btnGuidancePrimary)!!
-        secondaryButton = dialog.findViewById(R.id.btnGuidanceSecondary)!!
         chartCardView = dialog.findViewById(R.id.statsChartCard)!!
         btnRange7 = dialog.findViewById(R.id.btnChartRange7)!!
         btnRange30 = dialog.findViewById(R.id.btnChartRange30)!!
@@ -118,12 +116,6 @@ class StudyStatsBottomSheet(
         btnRanking7.setOnClickListener { updateRankingScope(RankingScope.LAST_7_DAYS) }
         btnMetricTime.setOnClickListener { updateRankingMetric(RankingMetric.STUDY_TIME) }
         btnMetricOpen.setOnClickListener { updateRankingMetric(RankingMetric.OPEN_COUNT) }
-        secondaryButton.setOnClickListener {
-            behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            scrollView.post {
-                scrollView.smoothScrollTo(0, chartCardView.top)
-            }
-        }
 
         bindGuidance(dialog)
         bindRange(7)
@@ -452,7 +444,6 @@ class StudyStatsBottomSheet(
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsRankingCard), elevatedDp = 10f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.rowLatestContext), elevatedDp = 6f)
         ThemeController.applyGlassDepth(primaryButton, elevatedDp = 2f)
-        ThemeController.applyGlassDepth(secondaryButton, elevatedDp = 0f)
         ThemeController.applyGlassDepth(btnRange7, elevatedDp = 0f)
         ThemeController.applyGlassDepth(btnRange30, elevatedDp = 0f)
         ThemeController.applyGlassDepth(btnRankingAll, elevatedDp = 0f)
