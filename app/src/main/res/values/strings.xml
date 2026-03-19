@@ -97,7 +97,7 @@
     <string name="stats_guidance_label">TODAY</string>
     <string name="stats_guidance_title_review">Ready for the next review</string>
     <string name="stats_guidance_title_random">Ready to restart study</string>
-    <string name="stats_guidance_body_review">Review recent kanji while the context is still fresh.</string>
+    <string name="stats_guidance_body_review">Open the latest kanji while the context is still fresh.</string>
     <string name="stats_guidance_body_random">Start with a random review.</string>
     <string name="stats_guidance_badge_streak">%1$dd streak</string>
     <string name="stats_guidance_badge_today">Today active</string>
@@ -106,7 +106,7 @@
     <string name="stats_guidance_meta_random">Random review ready</string>
     <string name="stats_latest_context_label">LATEST CONTEXT</string>
     <string name="stats_latest_context_body">%1$s was last opened %2$s</string>
-    <string name="stats_guidance_primary">Review recent kanji</string>
+    <string name="stats_guidance_primary">Open latest kanji</string>
     <string name="stats_guidance_primary_random">Start random review</string>
     <string name="stats_guidance_secondary">See full stats</string>
     <string name="chart_range_7">7 days</string>
