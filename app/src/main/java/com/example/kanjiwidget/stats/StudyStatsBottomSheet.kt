@@ -32,15 +32,10 @@ class StudyStatsBottomSheet(
     private val rankingRepository = KanjiRankingRepository(activity)
     private lateinit var scrollView: androidx.core.widget.NestedScrollView
     private lateinit var chartView: StudyTimeChartView
+    private lateinit var guidanceCardView: View
     private lateinit var guidanceTitleView: TextView
     private lateinit var guidanceBodyView: TextView
     private lateinit var guidanceBadgeView: TextView
-    private lateinit var guidanceMetaPrimaryView: TextView
-    private lateinit var guidanceMetaSecondaryView: TextView
-    private lateinit var latestContextRow: View
-    private lateinit var latestContextBodyView: TextView
-    private lateinit var latestContextValueView: TextView
-    private lateinit var primaryButton: Button
     private lateinit var chartCardView: View
     private lateinit var btnRange7: Button
     private lateinit var btnRange30: Button
@@ -49,12 +44,15 @@ class StudyStatsBottomSheet(
     private lateinit var btnRanking7: Button
     private lateinit var btnMetricTime: Button
     private lateinit var btnMetricOpen: Button
+    private lateinit var sectionRankingLeastView: View
+    private lateinit var rankingLeastPreviewRow: View
+    private lateinit var rankingLeastPreviewText: TextView
     private lateinit var sheetGuidanceTitleView: TextView
     private lateinit var sheetGuidanceBodyView: TextView
     private lateinit var rangeLabel: TextView
     private lateinit var summaryHintView: TextView
     private lateinit var totalView: TextView
-    private lateinit var averageView: TextView
+    private lateinit var averageSummaryView: TextView
     private lateinit var activeDaysView: TextView
     private lateinit var currentStreakView: TextView
     private lateinit var bestDayView: TextView
@@ -66,21 +64,18 @@ class StudyStatsBottomSheet(
 
     private var currentRankingScope = RankingScope.ALL_TIME
     private var currentRankingMetric = RankingMetric.STUDY_TIME
+    private var rankingLeastItemCount = 0
+    private var rankingLeastItems: List<KanjiStudyRankItem> = emptyList()
 
     fun show() {
         val dialog = BottomSheetDialog(activity)
         dialog.setContentView(R.layout.view_study_stats_bottom_sheet)
         scrollView = dialog.findViewById(R.id.statsSheetScroll)!!
         chartView = dialog.findViewById(R.id.studyTimeChartView)!!
+        guidanceCardView = dialog.findViewById(R.id.cardGuidance)!!
         guidanceTitleView = dialog.findViewById(R.id.tvGuidanceTitle)!!
         guidanceBodyView = dialog.findViewById(R.id.tvGuidanceBody)!!
         guidanceBadgeView = dialog.findViewById(R.id.tvGuidanceBadge)!!
-        guidanceMetaPrimaryView = dialog.findViewById(R.id.tvGuidanceMetaPrimary)!!
-        guidanceMetaSecondaryView = dialog.findViewById(R.id.tvGuidanceMetaSecondary)!!
-        latestContextRow = dialog.findViewById(R.id.rowLatestContext)!!
-        latestContextBodyView = dialog.findViewById(R.id.tvLatestContextBody)!!
-        latestContextValueView = dialog.findViewById(R.id.tvLatestContextValue)!!
-        primaryButton = dialog.findViewById(R.id.btnGuidancePrimary)!!
         chartCardView = dialog.findViewById(R.id.statsChartCard)!!
         btnRange7 = dialog.findViewById(R.id.btnChartRange7)!!
         btnRange30 = dialog.findViewById(R.id.btnChartRange30)!!
@@ -89,12 +84,15 @@ class StudyStatsBottomSheet(
         btnRanking7 = dialog.findViewById(R.id.btnRankingScope7)!!
         btnMetricTime = dialog.findViewById(R.id.btnRankingMetricTime)!!
         btnMetricOpen = dialog.findViewById(R.id.btnRankingMetricOpen)!!
+        sectionRankingLeastView = dialog.findViewById(R.id.sectionRankingLeast)!!
+        rankingLeastPreviewRow = dialog.findViewById(R.id.rowRankingLeastPreview)!!
+        rankingLeastPreviewText = dialog.findViewById(R.id.tvRankingLeastPreview)!!
         sheetGuidanceTitleView = dialog.findViewById(R.id.tvSheetGuidanceTitle)!!
         sheetGuidanceBodyView = dialog.findViewById(R.id.tvSheetGuidanceBody)!!
         rangeLabel = dialog.findViewById(R.id.tvChartRangeLabel)!!
         summaryHintView = dialog.findViewById(R.id.tvChartSummaryHint)!!
         totalView = dialog.findViewById(R.id.tvChartTotal)!!
-        averageView = dialog.findViewById(R.id.tvChartAverage)!!
+        averageSummaryView = dialog.findViewById(R.id.tvChartAverageSummary)!!
         activeDaysView = dialog.findViewById(R.id.tvChartActiveDays)!!
         currentStreakView = dialog.findViewById(R.id.tvChartCurrentStreak)!!
         bestDayView = dialog.findViewById(R.id.tvChartBestDay)!!
@@ -116,6 +114,7 @@ class StudyStatsBottomSheet(
         btnRanking7.setOnClickListener { updateRankingScope(RankingScope.LAST_7_DAYS) }
         btnMetricTime.setOnClickListener { updateRankingMetric(RankingMetric.STUDY_TIME) }
         btnMetricOpen.setOnClickListener { updateRankingMetric(RankingMetric.OPEN_COUNT) }
+        rankingLeastPreviewRow.setOnClickListener { showLeastRankingDetailSheet() }
 
         bindGuidance(dialog)
         bindRange(7)
@@ -146,56 +145,51 @@ class StudyStatsBottomSheet(
         val hasLatest = !summary.latestKanji.isNullOrBlank()
         val catalog = KanjiWidgetPrefs.getKanjiCatalog(activity)
         val hasRandomFallback = catalog.isNotEmpty()
+        val randomIntent = KanjiDetailNavigator.buildRandomDetailIntent(
+            context = activity,
+            catalog = catalog,
+            currentKanji = summary.latestKanji,
+        )
 
-        guidanceTitleView.text = if (hasLatest) {
-            activity.getString(R.string.stats_guidance_title_review)
+        guidanceTitleView.text = if (streakDays > 0 || summary.todayStudyMs > 0L) {
+            activity.getString(R.string.chart_status_title_active)
+        } else if (hasRandomFallback) {
+            activity.getString(R.string.chart_status_title_restart)
         } else {
-            activity.getString(R.string.stats_guidance_title_random)
+            activity.getString(R.string.chart_status_title_empty)
         }
         sheetGuidanceTitleView.text = activity.getString(R.string.chart_title)
         guidanceBodyView.text = if (hasLatest) {
-            activity.getString(R.string.stats_guidance_body_review)
-        } else if (hasRandomFallback) {
-            activity.getString(R.string.stats_guidance_body_random)
-        } else {
-            activity.getString(R.string.stats_guidance_body_empty)
-        }
-        sheetGuidanceBodyView.text = activity.getString(R.string.chart_sheet_body)
-        guidanceBadgeView.text = if (streakDays > 0) {
-            activity.getString(R.string.stats_guidance_badge_streak, streakDays)
-        } else {
-            activity.getString(R.string.stats_guidance_badge_today)
-        }
-        guidanceMetaPrimaryView.text = if (summary.todayStudyMs > 0L) {
             activity.getString(
-                R.string.stats_guidance_meta_today,
-                formatDurationCompact(summary.todayStudyMs)
-            )
-        } else {
-            activity.getString(R.string.stats_guidance_badge_today)
-        }
-        guidanceMetaSecondaryView.text = if (summary.recentKanji.isNotEmpty()) {
-            activity.getString(
-                R.string.stats_guidance_meta_recent,
-                summary.recentKanji.size
-            )
-        } else if (hasRandomFallback) {
-            activity.getString(R.string.stats_guidance_meta_random)
-        } else {
-            activity.getString(R.string.stats_guidance_meta_empty)
-        }
-        if (hasLatest) {
-            latestContextRow.visibility = View.VISIBLE
-            latestContextBodyView.text = activity.getString(
-                R.string.stats_latest_context_body,
+                R.string.chart_status_body_latest,
                 summary.latestKanji,
                 formatRelativeTime(summary.latestViewedAt)
             )
-            latestContextValueView.text = summary.latestKanji
-            primaryButton.text = activity.getString(R.string.stats_guidance_primary)
-            primaryButton.isEnabled = true
-            primaryButton.alpha = 1f
-            primaryButton.setOnClickListener {
+        } else if (summary.todayStudyMs > 0L) {
+            activity.getString(
+                R.string.chart_status_body_today,
+                formatDurationCompact(summary.todayStudyMs)
+            )
+        } else if (hasRandomFallback) {
+            activity.getString(R.string.chart_status_body_random)
+        } else {
+            activity.getString(R.string.chart_status_body_empty)
+        }
+        sheetGuidanceBodyView.text = activity.getString(R.string.chart_sheet_body)
+        guidanceBadgeView.text = if (hasLatest) {
+            summary.latestKanji
+        } else if (summary.todayStudyMs > 0L || streakDays > 0) {
+            activity.getString(R.string.chart_status_badge_active)
+        } else if (hasRandomFallback) {
+            activity.getString(R.string.chart_status_badge_random)
+        } else {
+            activity.getString(R.string.chart_metric_value_empty)
+        }
+
+        if (hasLatest && summary.latestKanji != null) {
+            guidanceCardView.isEnabled = true
+            guidanceCardView.alpha = 1f
+            guidanceCardView.setOnClickListener {
                 dialog.dismiss()
                 activity.startActivity(
                     KanjiDetailNavigator.buildDetailIntent(
@@ -206,26 +200,17 @@ class StudyStatsBottomSheet(
                     )
                 )
             }
+        } else if (randomIntent != null) {
+            guidanceCardView.isEnabled = true
+            guidanceCardView.alpha = 1f
+            guidanceCardView.setOnClickListener {
+                dialog.dismiss()
+                activity.startActivity(randomIntent)
+            }
         } else {
-            latestContextRow.visibility = View.GONE
-            val randomIntent = KanjiDetailNavigator.buildRandomDetailIntent(
-                context = activity,
-                catalog = catalog,
-                currentKanji = summary.latestKanji,
-            )
-            primaryButton.text = activity.getString(R.string.stats_guidance_primary_random)
-            primaryButton.isEnabled = randomIntent != null
-            primaryButton.alpha = if (randomIntent != null) 1f else 0.5f
-            primaryButton.setOnClickListener(
-                if (randomIntent == null) {
-                    null
-                } else {
-                    View.OnClickListener {
-                        dialog.dismiss()
-                        activity.startActivity(randomIntent)
-                    }
-                }
-            )
+            guidanceCardView.isEnabled = false
+            guidanceCardView.alpha = 0.72f
+            guidanceCardView.setOnClickListener(null)
         }
     }
 
@@ -246,7 +231,19 @@ class StudyStatsBottomSheet(
         val dayCountText = activity.resources.getQuantityString(R.plurals.day_count, days, days)
         rangeLabel.text = activity.getString(R.string.chart_range_value, dayCountText)
         summaryHintView.text = if (hasStudyData) {
-            activity.getString(R.string.chart_summary_hint_value)
+            chartSummary.bestDay?.let {
+                val locale = currentLocale()
+                val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(locale)
+                activity.getString(
+                    R.string.chart_summary_compact_with_best,
+                    formatDurationCompact(chartSummary.averageMs),
+                    it.date.format(formatter),
+                    formatDurationCompact(it.totalMs)
+                )
+            } ?: activity.getString(
+                R.string.chart_summary_compact_average_only,
+                formatDurationCompact(chartSummary.averageMs)
+            )
         } else {
             activity.getString(R.string.chart_average_empty_value)
         }
@@ -255,10 +252,13 @@ class StudyStatsBottomSheet(
         } else {
             activity.getString(R.string.chart_metric_value_empty)
         }
-        averageView.text = if (hasStudyData) {
-            formatDurationCompact(chartSummary.averageMs)
+        averageSummaryView.text = if (hasStudyData) {
+            activity.getString(
+                R.string.chart_support_average_value,
+                formatDurationCompact(chartSummary.averageMs)
+            )
         } else {
-            activity.getString(R.string.chart_metric_value_empty)
+            activity.getString(R.string.chart_support_average_empty)
         }
         activeDaysView.text = activity.resources.getQuantityString(
             R.plurals.day_count,
@@ -289,27 +289,59 @@ class StudyStatsBottomSheet(
 
     private fun bindRanking() {
         val ranking = rankingRepository.getRanking(currentRankingScope, currentRankingMetric)
-        
+
         rankingMostTitle.text = activity.getString(R.string.ranking_most_title)
         rankingLeastTitle.text = activity.getString(R.string.ranking_least_title)
-        
+        rankingLeastItems = ranking.leastRanked
+
         renderRankingSection(
             container = rankingMostContainer,
             items = ranking.mostRanked,
             metric = currentRankingMetric
         )
-        renderRankingSection(
-            container = rankingLeastContainer,
-            items = ranking.leastRanked,
-            metric = currentRankingMetric
-        )
 
         val hasAnyRanking = ranking.mostRanked.isNotEmpty() || ranking.leastRanked.isNotEmpty()
+        rankingLeastItemCount = ranking.leastRanked.size
         rankingEmptyView.visibility = if (hasAnyRanking) View.GONE else View.VISIBLE
-        rankingMostContainer.visibility = if (ranking.mostRanked.isNotEmpty()) View.VISIBLE else View.GONE
-        rankingLeastContainer.visibility = if (ranking.leastRanked.isNotEmpty()) View.VISIBLE else View.GONE
-        
+        sectionRankingLeastView.visibility = if (rankingLeastItemCount > 0) View.VISIBLE else View.GONE
+
         updateRankingControls()
+        renderRankingSection(
+            container = rankingLeastContainer,
+            items = rankingLeastItems.take(1),
+            metric = currentRankingMetric
+        )
+        rankingLeastContainer.visibility = if (rankingLeastItemCount > 0) View.VISIBLE else View.GONE
+        rankingLeastPreviewRow.isEnabled = rankingLeastItemCount > 0
+        rankingLeastPreviewRow.alpha = if (rankingLeastItemCount > 0) 1f else 0.6f
+        rankingLeastPreviewText.text = activity.getString(R.string.ranking_least_preview_action)
+    }
+
+    private fun showLeastRankingDetailSheet() {
+        if (rankingLeastItems.isEmpty()) return
+
+        val dialog = BottomSheetDialog(activity)
+        dialog.setContentView(R.layout.view_ranking_detail_sheet)
+        dialog.findViewById<TextView>(R.id.tvRankingDetailTitle)?.text =
+            activity.getString(R.string.ranking_least_detail_title)
+        dialog.findViewById<TextView>(R.id.tvRankingDetailBody)?.text =
+            activity.resources.getQuantityString(
+                R.plurals.ranking_preview_count,
+                rankingLeastItemCount,
+                rankingLeastItemCount
+            )
+        dialog.findViewById<LinearLayout>(R.id.containerRankingDetail)?.let { container ->
+            renderRankingSection(
+                container = container,
+                items = rankingLeastItems,
+                metric = currentRankingMetric
+            )
+        }
+        val behavior = dialog.behavior
+        dialog.setOnShowListener {
+            configureBehavior(dialog, behavior)
+        }
+        dialog.show()
     }
 
     private fun renderRankingSection(
@@ -395,20 +427,18 @@ class StudyStatsBottomSheet(
     private fun updateRankingControls() {
         val selected = R.drawable.bg_chart_range_selected
         val idle = R.drawable.bg_chart_range_idle
-        
-        // Update Scopes
+
         btnRankingAll.setBackgroundResource(if (currentRankingScope == RankingScope.ALL_TIME) selected else idle)
         btnRanking30.setBackgroundResource(if (currentRankingScope == RankingScope.LAST_30_DAYS) selected else idle)
         btnRanking7.setBackgroundResource(if (currentRankingScope == RankingScope.LAST_7_DAYS) selected else idle)
-        
+
         applySegmentButtonTextColors(btnRankingAll, isSelected = currentRankingScope == RankingScope.ALL_TIME)
         applySegmentButtonTextColors(btnRanking30, isSelected = currentRankingScope == RankingScope.LAST_30_DAYS)
         applySegmentButtonTextColors(btnRanking7, isSelected = currentRankingScope == RankingScope.LAST_7_DAYS)
-        
-        // Update Metrics
+
         btnMetricTime.setBackgroundResource(if (currentRankingMetric == RankingMetric.STUDY_TIME) selected else idle)
         btnMetricOpen.setBackgroundResource(if (currentRankingMetric == RankingMetric.OPEN_COUNT) selected else idle)
-        
+
         applySegmentButtonTextColors(btnMetricTime, isSelected = currentRankingMetric == RankingMetric.STUDY_TIME)
         applySegmentButtonTextColors(btnMetricOpen, isSelected = currentRankingMetric == RankingMetric.OPEN_COUNT)
     }
@@ -443,13 +473,10 @@ class StudyStatsBottomSheet(
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.cardGuidance), elevatedDp = 12f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsChartCard), elevatedDp = 12f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.cardChartTotal), elevatedDp = 8f)
-        ThemeController.applyGlassDepth(dialog.findViewById(R.id.cardChartAverage), elevatedDp = 8f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.cardChartActiveDays), elevatedDp = 8f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.cardChartCurrentStreak), elevatedDp = 8f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsSummaryCard), elevatedDp = 10f)
         ThemeController.applyGlassDepth(dialog.findViewById(R.id.statsRankingCard), elevatedDp = 10f)
-        ThemeController.applyGlassDepth(dialog.findViewById(R.id.rowLatestContext), elevatedDp = 6f)
-        ThemeController.applyGlassDepth(primaryButton, elevatedDp = 2f)
         ThemeController.applyGlassDepth(btnRange7, elevatedDp = 0f)
         ThemeController.applyGlassDepth(btnRange30, elevatedDp = 0f)
         ThemeController.applyGlassDepth(btnRankingAll, elevatedDp = 0f)
@@ -457,5 +484,6 @@ class StudyStatsBottomSheet(
         ThemeController.applyGlassDepth(btnRanking7, elevatedDp = 0f)
         ThemeController.applyGlassDepth(btnMetricTime, elevatedDp = 0f)
         ThemeController.applyGlassDepth(btnMetricOpen, elevatedDp = 0f)
+        ThemeController.applyGlassDepth(rankingLeastPreviewRow, elevatedDp = 0f)
     }
 }

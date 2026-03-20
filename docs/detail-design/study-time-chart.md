@@ -149,9 +149,10 @@ Visual rules:
 Current shipped presentation:
 - the bottom sheet opens with one clear chart card first, rather than a stack of equal-weight cards
 - range selection uses pill-style segmented buttons
-- summary values are split into compact metric tiles for total time, daily average, active days, and current streak
-- best day remains in a quieter support card below the metric tiles
-- ranking remains in the same bottom sheet as its own lower section with a separate scope selector
+- a compact status strip now sits below the chart instead of the earlier large guidance hero
+- the first visible metric set now prioritizes total time, current streak, and active days
+- daily average and best day remain in a quieter support card below the primary metrics
+- ranking remains accessible from the stats flow, but the lower-ranked continuation now uses a secondary detail bottom sheet so the main stats sheet stays shorter
 
 ### Supporting text
 

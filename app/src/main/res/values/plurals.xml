@@ -35,4 +35,8 @@
         <item quantity="one">+%d more</item>
         <item quantity="other">+%d more</item>
     </plurals>
+    <plurals name="ranking_preview_count">
+        <item quantity="one">%d lower-ranked item</item>
+        <item quantity="other">%d lower-ranked items</item>
+    </plurals>
 </resources>
