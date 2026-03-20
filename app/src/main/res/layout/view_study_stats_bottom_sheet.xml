@@ -48,200 +48,16 @@
             android:id="@+id/tvSheetGuidanceBody"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:visibility="gone"
             android:text="@string/chart_sheet_body"
             android:textColor="?attr/colorTextSecondary"
-            android:textSize="14sp" />
-
-        <LinearLayout
-            android:id="@+id/cardGuidance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_main_section_card"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvGuidanceLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/stats_guidance_label"
-                        android:textColor="?attr/colorAccentWarm"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvGuidanceTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:textColor="?attr/colorTextPrimary"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        tools:text="Ready for the next review" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvGuidanceBadge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:background="@drawable/bg_home_meta_pill"
-                    android:gravity="center"
-                    android:minHeight="32dp"
-                    android:paddingLeft="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingRight="12dp"
-                    android:paddingBottom="6dp"
-                    android:textColor="?attr/colorTextPrimary"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    tools:text="12d streak" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvGuidanceBody"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textColor="?attr/colorTextSecondary"
-                android:textSize="14sp"
-                tools:text="You already have momentum today. A quick review keeps the streak moving." />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvGuidanceMetaPrimary"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_home_meta_pill"
-                    android:drawablePadding="8dp"
-                    android:gravity="center"
-                    android:minHeight="32dp"
-                    android:paddingLeft="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingRight="12dp"
-                    android:paddingBottom="6dp"
-                    android:textColor="?attr/colorTextPrimary"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    tools:text="14m today" />
-
-                <TextView
-                    android:id="@+id/tvGuidanceMetaSecondary"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_home_meta_pill"
-                    android:drawablePadding="8dp"
-                    android:gravity="center"
-                    android:minHeight="32dp"
-                    android:paddingLeft="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingRight="12dp"
-                    android:paddingBottom="6dp"
-                    android:textColor="?attr/colorTextPrimary"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    tools:text="3 recent kanji" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/rowLatestContext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_detail_panel"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="12dp"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/stats_latest_context_label"
-                        android:textColor="?attr/colorAccentWarm"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvLatestContextBody"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="?attr/colorTextSecondary"
-                        android:textSize="13sp"
-                        tools:text="語 was last opened 18m ago" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvLatestContextValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:textColor="?attr/colorTextPrimary"
-                    android:textSize="26sp"
-                    android:textStyle="bold"
-                    tools:text="語" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btnGuidancePrimary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_chart_range_selected"
-                android:minHeight="46dp"
-                android:text="@string/stats_guidance_primary"
-                android:textAllCaps="false"
-                android:textColor="?attr/colorPrimaryButtonText"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                tools:ignore="ButtonStyle" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvChartRangeLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:textColor="?attr/colorTextSecondary"
-            android:textSize="15sp" />
+            android:textSize="13sp" />
 
         <LinearLayout
             android:id="@+id/statsChartCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/bg_main_section_card"
             android:orientation="vertical"
             android:padding="18dp">
@@ -318,13 +134,92 @@
                 android:padding="12dp" />
 
             <TextView
+                android:id="@+id/tvChartRangeLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="?attr/colorTextSecondary"
+                android:textSize="14sp"
+                tools:text="Range: last 7 days" />
+
+            <TextView
                 android:id="@+id/tvChartSummaryHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/chart_sheet_body"
                 android:textColor="?attr/colorTextMuted"
-                android:textSize="13sp" />
+                android:textSize="12sp"
+                tools:text="Avg 7m • Best 03/20 • 18m" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cardGuidance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_detail_panel"
+            android:baselineAligned="false"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvGuidanceLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chart_status_label"
+                    android:textColor="?attr/colorAccentWarm"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvGuidanceTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="?attr/colorTextPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="Study rhythm is active" />
+
+                <TextView
+                    android:id="@+id/tvGuidanceBody"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="?attr/colorTextSecondary"
+                    android:textSize="12sp"
+                    tools:text="Latest kanji 語 was opened 18m ago." />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvGuidanceBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/bg_home_meta_pill"
+                android:gravity="center"
+                android:minHeight="32dp"
+                android:minWidth="48dp"
+                android:paddingLeft="12dp"
+                android:paddingTop="6dp"
+                android:paddingRight="12dp"
+                android:paddingBottom="6dp"
+                android:textColor="?attr/colorTextPrimary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="語" />
         </LinearLayout>
 
         <LinearLayout
@@ -338,11 +233,11 @@
                 android:id="@+id/cardChartTotal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_home_metric_card"
                 android:orientation="vertical"
-                android:padding="14dp">
+                android:padding="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -356,73 +251,9 @@
                     android:id="@+id/tvChartTotal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="10dp"
                     android:textColor="?attr/colorTextPrimary"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/cardChartAverage"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_home_metric_card"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chart_metric_average_label"
-                    android:textColor="?attr/colorTextMuted"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvChartAverage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:textColor="?attr/colorTextPrimary"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/cardChartActiveDays"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_home_metric_card"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chart_metric_active_days_label"
-                    android:textColor="?attr/colorTextMuted"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvChartActiveDays"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:textColor="?attr/colorTextPrimary"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -430,11 +261,11 @@
                 android:id="@+id/cardChartCurrentStreak"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
+                android:layout_marginHorizontal="4dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_home_metric_card"
                 android:orientation="vertical"
-                android:padding="14dp">
+                android:padding="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -448,9 +279,37 @@
                     android:id="@+id/tvChartCurrentStreak"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="10dp"
                     android:textColor="?attr/colorTextPrimary"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardChartActiveDays"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_home_metric_card"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chart_metric_active_days_label"
+                    android:textColor="?attr/colorTextMuted"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvChartActiveDays"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="?attr/colorTextPrimary"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
@@ -459,26 +318,41 @@
             android:id="@+id/statsSummaryCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_main_section_card"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="12dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/chart_metric_best_day_label"
+                android:text="@string/chart_support_label"
                 android:textColor="?attr/colorTextMuted"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvChartAverageSummary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="?attr/colorTextPrimary"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="Daily average: 7m" />
+
+            <TextView
                 android:id="@+id/tvChartBestDay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="?attr/colorTextSecondary"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -490,163 +364,244 @@
             android:orientation="vertical"
             android:padding="18dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/ranking_section_label"
-                android:textColor="?attr/colorAccentWarm"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/ranking_title"
-                android:textColor="?attr/colorTextPrimary"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ranking_section_label"
+                        android:textColor="?attr/colorAccentWarm"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/ranking_title"
+                        android:textColor="?attr/colorTextPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:visibility="gone"
                 android:text="@string/ranking_section_body"
                 android:textColor="?attr/colorTextMuted"
                 android:textSize="13sp" />
 
             <LinearLayout
+                android:id="@+id/rankingContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btnRankingScopeAll"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_chart_range_idle"
-                    android:minHeight="42dp"
-                    android:text="@string/ranking_scope_all"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/colorSecondaryButtonText"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    tools:ignore="ButtonStyle" />
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btnRankingScope30"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_chart_range_idle"
-                    android:minHeight="42dp"
-                    android:text="@string/ranking_scope_30"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/colorSecondaryButtonText"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    tools:ignore="ButtonStyle" />
+                    <Button
+                        android:id="@+id/btnRankingScopeAll"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_chart_range_idle"
+                        android:minHeight="38dp"
+                        android:text="@string/ranking_scope_all"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/colorSecondaryButtonText"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        tools:ignore="ButtonStyle" />
 
-                <Button
-                    android:id="@+id/btnRankingScope7"
-                    android:layout_width="0dp"
+                    <Button
+                        android:id="@+id/btnRankingScope30"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_chart_range_idle"
+                        android:minHeight="38dp"
+                        android:text="@string/ranking_scope_30"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/colorSecondaryButtonText"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        tools:ignore="ButtonStyle" />
+
+                    <Button
+                        android:id="@+id/btnRankingScope7"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_chart_range_idle"
+                        android:minHeight="38dp"
+                        android:text="@string/ranking_scope_7"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/colorSecondaryButtonText"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        tools:ignore="ButtonStyle" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_chart_range_idle"
-                    android:minHeight="42dp"
-                    android:text="@string/ranking_scope_7"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/colorSecondaryButtonText"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    tools:ignore="ButtonStyle" />
+                    android:layout_marginTop="8dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnRankingMetricTime"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_chart_range_idle"
+                        android:minHeight="38dp"
+                        android:text="@string/ranking_metric_time"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/colorSecondaryButtonText"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        tools:ignore="ButtonStyle" />
+
+                    <Button
+                        android:id="@+id/btnRankingMetricOpen"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_chart_range_idle"
+                        android:minHeight="38dp"
+                        android:text="@string/ranking_metric_open"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/colorSecondaryButtonText"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        tools:ignore="ButtonStyle" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sectionRankingMost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvRankingMostTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ranking_most_title"
+                        android:textColor="?attr/colorTextPrimary"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/containerRankingMost"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sectionRankingLeast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/rowRankingLeastPreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:background="@drawable/bg_detail_panel"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:id="@+id/tvRankingLeastTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/ranking_least_title"
+                                android:textColor="?attr/colorTextPrimary"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvRankingLeastPreview"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="@string/ranking_least_preview_action"
+                                android:textColor="?attr/colorTextMuted"
+                                android:textSize="12sp"
+                                tools:text="See lower-ranked items" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvRankingLeastChevron"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
+                            android:text="@string/home_recent_chevron"
+                            android:textColor="?attr/colorTextMuted"
+                            android:textSize="16sp"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/containerRankingLeast"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvRankingEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/ranking_empty"
+                    android:textColor="?attr/colorTextMuted"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btnRankingMetricTime"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_chart_range_idle"
-                    android:minHeight="42dp"
-                    android:text="@string/ranking_metric_time"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/colorSecondaryButtonText"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    tools:ignore="ButtonStyle" />
-
-                <Button
-                    android:id="@+id/btnRankingMetricOpen"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_chart_range_idle"
-                    android:minHeight="42dp"
-                    android:text="@string/ranking_metric_open"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/colorSecondaryButtonText"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    tools:ignore="ButtonStyle" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvRankingMostTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/ranking_most_title"
-                android:textColor="?attr/colorTextPrimary"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:id="@+id/containerRankingMost"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <TextView
-                android:id="@+id/tvRankingLeastTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/ranking_least_title"
-                android:textColor="?attr/colorTextPrimary"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:id="@+id/containerRankingLeast"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <TextView
-                android:id="@+id/tvRankingEmpty"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/ranking_empty"
-                android:textColor="?attr/colorTextMuted"
-                android:textSize="13sp"
-                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 

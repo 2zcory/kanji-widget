@@ -26,4 +26,7 @@
     <plurals name="detail_reading_more">
         <item quantity="other">+%d mục nữa</item>
     </plurals>
+    <plurals name="ranking_preview_count">
+        <item quantity="other">%d mục xếp hạng thấp hơn</item>
+    </plurals>
 </resources>
