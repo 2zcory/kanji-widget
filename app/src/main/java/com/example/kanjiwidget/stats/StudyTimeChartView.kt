@@ -29,6 +29,12 @@ class StudyTimeChartView @JvmOverloads constructor(
     private val zeroBarPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
     }
+    private val focusBarPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
+    private val focusDotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
     private val axisPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = dp(1f)
@@ -78,9 +84,22 @@ class StudyTimeChartView @JvmOverloads constructor(
                 (chartBottom - chartTop) * normalized
             }
             val top = chartBottom - barHeight
-            val paint = if (point.totalMs <= 0L) zeroBarPaint else barPaint
+            val isFocusedToday = index == points.lastIndex && point.totalMs > 0L
+            val paint = when {
+                point.totalMs <= 0L -> zeroBarPaint
+                isFocusedToday -> focusBarPaint
+                else -> barPaint
+            }
             barRect.set(left, top, right, chartBottom)
             canvas.drawRoundRect(barRect, dp(6f), dp(6f), paint)
+            if (isFocusedToday) {
+                canvas.drawCircle(
+                    left + barWidth / 2f,
+                    top - dp(6f),
+                    dp(3f),
+                    focusDotPaint
+                )
+            }
 
             if (shouldDrawLabel(index, points.size)) {
                 canvas.drawText(
@@ -109,6 +128,8 @@ class StudyTimeChartView @JvmOverloads constructor(
     private fun refreshThemeColors() {
         barPaint.color = resolveColor(R.attr.colorChartBar)
         zeroBarPaint.color = resolveColor(R.attr.colorChartBarFaint)
+        focusBarPaint.color = resolveColor(R.attr.colorAccentWarm)
+        focusDotPaint.color = resolveColor(R.attr.colorAccentWarm)
         axisPaint.color = resolveColor(R.attr.colorChartAxis)
         textPaint.color = resolveColor(R.attr.colorTextMuted)
     }

@@ -51,8 +51,10 @@ class MainActivity : ThemedActivity() {
     private lateinit var widgetStatusMetaPrimary: TextView
     private lateinit var widgetStatusMetaSecondary: TextView
     private lateinit var primaryStudyActionButton: Button
-    private lateinit var openRandomButton: Button
-    private lateinit var statsButton: Button
+    private lateinit var openRandomButton: View
+    private lateinit var openRandomButtonLabel: TextView
+    private lateinit var statsButton: View
+    private lateinit var statsButtonLabel: TextView
     private lateinit var recentKanjiContainer: GridLayout
     private lateinit var recentEmptyState: View
     private lateinit var recentSectionLink: TextView
@@ -82,7 +84,9 @@ class MainActivity : ThemedActivity() {
         widgetStatusMetaSecondary = findViewById(R.id.tvWidgetStatusMetaSecondary)
         primaryStudyActionButton = findViewById(R.id.btnPrimaryStudyAction)
         openRandomButton = findViewById(R.id.btnOpenRandomKanji)
+        openRandomButtonLabel = findViewById(R.id.tvOpenRandomKanjiLabel)
         statsButton = findViewById(R.id.btnTodayStats)
+        statsButtonLabel = findViewById(R.id.tvTodayStatsLabel)
         recentKanjiContainer = findViewById(R.id.containerRecentKanji)
         recentEmptyState = findViewById(R.id.tvRecentEmpty)
         recentSectionLink = findViewById(R.id.tvRecentSectionLink)
@@ -209,7 +213,7 @@ class MainActivity : ThemedActivity() {
     private fun bindRandomAction(summary: HomeSummary, catalog: List<String>) {
         openRandomButton.isEnabled = catalog.isNotEmpty()
         openRandomButton.alpha = if (catalog.isNotEmpty()) 1f else 0.5f
-        openRandomButton.text = if (catalog.isNotEmpty()) {
+        openRandomButtonLabel.text = if (catalog.isNotEmpty()) {
             getString(R.string.home_action_random_review)
         } else {
             getString(R.string.home_action_open_random_disabled)
@@ -223,7 +227,7 @@ class MainActivity : ThemedActivity() {
                 }
             }
         )
-        statsButton.text = getString(R.string.home_action_study_stats)
+        statsButtonLabel.text = getString(R.string.home_action_study_stats)
         statsButton.alpha = 1f
         statsButton.isEnabled = true
     }
@@ -261,7 +265,14 @@ class MainActivity : ThemedActivity() {
             tile.findViewById<TextView>(R.id.tvRecentKanji).text = item.kanji
             tile.findViewById<TextView>(R.id.tvRecentMeaning).text =
                 item.meaning ?: getString(R.string.home_latest_meaning_placeholder)
-            tile.findViewById<TextView>(R.id.tvRecentMeta).text = buildRecentMeta(item)
+            updatePill(
+                tile.findViewById(R.id.tvRecentMetaPrimary),
+                buildRecentPrimaryMeta(item)
+            )
+            updatePill(
+                tile.findViewById(R.id.tvRecentJlpt),
+                item.jlpt?.takeIf { it.isNotBlank() }?.let { getString(R.string.jlpt_format, it) }
+            )
             tile.setOnClickListener { detailLauncher.launch(buildDetailIntent(item)) }
             ThemeController.applyMainCardDepth(tile.findViewById(R.id.recentKanjiItemRoot), elevatedDp = 6f, defaultDp = 4f)
             tile.alpha = 0f
@@ -361,16 +372,13 @@ class MainActivity : ThemedActivity() {
         )
     }
 
-    private fun buildRecentMeta(item: RecentKanjiSummaryItem): String {
-        val parts = mutableListOf<String>()
-        parts += DateUtils.getRelativeTimeSpanString(
+    private fun buildRecentPrimaryMeta(item: RecentKanjiSummaryItem): String {
+        return DateUtils.getRelativeTimeSpanString(
             item.viewedAt,
             System.currentTimeMillis(),
             DateUtils.MINUTE_IN_MILLIS,
             DateUtils.FORMAT_ABBREV_RELATIVE
         ).toString()
-        item.jlpt?.takeIf { it.isNotBlank() }?.let { parts += getString(R.string.jlpt_format, it) }
-        return parts.joinToString(getString(R.string.bullet_separator))
     }
 
     private fun applyDepthStyling() {

@@ -184,7 +184,6 @@ class StudyStatsBottomSheet(
         } else {
             activity.getString(R.string.stats_guidance_meta_empty)
         }
-
         if (hasLatest) {
             latestContextRow.visibility = View.VISIBLE
             latestContextBodyView.text = activity.getString(
@@ -326,14 +325,21 @@ class StudyStatsBottomSheet(
             row.findViewById<TextView>(R.id.tvRankingPrimary).text =
                 item.meaning?.takeIf { it.isNotBlank() } ?: item.kanji
             row.findViewById<TextView>(R.id.tvRankingSecondary).text = buildSecondaryText(item)
-            
-            val metricValueView = row.findViewById<TextView>(R.id.tvRankingDuration)
+
+            val metricValueView = row.findViewById<TextView>(R.id.tvRankingMetricCaption)
             metricValueView.text = if (metric == RankingMetric.STUDY_TIME) {
-                activity.formatDurationForUi(item.totalStudyMs)
+                activity.getString(
+                    R.string.ranking_metric_time_value,
+                    activity.formatDurationForUi(item.totalStudyMs)
+                )
             } else {
-                item.openCount.toString()
+                activity.resources.getQuantityString(
+                    R.plurals.ranking_metric_open_value,
+                    item.openCount.toInt(),
+                    item.openCount
+                )
             }
-            
+
             row.setOnClickListener { activity.startActivity(buildDetailIntent(item)) }
             ThemeController.applyGlassDepth(row.findViewById(R.id.rankingItemRoot), elevatedDp = 8f)
             container.addView(row)
