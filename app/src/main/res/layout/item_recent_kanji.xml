@@ -26,11 +26,31 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/tvRecentMeta"
+        android:id="@+id/tvRecentJlpt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="?attr/colorTextMuted"
-        android:textSize="12sp" />
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvRecentMetaPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_home_meta_pill"
+        android:gravity="center_vertical"
+        android:minHeight="28dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="0dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="0dp"
+        android:textColor="?attr/colorTextMuted"
+        android:textSize="11sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

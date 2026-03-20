@@ -43,7 +43,7 @@
     <string name="home_action_study_stats">Thống kê học</string>
     <string name="home_action_widget_help">Hướng dẫn thêm widget</string>
     <string name="home_action_open_settings">Mở cài đặt</string>
-    <string name="home_hero_label_latest">Mở kanji gần nhất</string>
+    <string name="home_hero_label_latest">Tiếp tục học</string>
     <string name="home_hero_label_setup">Thiết lập widget</string>
     <string name="home_hero_label_random">Review ngẫu nhiên</string>
     <string name="home_hero_label_ready">Luồng học</string>
@@ -51,7 +51,7 @@
     <string name="home_hero_title_no_widget">Thiết lập widget</string>
     <string name="home_hero_title_random">Bắt đầu một lượt review ngẫu nhiên</string>
     <string name="home_hero_title_empty">Luồng review đã sẵn sàng</string>
-    <string name="home_hero_body_with_latest">Quay lại kanji mà người học vừa mở gần nhất.</string>
+    <string name="home_hero_body_with_latest">Quay lại kanji mà người học vừa mở khi ngữ cảnh vẫn còn mới.</string>
     <string name="home_hero_body_no_latest">Chưa có kanji gần đây. Hãy bắt đầu với một lượt review ngẫu nhiên để tạo nhịp học.</string>
     <string name="home_hero_body_no_widget">Thêm widget để có vòng review nhanh nhất, rồi quay lại đây khi bạn muốn xem tóm tắt và vào học nhanh.</string>
     <string name="home_meta_today_active">Đã học hôm nay</string>
@@ -94,6 +94,22 @@
     <string name="chart_title">Thống kê học tập</string>
     <string name="chart_sheet_label">THỐNG KÊ HỌC</string>
     <string name="chart_sheet_body">Nhịp học gần đây, tổng thời gian, và xếp hạng nằm gọn trong một sheet.</string>
+    <string name="stats_guidance_label">HÔM NAY</string>
+    <string name="stats_guidance_title_review">Sẵn sàng cho lượt review tiếp theo</string>
+    <string name="stats_guidance_title_random">Sẵn sàng khởi động lại nhịp học</string>
+    <string name="stats_guidance_body_review">Mở lại kanji gần nhất khi ngữ cảnh vẫn còn mới.</string>
+    <string name="stats_guidance_body_random">Bắt đầu với một lượt review ngẫu nhiên, trong khi biểu đồ và xếp hạng vẫn ở ngay bên dưới.</string>
+    <string name="stats_guidance_body_empty">Chưa có dữ liệu học gần đây.</string>
+    <string name="stats_guidance_badge_streak">Chuỗi %1$d ngày</string>
+    <string name="stats_guidance_badge_today">Đã học hôm nay</string>
+    <string name="stats_guidance_meta_today">%1$s hôm nay</string>
+    <string name="stats_guidance_meta_recent">%1$d kanji gần đây</string>
+    <string name="stats_guidance_meta_random">Sẵn sàng review ngẫu nhiên</string>
+    <string name="stats_guidance_meta_empty">Chưa có deck khả dụng</string>
+    <string name="stats_latest_context_label">NGỮ CẢNH GẦN NHẤT</string>
+    <string name="stats_latest_context_body">%1$s được mở lần gần nhất %2$s</string>
+    <string name="stats_guidance_primary">Mở lại kanji gần nhất</string>
+    <string name="stats_guidance_primary_random">Bắt đầu review ngẫu nhiên</string>
     <string name="chart_range_7">7 ngày</string>
     <string name="chart_range_30">30 ngày</string>
     <string name="chart_range_value">Khoảng thời gian: %1$s gần nhất</string>
@@ -114,7 +130,7 @@
     <string name="ranking_title">Xếp hạng kanji</string>
     <string name="ranking_section_label">XẾP HẠNG</string>
     <string name="ranking_section_body">Chạm một dòng để nhảy thẳng về màn detail của kanji đó.</string>
-    <string name="ranking_scope_all">All time</string>
+    <string name="ranking_scope_all">Toàn bộ</string>
     <string name="ranking_scope_30">30 ngày</string>
     <string name="ranking_scope_7">7 ngày</string>
     <string name="ranking_metric_time">Thời gian học</string>
@@ -125,7 +141,12 @@
     <string name="ranking_secondary_with_jlpt">%1$s • JLPT %2$s</string>
     <string name="ranking_secondary_fallback">Chưa có metadata chi tiết</string>
     <string name="ranking_secondary_last_activity">Hoạt động gần nhất %1$s</string>
+    <string name="ranking_metric_time_value">Đã học %1$s</string>
     <string name="ranking_last_activity_today">Hôm nay</string>
+    <plurals name="ranking_metric_open_value">
+        <item quantity="one">%d lượt mở</item>
+        <item quantity="other">%d lượt mở</item>
+    </plurals>
     <string name="language_section_title">NGÔN NGỮ</string>
     <string name="language_section_body">Chọn ngôn ngữ ứng dụng. Mặc định hệ thống sẽ theo cài đặt máy.</string>
     <string name="language_action_apply">Áp dụng</string>

@@ -39,7 +39,9 @@ class KanjiDetailActivity : ThemedActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var titleView: TextView
     private lateinit var subtitleView: TextView
-    private lateinit var heroMetaView: TextView
+    private lateinit var heroMetaRow: View
+    private lateinit var heroMetaPrimaryView: TextView
+    private lateinit var heroMetaSecondaryView: TextView
     private lateinit var jlptBadgeView: TextView
     private lateinit var gradeBadgeView: TextView
     private lateinit var statusView: TextView
@@ -84,7 +86,9 @@ class KanjiDetailActivity : ThemedActivity() {
         backButton = findViewById(R.id.btnDetailBack)
         titleView = findViewById(R.id.tvDetailKanji)
         subtitleView = findViewById(R.id.tvDetailSubtitle)
-        heroMetaView = findViewById(R.id.tvDetailHeroMeta)
+        heroMetaRow = findViewById(R.id.rowDetailHeroMeta)
+        heroMetaPrimaryView = findViewById(R.id.tvDetailHeroMetaPrimary)
+        heroMetaSecondaryView = findViewById(R.id.tvDetailHeroMetaSecondary)
         jlptBadgeView = findViewById(R.id.tvDetailJlptBadge)
         gradeBadgeView = findViewById(R.id.tvDetailGradeBadge)
         statusView = findViewById(R.id.tvDetailStatus)
@@ -338,11 +342,19 @@ class KanjiDetailActivity : ThemedActivity() {
             frequency?.let { add(getString(R.string.stroke_order_meta_frequency, it)) }
         }
         if (parts.isEmpty()) {
-            heroMetaView.visibility = View.GONE
-            heroMetaView.text = ""
+            heroMetaRow.visibility = View.GONE
+            heroMetaPrimaryView.text = ""
+            heroMetaSecondaryView.text = ""
         } else {
-            heroMetaView.visibility = View.VISIBLE
-            heroMetaView.text = parts.joinToString(getString(R.string.bullet_separator))
+            heroMetaRow.visibility = View.VISIBLE
+            updateMetaPill(
+                heroMetaPrimaryView,
+                strokeCount?.let { resources.getQuantityString(R.plurals.stroke_count, it, it) }
+            )
+            updateMetaPill(
+                heroMetaSecondaryView,
+                frequency?.let { getString(R.string.stroke_order_meta_frequency, it) }
+            )
         }
     }
 
@@ -679,6 +691,15 @@ class KanjiDetailActivity : ThemedActivity() {
         }
         return parts.joinToString(getString(R.string.bullet_separator))
             .ifBlank { getString(R.string.stroke_order_info_placeholder) }
+    }
+
+    private fun updateMetaPill(view: TextView, text: CharSequence?) {
+        if (text.isNullOrBlank()) {
+            view.visibility = View.GONE
+            return
+        }
+        view.text = text
+        view.visibility = View.VISIBLE
     }
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).roundToInt()

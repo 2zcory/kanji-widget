@@ -12,11 +12,11 @@
 
     <TextView
         android:id="@+id/tvRankingKanji"
-        android:layout_width="52dp"
+        android:layout_width="48dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="?attr/colorTextPrimary"
-        android:textSize="30sp"
+        android:textSize="28sp"
         android:textStyle="bold"
         tools:text="日" />
 
@@ -31,9 +31,10 @@
             android:id="@+id/tvRankingPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textColor="?attr/colorTextPrimary"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             tools:text="Sun" />
 
@@ -41,37 +42,33 @@
             android:id="@+id/tvRankingSecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
+            android:ellipsize="end"
             android:maxLines="2"
             android:textColor="?attr/colorTextMuted"
             android:textSize="12sp"
             tools:text="JLPT N5 • Today" />
+
+        <TextView
+            android:id="@+id/tvRankingMetricCaption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:maxLines="1"
+            android:textColor="?attr/colorTextSecondary"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            tools:text="36 seconds studied" />
     </LinearLayout>
 
-    <LinearLayout
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:gravity="end|center_vertical"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvRankingDuration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="?attr/colorAccentWarm"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            tools:text="2 min" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="@string/home_recent_chevron"
-            android:textColor="?attr/colorTextMuted"
-            android:textSize="18sp"
-            tools:ignore="HardcodedText" />
-    </LinearLayout>
+        android:layout_marginStart="10dp"
+        android:gravity="center_vertical"
+        android:text="@string/home_recent_chevron"
+        android:textColor="?attr/colorTextMuted"
+        android:textSize="16sp"
+        tools:ignore="HardcodedText" />
 
 </LinearLayout>

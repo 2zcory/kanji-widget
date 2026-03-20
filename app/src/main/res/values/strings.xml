@@ -43,7 +43,7 @@
     <string name="home_action_study_stats">Study stats</string>
     <string name="home_action_widget_help">Widget setup</string>
     <string name="home_action_open_settings">Open settings</string>
-    <string name="home_hero_label_latest">Open latest Kanji</string>
+    <string name="home_hero_label_latest">Continue study</string>
     <string name="home_hero_label_setup">Widget setup</string>
     <string name="home_hero_label_random">Random review</string>
     <string name="home_hero_label_ready">Study flow</string>
@@ -51,7 +51,7 @@
     <string name="home_hero_title_no_widget">Set up the widget</string>
     <string name="home_hero_title_random">Start a random review</string>
     <string name="home_hero_title_empty">Review flow ready</string>
-    <string name="home_hero_body_with_latest">Jump back into the latest Kanji the learner opened.</string>
+    <string name="home_hero_body_with_latest">Jump back into the latest Kanji the learner opened while the context is still fresh.</string>
     <string name="home_hero_body_no_latest">No recent Kanji yet. Start with a random review to build your study flow.</string>
     <string name="home_hero_body_no_widget">Add the widget for the fastest review loop, then return here whenever you want a quick summary and study entry point.</string>
     <string name="home_meta_today_active">Studied today</string>
@@ -98,7 +98,7 @@
     <string name="stats_guidance_title_review">Ready for the next review</string>
     <string name="stats_guidance_title_random">Ready to restart study</string>
     <string name="stats_guidance_body_review">Open the latest kanji while the context is still fresh.</string>
-    <string name="stats_guidance_body_random">Start with a random review.</string>
+    <string name="stats_guidance_body_random">Start with a random review while keeping the chart and ranking close at hand.</string>
     <string name="stats_guidance_body_empty">No recent study data yet.</string>
     <string name="stats_guidance_badge_streak">%1$dd streak</string>
     <string name="stats_guidance_badge_today">Today active</string>
@@ -141,7 +141,12 @@
     <string name="ranking_secondary_with_jlpt">%1$s • JLPT %2$s</string>
     <string name="ranking_secondary_fallback">No detailed metadata</string>
     <string name="ranking_secondary_last_activity">Last active %1$s</string>
+    <string name="ranking_metric_time_value">%1$s studied</string>
     <string name="ranking_last_activity_today">Today</string>
+    <plurals name="ranking_metric_open_value">
+        <item quantity="one">%d open</item>
+        <item quantity="other">%d opens</item>
+    </plurals>
     <string name="language_section_title">LANGUAGE</string>
     <string name="language_section_body">Choose the app language. System default follows your device settings.</string>
     <string name="language_action_apply">Apply</string>

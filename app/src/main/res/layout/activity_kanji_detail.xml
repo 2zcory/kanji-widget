@@ -126,16 +126,49 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvDetailHeroMeta"
+            <LinearLayout
+                android:id="@+id/rowDetailHeroMeta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:baselineAligned="false"
                 android:gravity="center"
-                android:textColor="?attr/colorTextMuted"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvDetailHeroMetaPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_home_meta_pill"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="30dp"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="0dp"
+                    android:textColor="?attr/colorTextMuted"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDetailHeroMetaSecondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_home_meta_pill"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="30dp"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="0dp"
+                    android:textColor="?attr/colorTextMuted"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -455,7 +488,7 @@
                     android:id="@+id/tvTodayStudyOpenCount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:textColor="?attr/colorTextPrimary"
                     android:textSize="28sp"
                     android:textStyle="bold" />
@@ -491,7 +524,7 @@
                     android:id="@+id/tvCompoundMetricValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:textColor="?attr/colorTextPrimary"
                     android:textSize="28sp"
                     android:textStyle="bold" />

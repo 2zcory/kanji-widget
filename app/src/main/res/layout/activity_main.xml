@@ -80,6 +80,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_home_meta_pill"
+                    android:drawablePadding="8dp"
                     android:gravity="center_vertical"
                     android:minHeight="28dp"
                     android:paddingLeft="10dp"
@@ -96,6 +97,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/bg_home_meta_pill"
+                    android:drawablePadding="8dp"
                     android:gravity="center_vertical"
                     android:minHeight="28dp"
                     android:paddingLeft="10dp"
@@ -128,37 +130,77 @@
                 android:baselineAligned="false"
                 android:orientation="horizontal">
 
-                <Button
+                <LinearLayout
                     android:id="@+id/btnOpenRandomKanji"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="6dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_home_action_chip"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center"
                     android:minHeight="44dp"
-                    android:paddingTop="0dp"
-                    android:paddingBottom="0dp"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/colorSecondaryButtonText"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    tools:ignore="ButtonStyle" />
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
 
-                <Button
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_shuffle_kw"
+                        android:tint="?attr/colorSecondaryButtonText" />
+
+                    <TextView
+                        android:id="@+id/tvOpenRandomKanjiLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/colorSecondaryButtonText"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/btnTodayStats"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_home_action_chip"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center"
                     android:minHeight="44dp"
-                    android:paddingTop="0dp"
-                    android:paddingBottom="0dp"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/colorSecondaryButtonText"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    tools:ignore="ButtonStyle" />
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_chart_kw"
+                        android:tint="?attr/colorSecondaryButtonText" />
+
+                    <TextView
+                        android:id="@+id/tvTodayStatsLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/colorSecondaryButtonText"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -271,6 +313,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_home_meta_pill"
+                    android:drawablePadding="8dp"
                     android:paddingLeft="10dp"
                     android:paddingTop="6dp"
                     android:paddingRight="10dp"
@@ -285,6 +328,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/bg_home_meta_pill"
+                    android:drawablePadding="8dp"
                     android:paddingLeft="10dp"
                     android:paddingTop="6dp"
                     android:paddingRight="10dp"
@@ -325,7 +369,7 @@
                     android:id="@+id/tvTodayMetricValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:textColor="?attr/colorTextPrimary"
                     android:textSize="30sp"
                     android:textStyle="bold" />
@@ -362,7 +406,7 @@
                     android:id="@+id/tvStreakMetricValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:textColor="?attr/colorTextPrimary"
                     android:textSize="30sp"
                     android:textStyle="bold" />
