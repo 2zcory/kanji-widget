@@ -8,18 +8,33 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.ScrollView
 import android.widget.TextView
 import com.example.kanjiwidget.roadmap.KanjiCompletionPrefs
 import com.example.kanjiwidget.roadmap.KanjiRoadmapRepository
 import com.example.kanjiwidget.roadmap.KanjiRoadmapSnapshot
+import com.example.kanjiwidget.roadmap.KanjiRoadmapStageId
 import com.example.kanjiwidget.roadmap.KanjiRoadmapStageProgress
 import com.example.kanjiwidget.placement.PlacementResultPrefs
 import com.example.kanjiwidget.theme.ThemeController
 import com.example.kanjiwidget.widget.KanjiEntry
 
 class RoadmapActivity : ThemedActivity() {
+    companion object {
+        private const val EXTRA_TARGET_STAGE_ID = "target_stage_id"
+
+        fun buildIntent(
+            context: android.content.Context,
+            targetStageId: KanjiRoadmapStageId? = null,
+        ): Intent {
+            return Intent(context, RoadmapActivity::class.java).apply {
+                putExtra(EXTRA_TARGET_STAGE_ID, targetStageId?.name)
+            }
+        }
+    }
 
     private lateinit var repository: KanjiRoadmapRepository
+    private lateinit var scrollView: ScrollView
     private lateinit var backButton: ImageButton
     private lateinit var heroLabel: TextView
     private lateinit var heroTitle: TextView
@@ -31,6 +46,7 @@ class RoadmapActivity : ThemedActivity() {
     private lateinit var batchEmptyView: TextView
     private lateinit var batchContainer: LinearLayout
     private lateinit var stageContainer: LinearLayout
+    private var targetStageId: KanjiRoadmapStageId? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         applyPreparedTheme()
@@ -39,6 +55,7 @@ class RoadmapActivity : ThemedActivity() {
         runScreenEntranceAnimation()
 
         repository = KanjiRoadmapRepository(this)
+        scrollView = findViewById(R.id.scrollRoadmap)
         backButton = findViewById(R.id.btnRoadmapBack)
         heroLabel = findViewById(R.id.tvRoadmapHeroLabel)
         heroTitle = findViewById(R.id.tvRoadmapHeroTitle)
@@ -50,6 +67,8 @@ class RoadmapActivity : ThemedActivity() {
         batchEmptyView = findViewById(R.id.tvRoadmapBatchEmpty)
         batchContainer = findViewById(R.id.containerRoadmapBatch)
         stageContainer = findViewById(R.id.containerRoadmapStages)
+        targetStageId = intent.getStringExtra(EXTRA_TARGET_STAGE_ID)
+            ?.let { runCatching { KanjiRoadmapStageId.valueOf(it) }.getOrNull() }
 
         backButton.setOnClickListener { finish() }
         placementTestButton.setOnClickListener {
@@ -66,16 +85,32 @@ class RoadmapActivity : ThemedActivity() {
     private fun bindRoadmap() {
         val entries = repository.loadKnownEntries()
         val snapshot = repository.buildSnapshot(entries)
-        val recommendation = repository.getRecommendedNextBatch(batchSize = 4, entries = entries)
-        bindHero(snapshot)
+        val focusedStage = resolveFocusedStage(snapshot)
+        val recommendation = if (focusedStage == null) {
+            repository.getRecommendedNextBatch(batchSize = 4, entries = entries)
+        } else {
+            repository.getRecommendedBatchForStage(
+                stageId = focusedStage.definition.id,
+                batchSize = 4,
+                entries = entries,
+            )
+        }
+        bindHero(snapshot, focusedStage)
         bindPlacementSummary()
         bindRecommendedBatch(recommendation.batch, snapshot)
-        bindStages(snapshot)
+        bindStages(snapshot, focusedStage)
     }
 
-    private fun bindHero(snapshot: KanjiRoadmapSnapshot) {
-        val currentStage = snapshot.currentStage
-        val nextStage = snapshot.nextStage
+    private fun bindHero(
+        snapshot: KanjiRoadmapSnapshot,
+        focusedStage: KanjiRoadmapStageProgress?,
+    ) {
+        val currentStage = focusedStage ?: snapshot.currentStage
+        val nextStage = currentStage?.let { current ->
+            snapshot.stages.firstOrNull {
+                it.definition.sortOrder > current.definition.sortOrder && it.totalCount > 0
+            }
+        }
         val hasData = snapshot.stages.any { it.totalCount > 0 }
         heroLabel.text = getString(R.string.roadmap_hero_label)
         when {
@@ -103,7 +138,11 @@ class RoadmapActivity : ThemedActivity() {
                 )
                 updatePill(
                     heroMetaPrimary,
-                    getString(R.string.roadmap_meta_current, currentStage.definition.jlptLevel)
+                    if (targetStageId != null && currentStage.definition.id == targetStageId) {
+                        getString(R.string.roadmap_meta_recommended, currentStage.definition.jlptLevel)
+                    } else {
+                        getString(R.string.roadmap_meta_current, currentStage.definition.jlptLevel)
+                    }
                 )
                 updatePill(
                     heroMetaSecondary,
@@ -130,6 +169,12 @@ class RoadmapActivity : ThemedActivity() {
             savedResult.confidenceLabel,
         )
         placementTestButton.text = getString(R.string.roadmap_action_retake_placement_test)
+    }
+
+    private fun resolveFocusedStage(snapshot: KanjiRoadmapSnapshot): KanjiRoadmapStageProgress? {
+        val target = targetStageId ?: return snapshot.currentStage
+        return snapshot.stages.firstOrNull { it.definition.id == target && it.totalCount > 0 }
+            ?: snapshot.currentStage
     }
 
     private fun bindRecommendedBatch(
@@ -187,13 +232,17 @@ class RoadmapActivity : ThemedActivity() {
         }
     }
 
-    private fun bindStages(snapshot: KanjiRoadmapSnapshot) {
+    private fun bindStages(
+        snapshot: KanjiRoadmapSnapshot,
+        focusedStage: KanjiRoadmapStageProgress?,
+    ) {
         stageContainer.removeAllViews()
         val inflater = LayoutInflater.from(this)
         snapshot.stages.forEach { stage ->
             val row = inflater.inflate(R.layout.item_roadmap_stage, stageContainer, false)
             row.findViewById<TextView>(R.id.tvRoadmapStageTitle).text = stage.definition.title
-            row.findViewById<TextView>(R.id.tvRoadmapStageState).text = resolveStageState(snapshot, stage)
+            row.findViewById<TextView>(R.id.tvRoadmapStageState).text =
+                resolveStageState(snapshot, stage, focusedStage)
             row.findViewById<TextView>(R.id.tvRoadmapStageMeta).text = getString(
                 R.string.roadmap_stage_meta,
                 stage.completedCount,
@@ -206,15 +255,23 @@ class RoadmapActivity : ThemedActivity() {
             }
             ThemeController.applyMainCardDepth(row, elevatedDp = 2f, defaultDp = 1f)
             stageContainer.addView(row)
+            if (focusedStage != null && stage.definition.id == focusedStage.definition.id) {
+                row.post {
+                    scrollView.smoothScrollTo(0, (row.top - dp(24)).coerceAtLeast(0))
+                }
+            }
         }
     }
 
     private fun resolveStageState(
         snapshot: KanjiRoadmapSnapshot,
         stage: KanjiRoadmapStageProgress,
+        focusedStage: KanjiRoadmapStageProgress?,
     ): String {
         return when {
             stage.totalCount == 0 -> getString(R.string.roadmap_stage_state_unavailable)
+            focusedStage?.definition?.id == stage.definition.id && targetStageId != null ->
+                getString(R.string.roadmap_stage_state_recommended)
             stage.completedCount >= stage.totalCount -> getString(R.string.roadmap_stage_state_done)
             snapshot.currentStage?.definition?.id == stage.definition.id -> getString(R.string.roadmap_stage_state_current)
             snapshot.nextStage?.definition?.id == stage.definition.id -> getString(R.string.roadmap_stage_state_next)
@@ -238,4 +295,6 @@ class RoadmapActivity : ThemedActivity() {
         view.text = text
         view.visibility = View.VISIBLE
     }
+
+    private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
 }
