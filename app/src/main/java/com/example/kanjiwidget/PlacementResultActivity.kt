@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import com.example.kanjiwidget.placement.PlacementResultPrefs
+import com.example.kanjiwidget.placement.SavedPlacementResult
 import com.example.kanjiwidget.roadmap.KanjiRoadmapRepository
 import com.example.kanjiwidget.roadmap.roadmapStageIdForJlpt
 import com.example.kanjiwidget.theme.ThemeController
@@ -64,6 +66,18 @@ class PlacementResultActivity : ThemedActivity() {
         val rationale = intent.getStringExtra(EXTRA_RATIONALE).orEmpty()
         val totalCorrect = intent.getIntExtra(EXTRA_TOTAL_CORRECT, 0)
         val totalQuestions = intent.getIntExtra(EXTRA_TOTAL_QUESTIONS, 0)
+
+        PlacementResultPrefs.save(
+            this,
+            SavedPlacementResult(
+                jlptLevel = stageJlpt,
+                stageTitle = stageTitle,
+                gradeBand = gradeBand,
+                confidenceLabel = confidenceLabel,
+                totalCorrectAnswers = totalCorrect,
+                totalQuestions = totalQuestions,
+            )
+        )
 
         heroLabel.text = getString(R.string.placement_result_hero_label)
         heroTitle.text = getString(R.string.placement_result_hero_title, stageJlpt)

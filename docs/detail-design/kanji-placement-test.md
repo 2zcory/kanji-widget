@@ -81,6 +81,7 @@ Current source-repo implementation direction:
 - launch the test from `RoadmapActivity`
 - keep `MainActivity` focused on summary, continuation, and roadmap entry
 - let the result hand off to either `RoadmapActivity` or the recommended batch detail flow
+- persist the most recent placement result locally so the roadmap can remind the learner where the last recommendation landed
 
 ## Data Dependencies
 

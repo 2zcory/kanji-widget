@@ -231,6 +231,9 @@
     <string name="roadmap_stage_state_later">Sau đó</string>
     <string name="roadmap_stage_state_unavailable">Chưa có</string>
     <string name="roadmap_action_open_placement_test">Làm bài test đầu vào</string>
+    <string name="roadmap_action_retake_placement_test">Làm lại bài test đầu vào</string>
+    <string name="roadmap_placement_result_empty">Chưa có kết quả đầu vào đã lưu. Hãy làm bài test để lấy điểm bắt đầu JLPT.</string>
+    <string name="roadmap_placement_result_summary">Kết quả gần nhất: %1$s • %2$d/%3$d • %4$s</string>
     <string name="placement_test_title">Bài test đầu vào</string>
     <string name="placement_result_title">Kết quả đầu vào</string>
     <string name="placement_action_back">Quay lại</string>
