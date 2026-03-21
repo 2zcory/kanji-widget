@@ -26,6 +26,7 @@ The screen should help users:
 - understand what the app does
 - install or use the widget
 - continue learning from the latest kanji or a random kanji
+- enter the roadmap when they want explicit stage guidance
 - review today’s learning activity
 - open a lightweight settings screen for non-study controls
 
@@ -138,6 +139,22 @@ Behavior:
 - the `Today` metric should show current valid opens for the day
 - the `Consistency` metric should show the current streak in days
 - both cards remain informational and should not compete with the hero CTA or stats action
+
+### 6. Roadmap Entry
+
+Contents:
+- one dedicated roadmap summary card
+- one primary action opening the roadmap surface
+- two compact metadata pills for current and next stage context
+
+Purpose:
+- expose the new JLPT-first path without overloading the hero
+- keep the roadmap discoverable from the launcher while preserving the launcher's lightweight role
+
+Behavior:
+- if roadmap data exists, show current stage progress and next-stage context
+- if roadmap data is not ready yet, keep the card visible with a sync-first explanation
+- tapping the primary action opens `RoadmapActivity`
 
 ## User Flow
 
