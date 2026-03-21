@@ -35,6 +35,12 @@
             android:theme="@style/Theme.KanjiWidget" />
 
         <activity
+            android:name=".RoadmapActivity"
+            android:exported="false"
+            android:label="@string/roadmap_title"
+            android:theme="@style/Theme.KanjiWidget" />
+
+        <activity
             android:name=".widget.WidgetConfigurationActivity"
             android:exported="true"
             android:theme="@style/Theme.KanjiWidget" />

@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kanjiwidget.home.HomeSummary
 import com.example.kanjiwidget.home.HomeSummaryRepository
 import com.example.kanjiwidget.home.RecentKanjiSummaryItem
+import com.example.kanjiwidget.roadmap.KanjiRoadmapRepository
 import com.example.kanjiwidget.stats.StudyStatsBottomSheet
 import com.example.kanjiwidget.stats.StudyStatsRepository
 import com.example.kanjiwidget.theme.ThemeController
@@ -41,6 +42,7 @@ class MainActivity : ThemedActivity() {
     }
 
     private lateinit var repository: HomeSummaryRepository
+    private lateinit var roadmapRepository: KanjiRoadmapRepository
     private lateinit var studyStatsRepository: StudyStatsRepository
     private lateinit var heroLabel: TextView
     private lateinit var heroTitle: TextView
@@ -50,6 +52,10 @@ class MainActivity : ThemedActivity() {
     private lateinit var widgetStatusBody: TextView
     private lateinit var widgetStatusMetaPrimary: TextView
     private lateinit var widgetStatusMetaSecondary: TextView
+    private lateinit var roadmapBody: TextView
+    private lateinit var roadmapMetaPrimary: TextView
+    private lateinit var roadmapMetaSecondary: TextView
+    private lateinit var openRoadmapButton: Button
     private lateinit var primaryStudyActionButton: Button
     private lateinit var openRandomButton: View
     private lateinit var openRandomButtonLabel: TextView
@@ -73,6 +79,7 @@ class MainActivity : ThemedActivity() {
         }
 
         repository = HomeSummaryRepository(this)
+        roadmapRepository = KanjiRoadmapRepository(this)
         studyStatsRepository = StudyStatsRepository(this)
         heroLabel = findViewById(R.id.tvHeroLabel)
         heroTitle = findViewById(R.id.tvHomeTitle)
@@ -82,6 +89,10 @@ class MainActivity : ThemedActivity() {
         widgetStatusBody = findViewById(R.id.tvHomeWidgetStatusBody)
         widgetStatusMetaPrimary = findViewById(R.id.tvWidgetStatusMetaPrimary)
         widgetStatusMetaSecondary = findViewById(R.id.tvWidgetStatusMetaSecondary)
+        roadmapBody = findViewById(R.id.tvHomeRoadmapBody)
+        roadmapMetaPrimary = findViewById(R.id.tvRoadmapMetaPrimary)
+        roadmapMetaSecondary = findViewById(R.id.tvRoadmapMetaSecondary)
+        openRoadmapButton = findViewById(R.id.btnOpenRoadmap)
         primaryStudyActionButton = findViewById(R.id.btnPrimaryStudyAction)
         openRandomButton = findViewById(R.id.btnOpenRandomKanji)
         openRandomButtonLabel = findViewById(R.id.tvOpenRandomKanjiLabel)
@@ -118,6 +129,7 @@ class MainActivity : ThemedActivity() {
         bindRandomAction(summary, catalog)
         bindRecentKanji(summary.recentKanji)
         bindWidgetStatus(summary)
+        bindRoadmap()
         bindStats(summary)
         statsButton.setOnClickListener { showStudyStatsBottomSheet(summary) }
     }
@@ -310,6 +322,50 @@ class MainActivity : ThemedActivity() {
         )
     }
 
+    private fun bindRoadmap() {
+        val snapshot = roadmapRepository.buildSnapshot()
+        val currentStage = snapshot.currentStage
+        val nextStage = snapshot.nextStage
+        val hasRoadmapData = snapshot.stages.any { it.totalCount > 0 }
+
+        roadmapBody.text = when {
+            !hasRoadmapData -> getString(R.string.home_roadmap_body_empty)
+            currentStage == null -> getString(R.string.home_roadmap_body_complete)
+            else -> getString(
+                R.string.home_roadmap_body_progress,
+                currentStage.completedCount,
+                currentStage.totalCount,
+                currentStage.definition.title
+            )
+        }
+
+        updatePill(
+            roadmapMetaPrimary,
+            when {
+                !hasRoadmapData -> getString(R.string.home_roadmap_meta_empty)
+                currentStage == null -> getString(R.string.home_roadmap_meta_complete)
+                else -> getString(R.string.home_roadmap_meta_current, currentStage.definition.jlptLevel)
+            }
+        )
+        updatePill(
+            roadmapMetaSecondary,
+            when {
+                !hasRoadmapData -> null
+                currentStage == null -> null
+                nextStage != null -> getString(
+                    R.string.home_roadmap_meta_next,
+                    nextStage.definition.jlptLevel,
+                    nextStage.definition.gradeBandLabel
+                )
+                else -> getString(R.string.home_roadmap_meta_final)
+            }
+        )
+
+        openRoadmapButton.setOnClickListener {
+            startActivity(Intent(this, RoadmapActivity::class.java))
+        }
+    }
+
     private fun bindStats(summary: HomeSummary) {
         val chart = studyStatsRepository.getDailyChart(days = 14)
         todayMetricValue.text = summary.todayOpenCount.toString()
@@ -385,9 +441,11 @@ class MainActivity : ThemedActivity() {
         ThemeController.applyMainHeroDepth(findViewById(R.id.sectionHero), elevatedDp = 10f, defaultDp = 4f)
         ThemeController.applyMainCardDepth(findViewById(R.id.sectionRecentKanji), elevatedDp = 6f, defaultDp = 3f)
         ThemeController.applyMainCardDepth(findViewById(R.id.sectionWidgetStatus), elevatedDp = 6f, defaultDp = 3f)
+        ThemeController.applyMainCardDepth(findViewById(R.id.sectionRoadmap), elevatedDp = 6f, defaultDp = 3f)
         ThemeController.applyMainCardDepth(findViewById(R.id.cardTodayMetric), elevatedDp = 4f, defaultDp = 2f)
         ThemeController.applyMainCardDepth(findViewById(R.id.cardStreakMetric), elevatedDp = 4f, defaultDp = 2f)
         ThemeController.applyMainCardDepth(primaryStudyActionButton, elevatedDp = 4f, defaultDp = 2f)
+        ThemeController.applyMainCardDepth(openRoadmapButton, elevatedDp = 4f, defaultDp = 2f)
         ThemeController.applyMainCardDepth(openRandomButton, elevatedDp = 1.5f, defaultDp = 0.5f)
         ThemeController.applyMainCardDepth(statsButton, elevatedDp = 1.5f, defaultDp = 0.5f)
         ThemeController.applyMainCardDepth(openSettingsButton, elevatedDp = 1.5f, defaultDp = 0.5f)
