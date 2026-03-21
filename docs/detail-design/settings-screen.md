@@ -104,3 +104,4 @@ flowchart TD
 - This slice changes the shared widget-opacity interaction from preset cycling to a direct slider while keeping the setting global across active widgets
 - Shared popup styling should stay centralized so later settings additions do not reintroduce divergent dialog behavior
 - The shipped first slice now uses a back-only top bar on `Settings`; `Widget help` remains reachable from the list row in the utility stack
+- The canonical review artifact for this screen must preserve the same back-only top bar contract so the source doc and HTML screen spec do not drift

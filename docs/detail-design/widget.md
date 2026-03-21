@@ -30,7 +30,6 @@ Out of scope for the first version:
 Out of scope for the daily-rotation first slice:
 - exact alarms or aggressive periodic scheduling to force a midnight widget refresh
 - another widget-placement setting just to enable or disable daily rotation
-- a separate streak or progress surface inside the widget
 
 ## User Value
 
@@ -82,6 +81,7 @@ Purpose:
 Possible fields:
 - Kanji
 - JLPT level
+- streak or completion badge
 - state chip
 - reading
 - meaning
@@ -375,6 +375,7 @@ Reason:
 The current widget presentation uses:
 - a layered card surface rather than a plain stacked text list
 - chip-style badges for JLPT and state
+- a compact streak or completion badge that surfaces daily engagement without becoming a second widget panel
 - a large hero panel for the Kanji itself
 - state-aware accent surfaces for loading, hidden-answer, and revealed-answer states
 - the same light blue, soft-stroke surface language now used across the refreshed main, detail, and stats screens
@@ -383,6 +384,7 @@ The current widget presentation uses:
 Current implementation note after the UI refresh:
 - `RemoteViews` still limits animation and blur, so the widget uses simplified gradients, opaque subcards, and state-aware button fills instead of trying to mirror the in-app Glass surfaces directly
 - the compact widget now keeps a short reading prompt visible so the smallest size still feels like a deliberate study card rather than only a large kanji plus button
+- the current shipped widget also surfaces streak or done-state feedback through the badge row rather than through a separate progress card
 
 ## Rendering Rules
 
@@ -575,4 +577,4 @@ Potential future improvements:
 - theme selection
 - scheduled daily rotation
 - local bundled fallback dataset
-- widget streak badge or progress badge
+- richer per-widget customization beyond opacity
