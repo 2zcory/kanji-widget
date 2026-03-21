@@ -12,7 +12,7 @@
         android:padding="16dp">
 
         <LinearLayout
-            android:id="@+id/sectionRoadmapHero"
+            android:id="@+id/sectionPlacementHero"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_main_hero_surface"
@@ -26,17 +26,17 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/btnRoadmapBack"
+                    android:id="@+id/btnPlacementBack"
                     android:layout_width="42dp"
                     android:layout_height="42dp"
                     android:background="@drawable/bg_icon_button"
-                    android:contentDescription="@string/roadmap_action_back"
+                    android:contentDescription="@string/placement_action_back"
                     android:padding="9dp"
                     android:src="@drawable/ic_arrow_back_kw"
                     android:tint="?attr/colorTextPrimary" />
 
                 <TextView
-                    android:id="@+id/tvRoadmapHeroLabel"
+                    android:id="@+id/tvPlacementHeroLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
@@ -47,21 +47,21 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tvRoadmapHeroTitle"
+                android:id="@+id/tvPlacementHeroTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textColor="?attr/colorTextPrimary"
-                android:textSize="30sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvRoadmapHeroBody"
+                android:id="@+id/tvPlacementHeroBody"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textColor="?attr/colorTextSecondary"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -70,7 +70,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tvRoadmapMetaPrimary"
+                    android:id="@+id/tvPlacementProgressMeta"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_home_meta_pill"
@@ -83,7 +83,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tvRoadmapMetaSecondary"
+                    android:id="@+id/tvPlacementStageMeta"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -96,113 +96,131 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sectionPlacementQuestion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_main_section_card"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:id="@+id/tvPlacementQuestionType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorAccentWarm"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textAllCaps="true" />
+
+            <TextView
+                android:id="@+id/tvPlacementPromptKanji"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:textColor="?attr/colorTextPrimary"
+                android:textSize="44sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPlacementPromptText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:textColor="?attr/colorTextSecondary"
+                android:textSize="15sp" />
 
             <Button
-                android:id="@+id/btnOpenPlacementTest"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginTop="16dp"
+                android:id="@+id/btnPlacementAnswerOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
                 android:background="@drawable/bg_home_action_chip"
-                android:minHeight="0dp"
-                android:minWidth="0dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:text="@string/roadmap_action_open_placement_test"
+                android:minHeight="48dp"
                 android:textAllCaps="false"
                 android:textColor="?attr/colorSecondaryButtonText"
-                android:textSize="13sp"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnPlacementAnswerTwo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_home_action_chip"
+                android:minHeight="48dp"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorSecondaryButtonText"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnPlacementAnswerThree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_home_action_chip"
+                android:minHeight="48dp"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorSecondaryButtonText"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnPlacementAnswerFour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_home_action_chip"
+                android:minHeight="48dp"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorSecondaryButtonText"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnPlacementNext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/bg_main_primary_button"
+                android:minHeight="48dp"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorPrimaryButtonText"
+                android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/sectionRoadmapBatch"
+            android:id="@+id/sectionPlacementEmpty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_main_section_card"
             android:orientation="vertical"
-            android:padding="18dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/roadmap_batch_title"
-                    android:textColor="?attr/colorTextPrimary"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/roadmap_batch_link"
-                    android:textColor="?attr/colorAccentMain"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+            android:padding="18dp"
+            android:visibility="gone">
 
             <TextView
-                android:id="@+id/tvRoadmapBatchEmpty"
+                android:id="@+id/tvPlacementEmptyTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:textColor="?attr/colorTextPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPlacementEmptyBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:textColor="?attr/colorTextSecondary"
-                android:textSize="14sp"
-                android:visibility="gone" />
-
-            <LinearLayout
-                android:id="@+id/containerRoadmapBatch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="vertical" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/sectionRoadmapStages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/bg_main_section_card"
-            android:orientation="vertical"
-            android:padding="18dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/roadmap_stage_title"
-                    android:textColor="?attr/colorTextPrimary"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/roadmap_stage_link"
-                    android:textColor="?attr/colorAccentMain"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/containerRoadmapStages"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="vertical" />
+                android:textSize="15sp" />
         </LinearLayout>
 
     </LinearLayout>

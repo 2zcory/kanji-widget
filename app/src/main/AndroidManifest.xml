@@ -41,6 +41,18 @@
             android:theme="@style/Theme.KanjiWidget" />
 
         <activity
+            android:name=".PlacementTestActivity"
+            android:exported="false"
+            android:label="@string/placement_test_title"
+            android:theme="@style/Theme.KanjiWidget" />
+
+        <activity
+            android:name=".PlacementResultActivity"
+            android:exported="false"
+            android:label="@string/placement_result_title"
+            android:theme="@style/Theme.KanjiWidget" />
+
+        <activity
             android:name=".widget.WidgetConfigurationActivity"
             android:exported="true"
             android:theme="@style/Theme.KanjiWidget" />

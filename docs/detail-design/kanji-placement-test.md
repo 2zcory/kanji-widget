@@ -77,6 +77,11 @@ Recommended first-slice integration:
 - keep the result screen one tap away from the recommended roadmap stage
 - avoid turning `MainActivity` into a quiz dashboard
 
+Current source-repo implementation direction:
+- launch the test from `RoadmapActivity`
+- keep `MainActivity` focused on summary, continuation, and roadmap entry
+- let the result hand off to either `RoadmapActivity` or the recommended batch detail flow
+
 ## Data Dependencies
 
 Likely required data:
