@@ -66,6 +66,28 @@ class KanjiRoadmapRepository(
         )
     }
 
+    fun getRecommendedBatchForStage(
+        stageId: KanjiRoadmapStageId,
+        batchSize: Int = 5,
+        entries: List<KanjiEntry> = loadKnownEntries(),
+    ): KanjiRoadmapRecommendation {
+        val snapshot = buildSnapshot(entries)
+        val stage = snapshot.stages.firstOrNull { it.definition.id == stageId }
+            ?: return KanjiRoadmapRecommendation(stage = null, batch = emptyList())
+        val batch = entries
+            .asSequence()
+            .filter { roadmapStageIdForJlpt(it.jlptLevel) == stageId }
+            .filterNot { snapshot.completedKanji.contains(it.kanji) }
+            .sortedWith(
+                compareBy<KanjiEntry> { it.grade ?: Int.MAX_VALUE }
+                    .thenBy { it.frequency ?: Int.MAX_VALUE }
+                    .thenBy { it.kanji }
+            )
+            .take(batchSize.coerceAtLeast(1))
+            .toList()
+        return KanjiRoadmapRecommendation(stage = stage, batch = batch)
+    }
+
     fun loadKnownEntries(): List<KanjiEntry> {
         val catalog = KanjiWidgetPrefs.getKanjiCatalog(context)
         return catalog.mapNotNull { kanji ->

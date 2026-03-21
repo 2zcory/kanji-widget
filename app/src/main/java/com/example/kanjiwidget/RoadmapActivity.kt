@@ -1,5 +1,6 @@
 package com.example.kanjiwidget
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,7 @@ class RoadmapActivity : ThemedActivity() {
     private lateinit var heroBody: TextView
     private lateinit var heroMetaPrimary: TextView
     private lateinit var heroMetaSecondary: TextView
+    private lateinit var placementTestButton: Button
     private lateinit var batchEmptyView: TextView
     private lateinit var batchContainer: LinearLayout
     private lateinit var stageContainer: LinearLayout
@@ -41,11 +43,15 @@ class RoadmapActivity : ThemedActivity() {
         heroBody = findViewById(R.id.tvRoadmapHeroBody)
         heroMetaPrimary = findViewById(R.id.tvRoadmapMetaPrimary)
         heroMetaSecondary = findViewById(R.id.tvRoadmapMetaSecondary)
+        placementTestButton = findViewById(R.id.btnOpenPlacementTest)
         batchEmptyView = findViewById(R.id.tvRoadmapBatchEmpty)
         batchContainer = findViewById(R.id.containerRoadmapBatch)
         stageContainer = findViewById(R.id.containerRoadmapStages)
 
         backButton.setOnClickListener { finish() }
+        placementTestButton.setOnClickListener {
+            startActivity(Intent(this, PlacementTestActivity::class.java))
+        }
         applyDepthStyling()
     }
 
@@ -199,6 +205,7 @@ class RoadmapActivity : ThemedActivity() {
         ThemeController.applyMainHeroDepth(findViewById(R.id.sectionRoadmapHero), elevatedDp = 10f, defaultDp = 4f)
         ThemeController.applyMainCardDepth(findViewById(R.id.sectionRoadmapBatch), elevatedDp = 6f, defaultDp = 3f)
         ThemeController.applyMainCardDepth(findViewById(R.id.sectionRoadmapStages), elevatedDp = 6f, defaultDp = 3f)
+        ThemeController.applyMainCardDepth(placementTestButton, elevatedDp = 1.5f, defaultDp = 0.5f)
         ThemeController.applyMainCardDepth(backButton, elevatedDp = 1.5f, defaultDp = 0.5f)
     }
 
