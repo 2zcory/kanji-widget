@@ -87,11 +87,16 @@ class PlacementResultActivity : ThemedActivity() {
         scoreBody.text = getString(R.string.placement_result_score, totalCorrect, totalQuestions)
         rationaleBody.text = rationale
 
+        val stageId = roadmapStageIdForJlpt(stageJlpt)
         roadmapButton.setOnClickListener {
-            startActivity(Intent(this, RoadmapActivity::class.java))
+            startActivity(
+                RoadmapActivity.buildIntent(
+                    context = this,
+                    targetStageId = stageId,
+                )
+            )
         }
 
-        val stageId = roadmapStageIdForJlpt(stageJlpt)
         val batch = roadmapRepository.getRecommendedBatchForStage(stageId, batchSize = 4).batch
         val batchEntry = batch.firstOrNull()
         batchButton.isEnabled = batchEntry != null

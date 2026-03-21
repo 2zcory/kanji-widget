@@ -82,6 +82,7 @@ Current source-repo implementation direction:
 - keep `MainActivity` focused on summary, continuation, and roadmap entry
 - let the result hand off to either `RoadmapActivity` or the recommended batch detail flow
 - persist the most recent placement result locally so the roadmap can remind the learner where the last recommendation landed
+- when `Open roadmap` is used from the result, open `RoadmapActivity` with the recommended stage targeted rather than a generic entry state
 
 ## Data Dependencies
 

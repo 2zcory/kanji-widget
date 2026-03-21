@@ -212,6 +212,7 @@
     <string name="roadmap_complete_meta_primary">Đã hoàn tất</string>
     <string name="roadmap_hero_body_progress">Đã hoàn thành %1$d trên %2$d • %3$s</string>
     <string name="roadmap_meta_current">Hiện tại %1$s</string>
+    <string name="roadmap_meta_recommended">Gợi ý %1$s</string>
     <string name="roadmap_meta_next">Tiếp theo %1$s</string>
     <string name="roadmap_meta_final_stage">Stage cuối</string>
     <string name="roadmap_batch_title">Nên học tiếp</string>
@@ -227,6 +228,7 @@
     <string name="roadmap_stage_meta">%1$d / %2$d • %3$s</string>
     <string name="roadmap_stage_state_done">Đã xong</string>
     <string name="roadmap_stage_state_current">Hiện tại</string>
+    <string name="roadmap_stage_state_recommended">Gợi ý</string>
     <string name="roadmap_stage_state_next">Tiếp theo</string>
     <string name="roadmap_stage_state_later">Sau đó</string>
     <string name="roadmap_stage_state_unavailable">Chưa có</string>

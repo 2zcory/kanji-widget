@@ -212,6 +212,7 @@
     <string name="roadmap_complete_meta_primary">All complete</string>
     <string name="roadmap_hero_body_progress">%1$d of %2$d completed • %3$s</string>
     <string name="roadmap_meta_current">Current %1$s</string>
+    <string name="roadmap_meta_recommended">Recommended %1$s</string>
     <string name="roadmap_meta_next">Next %1$s</string>
     <string name="roadmap_meta_final_stage">Final stage</string>
     <string name="roadmap_batch_title">Recommended next</string>
@@ -227,6 +228,7 @@
     <string name="roadmap_stage_meta">%1$d / %2$d • %3$s</string>
     <string name="roadmap_stage_state_done">Done</string>
     <string name="roadmap_stage_state_current">Current</string>
+    <string name="roadmap_stage_state_recommended">Recommended</string>
     <string name="roadmap_stage_state_next">Next</string>
     <string name="roadmap_stage_state_later">Later</string>
     <string name="roadmap_stage_state_unavailable">Unavailable</string>
