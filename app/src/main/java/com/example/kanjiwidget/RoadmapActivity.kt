@@ -13,6 +13,7 @@ import com.example.kanjiwidget.roadmap.KanjiCompletionPrefs
 import com.example.kanjiwidget.roadmap.KanjiRoadmapRepository
 import com.example.kanjiwidget.roadmap.KanjiRoadmapSnapshot
 import com.example.kanjiwidget.roadmap.KanjiRoadmapStageProgress
+import com.example.kanjiwidget.placement.PlacementResultPrefs
 import com.example.kanjiwidget.theme.ThemeController
 import com.example.kanjiwidget.widget.KanjiEntry
 
@@ -26,6 +27,7 @@ class RoadmapActivity : ThemedActivity() {
     private lateinit var heroMetaPrimary: TextView
     private lateinit var heroMetaSecondary: TextView
     private lateinit var placementTestButton: Button
+    private lateinit var placementResultBody: TextView
     private lateinit var batchEmptyView: TextView
     private lateinit var batchContainer: LinearLayout
     private lateinit var stageContainer: LinearLayout
@@ -44,6 +46,7 @@ class RoadmapActivity : ThemedActivity() {
         heroMetaPrimary = findViewById(R.id.tvRoadmapMetaPrimary)
         heroMetaSecondary = findViewById(R.id.tvRoadmapMetaSecondary)
         placementTestButton = findViewById(R.id.btnOpenPlacementTest)
+        placementResultBody = findViewById(R.id.tvRoadmapPlacementResultBody)
         batchEmptyView = findViewById(R.id.tvRoadmapBatchEmpty)
         batchContainer = findViewById(R.id.containerRoadmapBatch)
         stageContainer = findViewById(R.id.containerRoadmapStages)
@@ -65,6 +68,7 @@ class RoadmapActivity : ThemedActivity() {
         val snapshot = repository.buildSnapshot(entries)
         val recommendation = repository.getRecommendedNextBatch(batchSize = 4, entries = entries)
         bindHero(snapshot)
+        bindPlacementSummary()
         bindRecommendedBatch(recommendation.batch, snapshot)
         bindStages(snapshot)
     }
@@ -109,6 +113,23 @@ class RoadmapActivity : ThemedActivity() {
                 )
             }
         }
+    }
+
+    private fun bindPlacementSummary() {
+        val savedResult = PlacementResultPrefs.load(this)
+        if (savedResult == null) {
+            placementResultBody.text = getString(R.string.roadmap_placement_result_empty)
+            placementTestButton.text = getString(R.string.roadmap_action_open_placement_test)
+            return
+        }
+        placementResultBody.text = getString(
+            R.string.roadmap_placement_result_summary,
+            savedResult.jlptLevel,
+            savedResult.totalCorrectAnswers,
+            savedResult.totalQuestions,
+            savedResult.confidenceLabel,
+        )
+        placementTestButton.text = getString(R.string.roadmap_action_retake_placement_test)
     }
 
     private fun bindRecommendedBatch(

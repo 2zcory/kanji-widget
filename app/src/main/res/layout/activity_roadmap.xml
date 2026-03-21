@@ -112,6 +112,14 @@
                 android:textColor="?attr/colorSecondaryButtonText"
                 android:textSize="13sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvRoadmapPlacementResultBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="?attr/colorTextSecondary"
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
